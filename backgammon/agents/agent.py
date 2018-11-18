@@ -1,4 +1,7 @@
-import random
+"""
+This is a fork of https://github.com/awni/backgammon.
+"""
+
 from backgammon.game import Game
 
 try:

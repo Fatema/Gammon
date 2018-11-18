@@ -1,3 +1,7 @@
+"""
+This is a fork of https://github.com/awni/backgammon.
+"""
+
 import random
 
 from backgammon.agents.agent import Agent

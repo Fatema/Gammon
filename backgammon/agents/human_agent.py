@@ -1,3 +1,7 @@
+"""
+This is a fork of https://github.com/awni/backgammon.
+"""
+
 import copy
 
 import pygame

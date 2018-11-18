@@ -1,3 +1,7 @@
+"""
+This is a fork of https://github.com/awni/backgammon.
+"""
+
 from backgammon.agents import agent
 import numpy as np
 
