@@ -78,7 +78,6 @@ class Modnet:
                 game.take_turn(players[player_num], roll, nodups=True)
                 if player_num:
                     game.reverse()
-                game.next_step(players[player_num], player_num)
                 player_num = (player_num + 1) % 2
 
                 x_next = game.extract_features(players[player_num].player)

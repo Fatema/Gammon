@@ -39,7 +39,7 @@ class MonoNN:
                 (winners[0] / winners_total) * 100.0))
 
     def get_output(self, x):
-        return self.mono_nn.get_output(x)
+        return '', self.mono_nn.get_output(x)
 
     def train(self):
         self.mono_nn.create_model()
@@ -67,11 +67,10 @@ class MonoNN:
                 game.take_turn(players[player_num], roll, nodups=True)
                 if player_num:
                     game.reverse()
-                game.next_step(players[player_num], player_num)
                 player_num = (player_num + 1) % 2
 
                 x_next = game.extract_features(players[player_num].player)
-                V_next = self.get_output(x_next)
+                _, V_next = self.get_output(x_next)
 
                 self.mono_nn.run_output(x, V_next)
 
