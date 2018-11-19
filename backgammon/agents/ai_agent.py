@@ -20,6 +20,9 @@ class TDAgent:
         v_best = 0
         a_best = None
 
+        """
+        1-ply method
+        """
         for a in actions:
             ateList = game.take_action(a, self.player)
             features = game.extract_features(game.opponent(self.player))

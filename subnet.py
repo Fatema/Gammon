@@ -205,3 +205,24 @@ class RacingGame(DefaultGame):
 
         if not os.path.exists(self.summary_path):
             os.makedirs(self.summary_path)
+
+
+"""
+I created this class to use the monolithic neural network as the tester instead of the Random agent
+"""
+class MonolithicNet(DefaultGame):
+    def __init__(self, sess, model_path, summary_path, checkpoint_path, restore=False):
+        super(self.__class__, self).__init__(sess, model_path, summary_path, checkpoint_path, restore)
+        self.game_strategy = 'mono'
+        self.model_path = model_path + self.game_strategy + '/'
+        self.summary_path = summary_path + self.game_strategy + '/'
+        self.checkpoint_path = checkpoint_path + self.game_strategy + '/'
+
+        if not os.path.exists(self.model_path):
+            os.makedirs(self.model_path)
+
+        if not os.path.exists(self.checkpoint_path):
+            os.makedirs(self.checkpoint_path)
+
+        if not os.path.exists(self.summary_path):
+            os.makedirs(self.summary_path)
