@@ -1,4 +1,7 @@
-import os, sys
+import os
+import random
+import time
+
 import numpy as np
 import copy
 try:
@@ -15,7 +18,7 @@ class Game:
     ON = 'on'
     TOKENS = ['o','x']
 
-    def __init__(self, layout=None, grid=None, off_pieces=None,
+    def __init__(self, layout=LAYOUT, grid=None, off_pieces=None,
                  bar_pieces=None, num_pieces=None, gplayers=None):
         """
         Define a new game object
@@ -52,9 +55,41 @@ class Game:
         Return an exact copy of the game. Changes can be made
         to the cloned version without affecting the original.
         """
-        return Game(None, self.grid, self.off_pieces,
+        return Game(self.LAYOUT, self.grid, self.off_pieces,
                     self.bar_pieces, self.num_pieces, self.players)
-    
+
+    def roll_dice(self):
+        return random.randint(1, self.die), random.randint(1, self.die)
+
+    def play(self, players, draw=False):
+        # player_num = random.randint(0, 1)
+        player_num = 1
+        while not self.is_over():
+            nodups = False
+            roll = self.roll_dice()
+            if draw:
+                self.draw(roll)
+            player_num = (player_num + 1) % 2
+            if player_num:
+                nodups = True
+                self.reverse()
+            self.take_turn(players[player_num], roll, draw=draw, nodups=nodups)
+            if player_num:
+                self.reverse()
+            time.sleep(.02)
+        return self.winner()
+
+    def take_turn(self, player, roll, draw=False, nodups=False):
+        if draw:
+            print("Player %s rolled <%d, %d>." % (player.player, roll[0], roll[1]))
+            time.sleep(1)
+
+        moves = self.get_actions(roll, player.player, nodups=nodups)
+        move = player.get_action(moves, self) if moves else None
+
+        if move:
+            self.take_action(move, player.player)
+
     def take_action(self, action, token):
         """
         Makes given move for player, assumes move is valid, 
@@ -322,7 +357,7 @@ class Game:
         pygame.init()
         WIDTH = 800
         HEIGHT = 425
-        
+
         WOFFSET_TOP = 57
         HOFFSET_TOP = 12
         HOFFSET_BOT = 370
@@ -330,92 +365,91 @@ class Game:
         WMID = 32
 
         HSKIP = 30
-        size = WIDTH,HEIGHT
+        size = WIDTH, HEIGHT
 
-        self.grid_locs = []
+        self.gridLocs = []
 
         for i in range(24):
             mid = 0
             hoff = HOFFSET_TOP
             hskip = HSKIP
-            k = 11-i
-            if i < 6 or i>17:
+            k = 11 - i
+            if i < 6 or i > 17:
                 mid = WMID
             if i > 11:
                 hoff = HOFFSET_BOT
                 hskip = -hskip
-                k = i-12
-            self.grid_locs.append([(WOFFSET_TOP + k * WSKIP + mid, hoff + j * hskip) for j in range(6)])
-
-        self.bar_locs = {'x':[(376, 142), (376, 110)], 'o':[(376, 243), (376, 275)]}
-        self.board_img = pygame.transform.scale(pygame.image.load('images/board.png'),size)
+                k = i - 12
+            self.gridLocs.append([(WOFFSET_TOP + k * WSKIP + mid, hoff + j * hskip) for j in range(6)])
+        self.barLocs = {'x': [(376, 142), (376, 110)], 'o': [(376, 243), (376, 275)]}
+        self.board_img = pygame.transform.scale(pygame.image.load('images/board.png'), size)
         self.screen = pygame.display.set_mode(self.board_img.get_rect().size)
-        self.tokIms = {'x':pygame.image.load('images/whitePiece.png'),
-                           'o':pygame.image.load('images/blackPiece.png')}
-        self.dies = [pygame.transform.scale(pygame.image.load('images/die%d.png'%i),(35,35))
-                         for i in range(1,7)]
-        self.offIms = {'x':pygame.transform.scale(pygame.image.load('images/whiteOff.png'),(40,18)),
-                           'o':pygame.transform.scale(pygame.image.load('images/blackOff.png'),(40,18))}
-        
+        self.tokIms = {'x': pygame.image.load('images/blackPiece.png'),
+                       'o': pygame.image.load('images/whitePiece.png')}
+        self.dies = [pygame.transform.scale(pygame.image.load('images/die%d.png' % i), (35, 35))
+                     for i in range(1, 7)]
+        self.offIms = {'x': pygame.transform.scale(pygame.image.load('images/blackOff.png'), (40, 18)),
+                       'o': pygame.transform.scale(pygame.image.load('images/whiteOff.png'), (40, 18))}
+
         outOff = 748
         bOffH = 391
         wOffH = 11
         offSkip = 9
-        self.offLocs = {'x':[(outOff,bOffH-i*offSkip) for i in range(19)],
-                            'o':[(outOff,wOffH+i*offSkip) for i in range(19)]}
-        
+        self.offLocs = {'x': [(outOff, bOffH - i * offSkip) for i in range(19)],
+                        'o': [(outOff, wOffH + i * offSkip) for i in range(19)]}
+
     def draw_gui(self, roll):
         if self.init:
             self.init_gui()
-        self.screen.blit(self.board_img,self.board_img.get_rect())
-        self.screen.blit(self.dies[roll[0]-1],(180,190))
-        self.screen.blit(self.dies[roll[1]-1],(220,190))
-        for i,col in enumerate(self.grid):
-            for j,t in enumerate(col):
+        self.screen.blit(self.board_img, self.board_img.get_rect())
+        self.screen.blit(self.dies[roll[0] - 1], (180, 190))
+        self.screen.blit(self.dies[roll[1] - 1], (220, 190))
+        for i, col in enumerate(self.grid):
+            for j, t in enumerate(col):
                 # for now only draw first 6 pieces
                 if j > 5:
                     break
-                self.screen.blit(self.tokIms[t], self.grid_locs[23 - i][j])
-        for k,v in self.bar_pieces.items():
-            for i,t in enumerate(v):
-                if i>1:
+                self.screen.blit(self.tokIms[t], self.gridLocs[23 - i][j])
+        for k, v in self.bar_pieces.items():
+            for i, t in enumerate(v):
+                if i > 1:
                     break
-                self.screen.blit(self.tokIms[t], self.bar_locs[t][i])
+                self.screen.blit(self.tokIms[t], self.barLocs[t][i])
 
-        for k,v in self.off_pieces.items():
-            for i,t in enumerate(v):
-                self.screen.blit(self.offIms[t],self.offLocs[t][i])
+        for k, v in self.off_pieces.items():
+            for i, t in enumerate(v):
+                self.screen.blit(self.offIms[t], self.offLocs[t][i])
         pygame.display.flip()
 
     def grid_loc_from_pos(self, pos, player):
-        tx,ty = self.tokIms['x'].get_rect().size
+        tx, ty = self.tokIms['x'].get_rect().size
 
-        def on_piece(piece_loc, pos, sizex, sizey):
-            px,py = piece_loc
-            tx,ty = pos
+        def onPiece(pieceLoc, pos, sizex, sizey):
+            px, py = pieceLoc
+            tx, ty = pos
             if tx < px + sizex and tx > px:
                 if ty < py + sizey and ty > py:
                     return True
             return False
-            
+
         # find out if we are on the grid
-        for i,col in enumerate(self.grid):
-            for loc in self.grid_locs[23 - i]:
-                if on_piece(loc,pos,tx,ty):
+        for i, col in enumerate(self.grid):
+            for loc in self.gridLocs[23 - i]:
+                if onPiece(loc, pos, tx, ty):
                     return i
 
         # find out if we are on the bar
-        for i,bp in enumerate(self.bar_pieces[player]):
-            if on_piece(self.bar_locs[player][i], pos, tx, ty):
+        for i, bp in enumerate(self.bar_pieces[player]):
+            if onPiece(self.barLocs[player][i], pos, tx, ty):
                 return Game.ON
 
         # find out if we are removing pieces
         offBase = self.offLocs['o'][0] if player == 'o' else self.offLocs['x'][-1]
         offHeight = 200
-        offWidth,_ = self.offIms['x'].get_rect().size
-        if on_piece(offBase,pos, offWidth, offHeight):
+        offWidth, _ = self.offIms['x'].get_rect().size
+        if onPiece(offBase, pos, offWidth, offHeight):
             return Game.OFF
-        
+
         return None
 
     def extract_features(self, player):
@@ -427,6 +461,7 @@ class Game:
                     for i in range(len(col)):
                         feats[min(i, 5)] += 1
                 features += feats
+                print(feats)
             features.append(float(len(self.bar_pieces[p])) / 2.)
             features.append(float(len(self.off_pieces[p])) / self.num_pieces[p])
         if player == self.players[0]:

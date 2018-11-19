@@ -5,7 +5,7 @@ This code is forked from https://github.com/fomorians/td-gammon
 import os
 import tensorflow as tf
 
-from modnet import Model
+from modnet import Modnet
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -28,13 +28,10 @@ if not os.path.exists(summary_path):
     os.makedirs(summary_path)
 
 if __name__ == '__main__':
-    graph = tf.Graph()
-    sess = tf.Session(graph=graph)
-    with sess.as_default(), graph.as_default():
-        model = Model(sess, model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-        if FLAGS.test:
-            model.test(episodes=1000)
-        elif FLAGS.play:
-            model.play()
-        else:
-            model.train()
+    model = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
+    if FLAGS.test:
+        model.test(episodes=1000)
+    elif FLAGS.play:
+        model.play()
+    else:
+        model.train()

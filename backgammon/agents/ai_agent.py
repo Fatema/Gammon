@@ -5,29 +5,32 @@ This is a fork of https://github.com/awni/backgammon.
 from backgammon.agents import agent
 import numpy as np
 
-class TDAgent(agent.Agent, object):
-    def __init__(self, player, weights):
-        super(self.__class__, self).__init__(player)
-        self.w1, self.w2, self.b1, self.b2 = weights
 
-    def get_action(self, actions, game):
+class TDAgent:
+    def __init__(self, player, model):
+        self.player = player
+        self.model = model
+        self.name = 'TD-Gammon'
+
+    def get_action(self, actions, game=None):
         """
         Return best action according to self.evaluationFunction,
         with no lookahead.
         """
-        bestV = 0
+        v_best = 0
+        a_best = None
 
         for a in actions:
             ateList = game.take_action(a, self.player)
-            features = game.extract_features(self.player)
-            hiddenAct = 1 / (1 + np.exp(-(self.w1.dot(features) + self.b1)))
-            v = 1 / (1 + np.exp(-(self.w2.dot(hiddenAct) + self.b2)))
-            if v > bestV:
-                action = a
-                bestV = v
+            features = game.extract_features(game.opponent(self.player))
+            _, v = self.model.get_output(features)
+            v = 1. - v if self.player == game.players[0] else v
+            if v > v_best:
+                v_best = v
+                a_best = a
             game.undo_action(a, self.player, ateList)
 
-        return action
+        return a_best
 
 
 def nnetEval(game, player, weights):
@@ -73,7 +76,7 @@ class ExpectiMiniMaxAgent(agent.Agent, object):
 
         return total / float(game.die ** 2)
 
-    def get_action(self, actions, game):
+    def get_action(self, actions, game=None):
         depth = 1
         if len(actions) > 100:
             depth = 0
