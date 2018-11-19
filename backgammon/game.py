@@ -45,8 +45,8 @@ class Game:
         self.roll = None
 
     @staticmethod
-    def new():
-        game = Game()
+    def new(layout=LAYOUT):
+        game = Game(layout=layout)
         game.new_game()
         return game
 
@@ -62,8 +62,7 @@ class Game:
         return random.randint(1, self.die), random.randint(1, self.die)
 
     def play(self, players, draw=False):
-        # player_num = random.randint(0, 1)
-        player_num = 1
+        player_num = random.randint(0, 1)
         while not self.is_over():
             nodups = False
             roll = self.roll_dice()
@@ -83,7 +82,6 @@ class Game:
         if draw:
             print("Player %s rolled <%d, %d>." % (player.player, roll[0], roll[1]))
             time.sleep(1)
-
         moves = self.get_actions(roll, player.player, nodups=nodups)
         move = player.get_action(moves, self) if moves else None
 
@@ -461,7 +459,6 @@ class Game:
                     for i in range(len(col)):
                         feats[min(i, 5)] += 1
                 features += feats
-                print(feats)
             features.append(float(len(self.bar_pieces[p])) / 2.)
             features.append(float(len(self.off_pieces[p])) / self.num_pieces[p])
         if player == self.players[0]:

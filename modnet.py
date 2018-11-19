@@ -70,13 +70,19 @@ class Modnet:
 
             game_step = 0
             while not game.is_over():
+                roll = game.roll_dice()
+                if player_num:
+                    game.reverse()
+                game.take_turn(players[player_num], roll, nodups=True)
+                if player_num:
+                    game.reverse()
                 game.next_step(players[player_num], player_num)
                 player_num = (player_num + 1) % 2
 
                 x_next = game.extract_features(players[player_num].player)
                 gated_net, V_next = self.get_output(x_next)
 
-                self.networks[gated_net].run_output(x_next, V_next)
+                self.networks[gated_net].run_output(x, V_next)
 
                 x = x_next
                 game_step += 1
