@@ -2,6 +2,8 @@ from __future__ import division
 
 import random
 
+from tqdm import tqdm
+
 from backgammon.game import Game
 from backgammon.agents.human_agent import HumanAgent
 from backgammon.agents.random_agent import RandomAgent
@@ -50,7 +52,7 @@ class MonoNN:
         validation_interval = 1000
         episodes = 5000
 
-        for episode in range(episodes):
+        for episode in tqdm(range(episodes)):
             if episode != 0 and episode % validation_interval == 0:
                 self.test(episodes=100)
 
