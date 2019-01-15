@@ -29,8 +29,8 @@ if not os.path.exists(summary_path):
     os.makedirs(summary_path)
 
 if __name__ == '__main__':
-    # model = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-    model = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
+    model = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
+    # model = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test:
         model.test(episodes=1000)
     elif FLAGS.play:

@@ -48,10 +48,96 @@ class Modnet:
                 winners[0], winners[1], winners_total,
                 (winners[0] / winners_total) * 100.0))
 
-    # gating program - decide which subnet to run based on the features
+    # gating program - decide which subnet to run based on the input features
     def get_output(self, x):
+        # make the indexes evaulated based on global variables
+        flip = x[0][-1]
 
-        return 'd', self.default_net.get_output(x)
+        if flip:
+           opp_pip = x[0][292]
+           player_pip = x[0][145]
+
+           opp_checkers = x[0][147:291]
+           player_checkers = x[0][0:144]
+
+           # flip the view - this is just a perspective change and not an actual copy
+           opp_checkers = opp_checkers[::-1]
+           player_checkers = player_checkers[::-1]
+        else:
+            opp_pip = x[0][145]
+            player_pip = x[0][292]
+
+            opp_checkers = x[0][0:144]
+            player_checkers = x[0][147:291]
+
+        # the calculation is based on the player view
+        # min means that it is closer to the perspective player home and max is the opposite
+        # opp_min = 23 - np.argmax(opp_checkers[::-1]) // 6
+        opp_max = np.argmax(opp_checkers) // 6
+
+        # player_min = np.argmax(player_checkers) // 6
+        player_max = 23 - np.argmax(player_checkers[::-1]) // 6
+
+        net = 'd'
+
+        if player_max < opp_max or player_pip > opp_pip:
+            net = 'r'
+        else:
+            # player_close_pos = 0
+            player_trapped_pos = 0
+            player_trapped_count = 0
+            # opp_trapped_pos = 0
+            # opp_trapped_count = 0
+
+            # for i in range(player_min, opp_max):
+            #     player_close_pos += player_checkers[i * 6]
+
+            for i in range(opp_max + 1, player_max + 1):
+                sum = np.sum(player_checkers[i * 6:(i + 1) * 6])
+                player_trapped_pos += 1 if sum > 0 else 0
+                player_trapped_count += sum
+
+            if player_trapped_pos < 3 and player_trapped_count < 4:
+                net = 'r'
+
+        return net, self.networks[net].get_output(x)
+
+
+    def extract_features(self, game, player):
+        features = []
+        # print(player)
+        # the order in which the players are evaluated matters
+        for k in range(len(game.players)):
+            p = game.players[k]
+            pip_count = 0
+            for j in range(len(game.grid)):
+                col = game.grid[j]
+                feats = [0.] * 6
+                if len(col) > 0 and col[0] == p:
+                    if k == 0:
+                        temp = len(col) * (24 - j)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    else:
+                        temp = len(col) * (j + 1)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    for i in range(len(col)):
+                        feats[min(i, 5)] += 1
+                features += feats
+            # print('pip_count before off pieces', pip_count)
+            features.append(float(len(game.bar_pieces[p])) / 2.)
+            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
+            # pip_count for the player the closer to home the less the value is
+            # print(game.bar_pieces[p], game.off_pieces[p])
+            pip_count += len(game.bar_pieces[p]) * 25
+            features.append(float(pip_count))
+            # print('pip count for', p, pip_count)
+        if player == game.players[0]:
+            features += [1., 0.]
+        else:
+            features += [0., 1.]
+        return np.array(features).reshape(1, -1)
 
     def train(self):
         for net in self.networks:
@@ -70,7 +156,7 @@ class Modnet:
             game = Game.new()
             player_num = random.randint(0, 1)
 
-            x = game.extract_features(players[player_num].player)
+            x = self.extract_features(game, players[player_num].player)
 
             game_step = 0
             while not game.is_over():
@@ -82,7 +168,7 @@ class Modnet:
                     game.reverse()
                 player_num = (player_num + 1) % 2
 
-                x_next = game.extract_features(players[player_num].player)
+                x_next = self.extract_features(game, players[player_num].player)
                 gated_net, V_next = self.get_output(x_next)
 
                 self.networks[gated_net].run_output(x, V_next)
@@ -93,7 +179,7 @@ class Modnet:
             winner = game.winner()
 
             for net in self.networks:
-                self.networks[net].update_model(x, winner,episode, episodes, players, game_step)
+                self.networks[net].update_model(x, winner, episode, episodes, players, game_step)
 
         for net in self.networks:
             self.networks[net].training_end()
