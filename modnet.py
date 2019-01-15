@@ -33,6 +33,7 @@ class Modnet:
         game.play([HumanAgent(Game.TOKENS[0]), TDAgent(Game.TOKENS[1], self)], draw=True)
 
     def test(self, episodes=100, draw=False):
+        # there is not much use of making mono part of this class so make it a normal object call instead
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self.mono_nn)]
         winners = [0, 0]
         for episode in range(episodes):
