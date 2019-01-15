@@ -63,7 +63,9 @@ class Game:
 
     def play(self, players, draw=False):
         player_num = random.randint(0, 1)
+        turns = 0
         while not self.is_over():
+            turns += 1
             nodups = False
             roll = self.roll_dice()
             if draw:
@@ -246,7 +248,7 @@ class Game:
         """
         Get winner.
         """
-        return len(self.off_pieces[self.players[0]])  ==  self.num_pieces[self.players[0]]
+        return len(self.off_pieces[self.players[0]]) == self.num_pieces[self.players[0]]
 
     def is_over(self):
         """
@@ -306,20 +308,20 @@ class Game:
         return False
 
     def draw_col(self,i,col):
-        print("|"),
+        print("|", end=''),
         if i == -2:
             if col<10:
-                print(""),
-            print(str(col)),
+                print(" ", end=''),
+            print(str(col), end=''),
         elif i == -1:
-            print("--"),
+            print("--", end=''),
         elif len(self.grid[col])>i:
-            print(" ", self.grid[col][i]),
+            print(" " + self.grid[col][i], end=''),
         else:
-            print("  "),
+            print("  ", end=''),
 
     def draw_screen(self):
-        os.system('clear')
+        # os.system('clear')
         half_grid_size = int(len(self.grid)/2)
         grid_size = len(self.grid)
         largest = max([len(self.grid[i]) for i in range(half_grid_size, grid_size)])
@@ -337,10 +339,10 @@ class Game:
         for t in self.players:
             print("<Player %s>  Off Board : "%(t)),
             for piece in self.off_pieces[t]:
-                print(t+''),
+                print(t+'', end=''),
             print("   Bar : "),
             for piece in self.bar_pieces[t]:
-                print(t+''),
+                print(t+'', end=''),
             print()
 
     def draw(self,roll=None):
@@ -452,15 +454,34 @@ class Game:
 
     def extract_features(self, player):
         features = []
-        for p in self.players:
-            for col in self.grid:
+        # print(player)
+        # the order in which the players are evaluated matters
+        for k in range(len(self.players)):
+            p = self.players[k]
+            pip_count = 0
+            for j in range(len(self.grid)):
+                col = self.grid[j]
                 feats = [0.] * 6
                 if len(col) > 0 and col[0] == p:
+                    if k == 0:
+                        temp = len(col) * (24 - j)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    else:
+                        temp = len(col) * (j + 1)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
                     for i in range(len(col)):
                         feats[min(i, 5)] += 1
                 features += feats
+            # print('pip_count before off pieces', pip_count)
             features.append(float(len(self.bar_pieces[p])) / 2.)
             features.append(float(len(self.off_pieces[p])) / self.num_pieces[p])
+            # pip_count for the player the closer to home the less the value is
+            # print(self.bar_pieces[p], self.off_pieces[p])
+            pip_count += len(self.bar_pieces[p]) * 25
+            features.append(float(pip_count))
+            # print('pip count for', p, pip_count)
         if player == self.players[0]:
             features += [1., 0.]
         else:

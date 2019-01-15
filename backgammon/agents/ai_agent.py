@@ -21,17 +21,25 @@ class TDAgent:
         a_best = None
 
         """
-        1-ply method
+        1-ply method, it is greedy selection for an action
         """
+        # print('considering actions:', actions)
         for a in actions:
+            # print('action considered:', a)
             ateList = game.take_action(a, self.player)
+            # print('action taken outcome:', ateList)
             features = game.extract_features(game.opponent(self.player))
+            # game.draw_screen()
+            # print('features after action:', features)
             _, v = self.model.get_output(features)
             v = 1. - v if self.player == game.players[0] else v
+            # print('NN output', v)
             if v > v_best:
                 v_best = v
                 a_best = a
             game.undo_action(a, self.player, ateList)
+
+        # print('best action selected', a_best)
 
         return a_best
 

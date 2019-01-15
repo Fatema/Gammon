@@ -1,3 +1,8 @@
+"""
+This code is forked from https://github.com/fomorians/td-gammon, I made some modification so it allows the
+creation of multiple instances of the network
+"""
+
 import os
 import time
 import numpy as np
@@ -27,17 +32,17 @@ class DefaultGame:
 
         # lambda decay
         lamda = tf.maximum(0.7, tf.train.exponential_decay(0.9, self.global_step,
-            30000, 0.96, staircase=True), name='lambda')
+                                                           30000, 0.96, staircase=True), name='lambda')
 
         # learning rate decay
         alpha = tf.maximum(0.01, tf.train.exponential_decay(0.1, self.global_step,
-            40000, 0.96, staircase=True), name='alpha')
+                                                            40000, 0.96, staircase=True), name='alpha')
 
         tf.summary.scalar('lambda', lamda)
         tf.summary.scalar('alpha', alpha)
 
         # describe network size
-        layer_size_input = 294
+        layer_size_input = 296
         layer_size_hidden = 50
         layer_size_output = 1
 
@@ -60,7 +65,8 @@ class DefaultGame:
         loss_op = tf.reduce_mean(tf.square(self.V_next - self.V), name='loss')
 
         # check if the model predicts the correct state
-        accuracy_op = tf.reduce_sum(tf.cast(tf.equal(tf.round(self.V_next), tf.round(self.V)), dtype='float'), name='accuracy')
+        accuracy_op = tf.reduce_sum(tf.cast(tf.equal(tf.round(self.V_next), tf.round(self.V)), dtype='float'),
+                                    name='accuracy')
 
         # track the number of steps and average loss for the current game
         with tf.variable_scope('game'):
@@ -152,11 +158,15 @@ class DefaultGame:
         # run variable initializers
         self.sess.run(tf.global_variables_initializer())
 
-        self.summary_writer = tf.summary.FileWriter('{0}{1}'.format(self.summary_path, int(time.time()), self.sess.graph_def))
+        self.summary_writer = tf.summary.FileWriter(
+            '{0}{1}'.format(self.summary_path, int(time.time()), self.sess.graph_def))
 
         # after training a model, we can restore checkpoints here
         if restore:
             self.restore()
+
+        # op = self.sess.graph.get_operations()
+        # print([m.values() for m in op])
 
     def restore(self):
         latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
@@ -165,13 +175,17 @@ class DefaultGame:
             self.saver.restore(self.sess, latest_checkpoint_path)
 
     def get_output(self, x):
-        return self.sess.run(self.V, feed_dict={ self.x: x })
+        return self.sess.run(self.V, feed_dict={self.x: x})
 
     def run_output(self, x, V_next):
         self.sess.run(self.train_op, feed_dict={self.x: x, self.V_next: V_next})
+        # op = self.sess.graph.get_operations()
+        # print([m.values() for m in op])
 
     def create_model(self):
         tf.train.write_graph(self.sess.graph_def, self.model_path, self.game_strategy + '_net.pb', as_text=False)
+        # op = self.sess.graph.get_operations()
+        # print([m.values() for m in op])
 
     def update_model(self, x, winner, episode, episodes, players, game_step):
         _, global_step, summaries, _ = self.sess.run([
@@ -184,6 +198,9 @@ class DefaultGame:
 
         print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[winner].player, game_step))
         self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
+
+        # op = self.sess.graph.get_operations()
+        # print([m.values() for m in op])
 
     def training_end(self):
         self.summary_writer.close()
@@ -206,10 +223,15 @@ class RacingGame(DefaultGame):
         if not os.path.exists(self.summary_path):
             os.makedirs(self.summary_path)
 
+        self.summary_writer = tf.summary.FileWriter(
+            '{0}{1}'.format(self.summary_path, int(time.time()), self.sess.graph_def))
+
 
 """
 I created this class to use the monolithic neural network as the tester instead of the Random agent
 """
+
+
 class MonolithicNet(DefaultGame):
     def __init__(self, sess, model_path, summary_path, checkpoint_path, restore=False):
         super(self.__class__, self).__init__(sess, model_path, summary_path, checkpoint_path, restore)
@@ -226,3 +248,6 @@ class MonolithicNet(DefaultGame):
 
         if not os.path.exists(self.summary_path):
             os.makedirs(self.summary_path)
+
+        self.summary_writer = tf.summary.FileWriter(
+            '{0}{1}'.format(self.summary_path, int(time.time()), self.sess.graph_def))

@@ -48,7 +48,9 @@ class Modnet:
                 winners[0], winners[1], winners_total,
                 (winners[0] / winners_total) * 100.0))
 
+    # gating program - decide which subnet to run based on the features
     def get_output(self, x):
+
         return 'd', self.default_net.get_output(x)
 
     def train(self):
