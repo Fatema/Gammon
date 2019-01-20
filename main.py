@@ -14,6 +14,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_boolean('test', False, 'If true, test against a random strategy.')
 flags.DEFINE_boolean('play', False, 'If true, play against a trained TD-Gammon strategy.')
 flags.DEFINE_boolean('restore', False, 'If true, restore a checkpoint before training.')
+flags.DEFINE_boolean('mono', False, 'If true, use monolithic NN.')
 
 model_path = os.environ.get('MODEL_PATH', 'models/')
 summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
@@ -29,11 +30,20 @@ if not os.path.exists(summary_path):
     os.makedirs(summary_path)
 
 if __name__ == '__main__':
-    model = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-    # model = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
+    model_mod = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
+    model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test:
-        model.test(episodes=1000)
+        if FLAGS.mono:
+            model_mono.test(episodes=1000)
+        else:
+            model_mod.test(episodes=1000)
     elif FLAGS.play:
-        model.play()
+        if FLAGS.mono:
+            model_mono.play()
+        else:
+            model_mod.play()
     else:
-        model.train()
+        if FLAGS.mono:
+            model_mono.train()
+        else:
+            model_mod.train()

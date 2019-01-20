@@ -49,14 +49,13 @@ class MonoNN:
     def get_output(self, x):
         return '', self.mono_nn.get_output(x)
 
-    def train(self):
+    def train(self, episodes=5000):
         self.mono_nn.create_model()
 
         # the agent plays against itself, making the best move for each player
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
 
         validation_interval = 1000
-        episodes = 5000
 
         for episode in range(episodes):
             # print()

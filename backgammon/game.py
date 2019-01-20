@@ -488,6 +488,10 @@ class Game:
             features += [0., 1.]
         return np.array(features).reshape(1, -1)
 
+    #TODO generate random losing game
+    def generate_random(self, losing=True):
+        self.grid
+        return self
 
 if __name__ == '__main__':
     g = Game(Game.LAYOUT)
