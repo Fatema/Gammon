@@ -12,10 +12,10 @@ from subnet import *
 
 class MonoNN:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
-        g3 = tf.Graph()
-        s3 = tf.Session(graph=g3)
-        with s3.as_default(), g3.as_default():
-            self.mono_nn = MonolithicNet(s3, model_path, summary_path, checkpoint_path, restore)
+        self.mono_nn = SubNet()
+        self.mono_nn.set_strategy_name('mono')
+        self.mono_nn.set_paths(model_path, summary_path, checkpoint_path)
+        self.mono_nn.start_session(restore=restore)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):

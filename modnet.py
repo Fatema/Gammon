@@ -13,28 +13,47 @@ from subnet import *
 
 class Modnet:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
-        g1 = tf.Graph()
-        s1 = tf.Session(graph=g1)
-        with s1.as_default(), g1.as_default():
-            self.default_net = DefaultGame(s1, model_path, summary_path, checkpoint_path, restore)
+        self.default_net = SubNet()
+        self.default_net.set_strategy_name('default')
+        self.default_net.set_paths(model_path, summary_path, checkpoint_path)
+        self.default_net.start_session(restore=restore)
 
-        g2 = tf.Graph()
-        s2 = tf.Session(graph=g2)
-        with s2.as_default(), g2.as_default():
-            self.racing_net = RacingGame(s2, model_path, summary_path, checkpoint_path, restore)
+        self.racing_net = SubNet()
+        self.racing_net.set_strategy_name('racing')
+        self.racing_net.set_paths(model_path, summary_path, checkpoint_path)
+        self.racing_net.start_session(restore=restore)
 
-        self.networks = {'d' : self.default_net, 'r' : self.racing_net}
+        self.holding_net = SubNet()
+        self.holding_net.set_strategy_name('holding')
+        self.holding_net.set_paths(model_path, summary_path, checkpoint_path)
+        self.holding_net.start_session(restore=restore)
 
-        self.mono_nn = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
+        self.networks = {'d' : self.default_net, 'r' : self.racing_net, 'h' : self.holding_net}
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
         game = Game.new()
         game.play([HumanAgent(Game.TOKENS[0]), TDAgent(Game.TOKENS[1], self)], draw=True)
 
-    def test(self, episodes=100, draw=False):
+    def test_mono(self, episodes=100, draw=False):
         # there is not much use of making mono part of this class so make it a normal object call instead
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self.mono_nn)]
+        winners = [0, 0]
+        for episode in range(episodes):
+            game = Game.new()
+
+            winner = game.play(players, draw=draw)
+            winners[winner] += 1
+
+            winners_total = sum(winners)
+            print("[Episode %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
+                players[0].player, players[0].player,
+                players[1].player, players[1].player,
+                winners[0], winners[1], winners_total,
+                (winners[0] / winners_total) * 100.0))
+
+    def test_random(self, episodes=100, draw=False):
+        players = [TDAgent(Game.TOKENS[0], self), RandomAgent(Game.TOKENS[1])]
         winners = [0, 0]
         for episode in range(episodes):
             game = Game.new()
@@ -104,7 +123,6 @@ class Modnet:
 
         return net, self.networks[net].get_output(x)
 
-
     def extract_features(self, game, player):
         features = []
         # print(player)
@@ -141,7 +159,7 @@ class Modnet:
             features += [0., 1.]
         return np.array(features).reshape(1, -1)
 
-    def train(self):
+    def train(self, episodes=5000):
         for net in self.networks:
             self.networks[net].create_model()
 
@@ -149,14 +167,13 @@ class Modnet:
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
 
         validation_interval = 1000
-        episodes = 5000
 
         for episode in range(episodes):
             if episode != 0 and episode % validation_interval == 0:
-                self.test(episodes=100)
+                self.test_random(episodes=100)
 
             game = Game.new()
-            game.generate_random()
+            game.generate_random_game()
             player_num = random.randint(0, 1)
 
             x = self.extract_features(game, players[player_num].player)
@@ -187,4 +204,4 @@ class Modnet:
         for net in self.networks:
             self.networks[net].training_end()
 
-        self.test(episodes=1000)
+        self.test_random(episodes=1000)

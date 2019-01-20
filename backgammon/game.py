@@ -488,12 +488,34 @@ class Game:
             features += [0., 1.]
         return np.array(features).reshape(1, -1)
 
-    #TODO generate random losing game
-    def generate_random(self, losing=True):
-        self.grid
-        return self
+    def generate_random_game(self, losing=True):
+        new_grid = [[] for _ in range(Game.NUMCOLS)]
+        o_remain = 15
+        x_remain = 15
+        if losing:
+            rand = random.randint(1, 10)
+            self.bar_pieces[0] = ['o' for _ in range(rand)]
+            o_remain -= rand
+        j = 0
+        while o_remain > 0 or x_remain > 0:
+            if random.random() < 0.5 or new_grid[j] != []:
+                j = (j + 1) % self.NUMCOLS
+                continue
+            token = random.choice(self.TOKENS)
+            if token == 'o':
+                rand = random.randint(0, min(o_remain, 6))
+                o_remain -= rand
+            else:
+                rand = random.randint(0, min(x_remain, 6))
+                x_remain -= rand
+            new_grid[j] = [token for _ in range(rand)]
+            j = (j + 1) % self.NUMCOLS
+        self.grid = new_grid
+        print(new_grid)
+
 
 if __name__ == '__main__':
     g = Game(Game.LAYOUT)
     g.new_game()
-    g.draw((4,3))
+    g.generate_random_game()
+    # g.draw((4,3))
