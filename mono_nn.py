@@ -13,7 +13,7 @@ from subnet import *
 class MonoNN:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
         g3 = tf.Graph()
-        s3 = tf.Session(graph=g3, config=tf.ConfigProto(log_device_placement=True))
+        s3 = tf.Session(graph=g3, config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
         with s3.as_default(), g3.as_default():
             self.mono_nn = MonolithicNet(s3, model_path, summary_path, checkpoint_path, restore)
 
