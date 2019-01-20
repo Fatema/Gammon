@@ -14,12 +14,12 @@ from subnet import *
 class Modnet:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
         g1 = tf.Graph()
-        s1 = tf.Session(graph=g1, config=tf.ConfigProto(log_device_placement=True))
+        s1 = tf.Session(graph=g1)
         with s1.as_default(), g1.as_default():
             self.default_net = DefaultGame(s1, model_path, summary_path, checkpoint_path, restore)
 
         g2 = tf.Graph()
-        s2 = tf.Session(graph=g2, config=tf.ConfigProto(log_device_placement=True))
+        s2 = tf.Session(graph=g2)
         with s2.as_default(), g2.as_default():
             self.racing_net = RacingGame(s2, model_path, summary_path, checkpoint_path, restore)
 
