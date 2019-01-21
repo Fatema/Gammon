@@ -30,8 +30,8 @@ class SubNet:
 
     def start_session(self, restore=False):
         graph = tf.Graph()
-        session = tf.Session(graph=graph, config=tf.ConfigProto(log_device_placement=True))
-        with session.as_default(), graph.as_default(), tf.device("/XLA_CPU:0"):
+        session = tf.Session(graph=graph, config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
+        with session.as_default(), graph.as_default():
             self.sess = session
             self.global_step = tf.Variable(0, trainable=False, name='global_step')
             self.set_decay()
