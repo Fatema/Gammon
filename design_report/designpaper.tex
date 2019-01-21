@@ -1,0 +1,153 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{times}
+\usepackage{durhampaper}
+\usepackage{harvard}
+\usepackage{graphicx}
+
+\graphicspath{}
+
+\citationmode{abbr}
+\bibliographystyle{agsm}
+
+\title{Reinforcement Learning, Looking for New Backgammon Strategies}
+\author{Fatema Alkhanaizi}
+\student{Fatema Alkhanaizi}
+\supervisor{Rob Powell}
+\degree{BSc Computer Science}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+These instructions give you guidelines for preparing the design paper.  DO NOT change any settings, such as margins and font sizes.  Just use this as a template and modify the contents into your design paper.  Do not cite references in the abstract.
+
+The abstract must be a Structured Abstract with the headings {\bf Context/Background}, {\bf Aims}, {\bf Method}, and {\bf Proposed Solution}.  This section should not be no longer than a page, and having no more than two or three sentences under each heading is advised.
+\end{abstract}
+
+{\bf Context/Background}
+There are many strategies that a professional backgammon player follows to better his chances of winning the game. In 1992, limitations of Monolithic Nueral Network - a generic strategy, one-size fit all Solution .
+{\bf Aims}
+study the effect of including hybrid of Backgammon strategies to the learning network.
+{\bf Method}
+the introduction of those strategies will be part of the NN architecture. 
+{\bf Proposed Solution}
+
+
+\begin{keywords}
+Put a few keywords here.
+\end{keywords}
+
+\section{Introduction}
+This section briefly introduces the project, the research question you are addressing.  Do not change the font sizes or line spacing in order to put in more text.
+
+Note that the whole report, including the references, should not be longer than 12 pages in length (there is no penalty for short papers if the required content is included). There should be at least 5 referenced papers.
+
+\subsection{Backgammon Game}
+Game rules followed and game set up.
+
+\subsection{TD Gammon}
+first implementation, limitations
+
+\subsection{Searching Algorithm}
+depth of lookup to choose the best action for the current turn (1-ply, 2-ply ... etc)
+
+\subsection{Learning Method}
+
+\subsection{Nueral Network architecture}
+
+\subsection{Research Questions}
+
+\section{Design}
+
+This section presents the proposed solutions of the problems in detail. The design details should all be placed in this section. You may create a number of subsections, each focusing on one issue.
+
+\subsection{Implementation}
+Python 3.6 is the language used in this project. The nueral networks for the project were implemented using tensorflow package. Figure- shows the structure of the project.
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.6\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{solution-step3}.png}
+    \end{minipage}
+    \caption{Minimum distance until t=$1e4$}
+    \label{alldelta}
+\end{figure}
+
+\subsubsection{Game}
+The user interface for the game is not the focus of this project, so a pre-existing interface written by ... has been used. The implementation has been refactored so it can be used in the project. This module holds the game setup and defines the rules and constraints of the game e.g. take an action, find legal moves, game board setup ... etc.
+
+\subsubsection{Agents}
+There are 3 types of agents implemented for this project, all agents implement get\_action method: 
+\begin{itemize}
+    \item \textbf{A human agent}, an interactive agent which takes user inputs either from the command line or by capturing the user clicks of the checker to a legal position though a GUI.
+    \item \textbf{A random agent} picks a random move from the list of legal moves based on the dice role. This agent is mainly used for testing.
+    \item \textbf{AI agent} uses a nueral network to determine the action for the current turn. A list of legal move is obtained from the game module and the best action is picked after running the outcome of each move in the network. The search algorithm implemented is greedy and at a single depth 1-ply; the action with the maximum output is picked.
+\end{itemize}
+
+\subsubsection{Modnet}
+This module defines the operations for extracting features from the game board, testing, training, reading and writing three kinds of modular nueral networks. The architecture of those networks is explained in section-\ref{modnet}. 
+
+\subsubsection{Subnet}
+This module includes the Nueral Network implementation using tensorflow.
+
+\subsection{Monolithic Nueral Network}
+The implementation for this network is based on TD-Gammon of Tesauro. An implementation with tensorflow was used as the basis for this nueral network.  
+- nueral network specifications
+For the basic implementation of Tesauro's TD-Gammon, the following expert features were included to the input layer:
+\begin{table}[htb]
+    \centering
+    \caption{Expert features included to the raw inputs}
+    \vspace*{6pt}
+    \label{exfeat}
+    \begin{tabular}{ccc}
+        \hline
+        \hline
+        Feature name & Description \\ 
+        \hline
+        bar\_pieces\_1 & number of checkers held on the bar for player 1 \\
+        \hline
+        bar\_pieces\_2 & number of checkers held on the bar for player 2 \\
+        \hline
+        pipcount\_1 & pip count for player 1 \\
+        \hline
+        pipcount\_2 & pip count for player 2 \\
+        \hline
+        off\_piece\_perc\_1 & percentage of pieces that player 1 has beared off \\
+        \hline
+        off\_piece\_perc\_2 & percentage of pieces that player 2 has beared off \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Modular Nueral Network} \label{modnet}
+\subsubsection{Designer Domain Decomposition Architecture}
+- strategies - racing game, 
+- list of conditions to switch to each network aka gating program
+- learning the strategy is not done explicitly but it is left to the agent to figure out the strategy based on the current board configuration. This is handled by the gating program. It triggers a certain nueral network based on the extracted features from the game board)
+
+\subsubsection{Meta-Pi Networks}
+- This network will replace the gating program. It will be used to determine the best nueral network to be triggered based on a give input. The benefit of this approach is that it could discover that some conditions in the gating program that used to trigger one nueral network might be more fitting for another network to handle such input. This will allow the agent to develop a more flexible strategy and eventually better decisions. 
+
+
+
+
+\subsection{Figures and Tables}
+In general, figures and tables should not appear before they are cited.  Place figure captions below the figures; place table titles above the tables.  If your figure has two parts, for example, include the labels ``(a)'' and ``(b)'' as part of the artwork.  Please verify that figures and tables you mention in the text actually exist.  make sure that all tables and figures are numbered as shown in Table \ref{units} and Figure 1.
+%sort out your own preferred means of inserting figures
+
+\subsection{References}
+
+The list of cited references should appear at the end of the report, ordered alphabetically by the surnames of the first authors.  The default style for references cited in the main text is the  Harvard (author, date) format.  When citing a section in a book, please give the relevant page numbers, as in \cite[p293]{budgen}.  When citing, where there are either one or two authors, use the names, but if there are more than two, give the first one and use ``et al.'' as in  , except where this would be ambiguous, in which case use all author names.
+
+You need to give all authors' names in each reference.  Do not use ``et al.'' unless there are more than five authors.  Papers that have not been published should be cited as ``unpublished'' \cite{euther}.  Papers that have been submitted or accepted for publication should be cited as ``submitted for publication'' as in \cite{futher} .  You can also cite using just the year when the author's name appears in the text, as in ``but according to Futher \citeyear{futher}, we \dots''.  Where an authors has more than one publication in a year, add `a', `b' etc. after the year.
+
+
+
+
+\bibliography{projectpaper}
+
+
+\end{document}
