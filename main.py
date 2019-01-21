@@ -36,7 +36,7 @@ if __name__ == '__main__':
         if FLAGS.mono:
             model_mono.test(episodes=1000)
         else:
-            model_mod.test(episodes=1000)
+            model_mod.test_random(episodes=1000)
     elif FLAGS.play:
         if FLAGS.mono:
             model_mono.play()
