@@ -27,13 +27,13 @@ These instructions give you guidelines for preparing the design paper.  DO NOT c
 The abstract must be a Structured Abstract with the headings {\bf Context/Background}, {\bf Aims}, {\bf Method}, and {\bf Proposed Solution}.  This section should not be no longer than a page, and having no more than two or three sentences under each heading is advised.
 \end{abstract}
 
-{\bf Context/Background}
+\subsection{Context/Background}
 There are many strategies that a professional backgammon player follows to better his chances of winning the game. In 1992, limitations of Monolithic Nueral Network - a generic strategy, one-size fit all Solution .
-{\bf Aims}
+\subsection{Aims}
 study the effect of including hybrid of Backgammon strategies to the learning network.
-{\bf Method}
+\subsection{Method}
 the introduction of those strategies will be part of the NN architecture. 
-{\bf Proposed Solution}
+\subsection{Proposed Solution}
 
 
 \begin{keywords}
@@ -64,75 +64,78 @@ depth of lookup to choose the best action for the current turn (1-ply, 2-ply ...
 
 This section presents the proposed solutions of the problems in detail. The design details should all be placed in this section. You may create a number of subsections, each focusing on one issue.
 
-\subsection{Implementation}
-Python 3.6 is the language used in this project. The nueral networks for the project were implemented using tensorflow package. Figure- shows the structure of the project.
+\subsection{Requirements}
+
+
+\subsection{System Components}
+Python 3.6 will used as the language for this project. The nueral networks will be implemented using tensorflow package with GPU support. The figure below shows the expected structure of the project.
 \begin{figure}[htp] 
     \centering
     \begin{minipage}{0.6\textwidth}
         \centering
-        \includegraphics[width=1\textwidth]{{solution-step3}.png}
+        \includegraphics[width=1\textwidth]{{backgammon}.png}
     \end{minipage}
-    \caption{Minimum distance until t=$1e4$}
-    \label{alldelta}
+    \caption{Backgammon board setup}
+    \label{board}
 \end{figure}
 
 \subsubsection{Game}
-The user interface for the game is not the focus of this project, so a pre-existing interface written by ... has been used. The implementation has been refactored so it can be used in the project. This module holds the game setup and defines the rules and constraints of the game e.g. take an action, find legal moves, game board setup ... etc.
+The user interface for the game is not the focus of this project, so a pre-existing interface written by ... will used. The implementation will refactored so it can be used in the project. This module will hold the game setup and define the rules and constraints of the game e.g. take an action, find legal moves, game board setup ... etc.
 
 \subsubsection{Agents}
-There are 3 types of agents implemented for this project, all agents implement get\_action method: 
+There are 3 types of agents will be implemented for this project, all agents will implement get\_action method: 
 \begin{itemize}
-    \item \textbf{A human agent}, an interactive agent which takes user inputs either from the command line or by capturing the user clicks of the checker to a legal position though a GUI.
-    \item \textbf{A random agent} picks a random move from the list of legal moves based on the dice role. This agent is mainly used for testing.
-    \item \textbf{AI agent} uses a nueral network to determine the action for the current turn. A list of legal move is obtained from the game module and the best action is picked after running the outcome of each move in the network. The search algorithm implemented is greedy and at a single depth 1-ply; the action with the maximum output is picked.
+    \item \textbf{A human agent}, an interactive agent which takes user inputs either from the command line or by capturing the user clicks though a GUI.
+    \item \textbf{A random agent} picks a random move from the list of legal moves based on the dice role. This agent will be mainly used for testing.
+    \item \textbf{AI agent} uses a modular nueral network to determine the action for the current turn. A list of legal moves is obtained from the game module and the best action is picked after running the outcome of each move through the network. The search algorithm implemented is greedy and at a single depth, 1-ply; the action with the maximum output is picked.
 \end{itemize}
 
 \subsubsection{Modnet}
-This module defines the operations for extracting features from the game board, testing, training, reading and writing three kinds of modular nueral networks. The architecture of those networks is explained in section-\ref{modnet}. 
+This module defines the operations for extracting features from the game board, testing, training, reading and writing three kinds of modular nueral networks. The architecture of those networks is explained in section-\ref{modnet}. This module heavily depends on Subnet module. A game-specific gating program is implemented in this class which determines which subnetwork applies to a given set of extracted features.
 
 \subsubsection{Subnet}
-This module includes the Nueral Network implementation using tensorflow.
+This module includes the Nueral Network implementation using tensorflow. It provides routines for storing and accessing model, checkpoints and summaries generated by tensorflow.  
 
-\subsection{Monolithic Nueral Network}
-The implementation for this network is based on TD-Gammon of Tesauro. An implementation with tensorflow was used as the basis for this nueral network.  
-- nueral network specifications
+\subsection{Nueral Network Architecture} \label{modnet}
+The first implementation for this network will be based on TD-Gammon of Tesauro. 
+For the function evaluation, eligibility traces are going to be included as part of the gradient computations. 
+The network compromises of 3 layers: an input layer, a hidden layer and an output layer. 
 For the basic implementation of Tesauro's TD-Gammon, the following expert features were included to the input layer:
 \begin{table}[htb]
     \centering
-    \caption{Expert features included to the raw inputs}
+    \caption{Expert features could to the raw inputs for each player}
     \vspace*{6pt}
     \label{exfeat}
-    \begin{tabular}{ccc}
+    \begin{tabular}{cp{12cm}}
         \hline
         \hline
         Feature name & Description \\ 
         \hline
-        bar\_pieces\_1 & number of checkers held on the bar for player 1 \\
+        bar\_pieces & number of checkers held on the bar for a player\\
         \hline
-        bar\_pieces\_2 & number of checkers held on the bar for player 2 \\
+        pip\_count & pip count for a player \\
         \hline
-        pipcount\_1 & pip count for player 1 \\
+        off\_pieces & percentage of pieces that a player has beared off \\
         \hline
-        pipcount\_2 & pip count for player 2 \\
-        \hline
-        off\_piece\_perc\_1 & percentage of pieces that player 1 has beared off \\
-        \hline
-        off\_piece\_perc\_2 & percentage of pieces that player 2 has beared off \\
+        hit\_pieces & percentage of pieces that are at risk of being hit (single checker in a position which the opponent can hit) for a player \\
         \hline
     \end{tabular}
 \end{table}
-
-\subsection{Modular Nueral Network} \label{modnet}
 \subsubsection{Designer Domain Decomposition Architecture}
+
 - strategies - racing game, 
 - list of conditions to switch to each network aka gating program
 - learning the strategy is not done explicitly but it is left to the agent to figure out the strategy based on the current board configuration. This is handled by the gating program. It triggers a certain nueral network based on the extracted features from the game board)
 
 \subsubsection{Meta-Pi Networks}
-- This network will replace the gating program. It will be used to determine the best nueral network to be triggered based on a give input. The benefit of this approach is that it could discover that some conditions in the gating program that used to trigger one nueral network might be more fitting for another network to handle such input. This will allow the agent to develop a more flexible strategy and eventually better decisions. 
+- This network will replace the gating program. It will be used to determine the best nueral network to be triggered based on a give input. The benefit of this approach is that it could discover that some conditions in the gating program that used to trigger one nueral network might be more fitting for another network to handle such input; reduce the stiffness introduced by hard coding the triggers for the sub-networks. This will allow the agent to develop a more flexible strategy and eventually better decisions.
 
 
+\subsection{Training}
+A Monolithic Nueral Network will be used as a bench reference for all other networks that will trained. This network will be trained on 1 million games. The implementation will be based on TD-Gammon of Tesauro. 
 
+\subsection{Testing and Evaluation}
+As the networks are training, in every 5000 game, a test will be ran against the random player to check the current performance of the networks architecture implemented. 
 
 \subsection{Figures and Tables}
 In general, figures and tables should not appear before they are cited.  Place figure captions below the figures; place table titles above the tables.  If your figure has two parts, for example, include the labels ``(a)'' and ``(b)'' as part of the artwork.  Please verify that figures and tables you mention in the text actually exist.  make sure that all tables and figures are numbered as shown in Table \ref{units} and Figure 1.
