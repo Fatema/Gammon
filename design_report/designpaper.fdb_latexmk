@@ -1,15 +1,15 @@
 # Fdb version 3
-["bibtex designpaper"] 1548109304 "designpaper.aux" "designpaper.bbl" "designpaper" 1548109334
+["bibtex designpaper"] 1548200977 "designpaper.aux" "designpaper.bbl" "designpaper" 1548200979
   "/usr/local/texlive/2016/texmf-dist/bibtex/bst/harvard/agsm.bst" 1136766823 25549 e3d0f1ab4ae55e777f7352db30e2c6f7 ""
-  "designpaper.aux" 1548109333 2565 00da32362caaa1c2adae818011684035 ""
+  "designpaper.aux" 1548200978 3458 994b7a5549878e8a9b61de5d7fb850bc ""
   "designpaper.bcf" 0 -1 0 ""
   "projectpaper.bib" 1288995656 471 a2ae6de230ec84ae1095e4c22721ab0b ""
   (generated)
-  "designpaper.bbl"
   "designpaper.blg"
-["pdflatex"] 1548109333 "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" "./designpaper.pdf" "designpaper" 1548109334
-  "./designpaper.aux" 1548109333 2565 00da32362caaa1c2adae818011684035 ""
-  "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" 1548109333 9117 ed4429cd5be193aa2986fabc2cee9b27 ""
+  "designpaper.bbl"
+["pdflatex"] 1548200978 "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" "./designpaper.pdf" "designpaper" 1548200979
+  "./designpaper.aux" 1548200978 3458 994b7a5549878e8a9b61de5d7fb850bc ""
+  "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" 1548200976 12837 a6ac78b2e9041f6c8fd74dfd389cc80c ""
   "/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2016/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1136768653 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -69,13 +69,13 @@
   "/usr/local/texlive/2016/texmf-var/web2c/pdftex/pdflatex.fmt" 1480246552 3873398 95537fc27d949865190528796909ef46 ""
   "/usr/local/texlive/2016/texmf.cnf" 1463979140 577 2938757e76f31531e65cc647e3507693 ""
   "backgammon.png" 1548017963 1850203 dc4eb36d93115740bb258c70e3ab6dff ""
-  "designpaper.aux" 1548109333 2565 00da32362caaa1c2adae818011684035 ""
-  "designpaper.bbl" 1548109304 462 1822dbc9b54cab12e34c1d80f4e5c05c "bibtex designpaper"
-  "designpaper.tex" 1548109333 9117 ed4429cd5be193aa2986fabc2cee9b27 ""
+  "designpaper.aux" 1548200978 3458 994b7a5549878e8a9b61de5d7fb850bc ""
+  "designpaper.bbl" 1548200978 462 1822dbc9b54cab12e34c1d80f4e5c05c "bibtex designpaper"
+  "designpaper.tex" 1548200976 12837 a6ac78b2e9041f6c8fd74dfd389cc80c ""
   "durhampaper.sty" 1265123134 2229 2ff83ec57d52d4d004a6047c981d45a8 ""
   (generated)
-  "./designpaper.log"
-  "designpaper.pdf"
   "designpaper.log"
   "designpaper.aux"
   "./designpaper.pdf"
+  "./designpaper.log"
+  "designpaper.pdf"

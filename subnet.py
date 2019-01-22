@@ -43,11 +43,11 @@ class SubNet:
     def set_decay(self):
         # lambda decay
         self.lamda = tf.maximum(0.7, tf.train.exponential_decay(0.9, self.global_step,
-                                                           30000, 0.96, staircase=True), name='lambda')
+                                                                30000, 0.96, staircase=True), name='lambda')
 
         # learning rate decay
         self.alpha = tf.maximum(0.01, tf.train.exponential_decay(0.1, self.global_step,
-                                                            40000, 0.96, staircase=True), name='alpha')
+                                                                 40000, 0.96, staircase=True), name='alpha')
 
         tf.summary.scalar('lambda', self.lamda)
         tf.summary.scalar('alpha', self.alpha)

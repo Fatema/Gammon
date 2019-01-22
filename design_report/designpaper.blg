@@ -3,9 +3,14 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: designpaper.aux
 The style file: agsm.bst
 Database file #1: projectpaper.bib
+Warning--I didn't find a database entry for "DBLP:conf/icml/Tesauro92"
+Warning--I didn't find a database entry for "DBLP:journals/ai/Tesauro02"
+Warning--I didn't find a database entry for ""
+Warning--I didn't find a database entry for "exg"
+Warning--I didn't find a database entry for "gnubg"
 You've used 3 entries,
             2909 wiz_defined-function locations,
-            653 strings with 4916 characters,
+            659 strings with 5024 characters,
 and the built_in function-call counts, 5340 in all, are:
 = -- 812
 > -- 72
@@ -44,3 +49,4 @@ warning$ -- 0
 while$ -- 63
 width$ -- 0
 write$ -- 41
+(There were 5 warnings)
