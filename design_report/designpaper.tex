@@ -42,6 +42,15 @@ Note that the whole report, including the references, should not be longer than 
 
 \subsection{Backgammon Game}
 Game rules followed and game set up.
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.6\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{backgammon}.png}
+    \end{minipage}
+    \caption{Backgammon board setup}
+    \label{board}
+\end{figure}
 
 \subsection{TD Gammon}
 first implementation, limitations
@@ -103,7 +112,7 @@ This section presents the proposed solutions of the problems in detail. The desi
     \centering
     \caption{List of Non-functional Requirements}
     \vspace*{6pt}
-    \label{req}
+    \label{nonreq}
     \begin{tabular}{cp{12cm}c}
         \hline
         \hline
@@ -125,60 +134,18 @@ This section presents the proposed solutions of the problems in detail. The desi
 
 - after state value function
 
-\subsubsection{Depth search algorithm}
+\subsubsection{n-ply search algorithm}
+% (https://www.gnu.org/software/gnubg/manual/html_node/The-depth-to-search-and-plies.html)
+Following Tesauro's research and recent backgammon softwares, the search algorithm to determine the best move for the current turn effects the general training outcome; it is evident from (backgammon league table) that better results are expected from 2-ply and 3-ply search. 1-ply and 2-ply search algorithms will be tested in this project. The 2-ply algorithm algorithm will be implemented as follows:
 
-\subsection{Nueral Network Architecture} \label{modnet}
-For the Monolithic Nueral Network, it will be based on Tesauro's TD Gammon implementation. A fully-connected feed-forward nueral networks with a single hidden layer. The architecture consists of one input layer with 296 inputs units which consists of raw inputs representing the checkers configuration on the board and expert features mentioned in table-\ref{exfeat}).
-\begin{table}[htb]
-    \centering
-    \caption{Expert features for each player}
-    \vspace*{6pt}
-    \label{exfeat}
-    \begin{tabular}{cp{12cm}}
-        \hline
-        \hline
-        Feature name & Description \\ 
-        \hline
-        x\_token & 1 if the player is playing with x token perspective, 0 otherwise \\
-        \hline
-        o\_token & 1 if the player is playing with o token perspective, 0 otherwise \\
-        \hline
-        bar\_pieces & number of checkers held on the bar for a player\\
-        \hline
-        pip\_count & pip count for a player \\
-        \hline
-        off\_pieces & percentage of pieces that a player has beared off \\
-        \hline
-        hit\_pieces & percentage of pieces that are at risk of being hit (single checker in a position which the opponent can hit) for a player \\
-        \hline
-    \end{tabular}
-\end{table}
+First, to select a move, the ai agent will look ahead not only the positions that would immediately result, but also the opponent's possible dice rolls and moves. Assuming the opponent always make the best move, the expected value of each move was computed and the best was selected. 
 
-The modular nueral networks that will be implemented for this project consist of a combination of the following networks:
-\begin{enumerate}
-    \item One network for racing game; the checkers cannot be hit anymore by another checker or the checkers layout is close to this outcome
-    \item One network for back/holding game positions; the player has some checkers on the bar or two or more checkers in 18, 19, 20 or 21 point
-    \item One network for priming game; if the player has a prime of 4-5 fields (a long wall of checkers)
-    \item One default network for all other positions
-\end{enumerate}
-Initially all networks will have the same layout as the monolithic nueral network, however the networks don't necessarly need to have the same layout. Different layouts will be tested to configure each nueral network e.g. racing game network does not need inputs for all fields since most checkers will be beared off or close to being beared off.
+It is important to note that this computation could take some time and in timed games this could be unfavourable. The only difference between 1-ply and 2-ply is that the 1-ply won't check all the possible rolls of the opponents and stops after evaulating the immediate best action.
 
-\subsubsection{Designer Domain Decomposition Architecture}
-
-\subsubsection{Meta-Pi Networks}
-- This network will replace the gating program. It will be used to determine the best nueral network to be triggered based on a give input. The benefit of this approach is that it could discover that some conditions in the gating program that used to trigger one nueral network might be more fitting for another network to handle such input; reduce the stiffness introduced by hard coding the triggers for the sub-networks. This will allow the agent to develop a more flexible strategy and eventually better decisions.
 
 \subsection{System Components}
-Python 3.6 will used as the language for this project. The nueral networks will be implemented using tensorflow package with GPU support. The figure below shows the expected structure of the project.
-\begin{figure}[htp] 
-    \centering
-    \begin{minipage}{0.6\textwidth}
-        \centering
-        \includegraphics[width=1\textwidth]{{backgammon}.png}
-    \end{minipage}
-    \caption{Backgammon board setup}
-    \label{board}
-\end{figure}
+Python 3.6 will used as the language for this project. The nueral networks will be implemented using tensorflow package. The figure below shows the expected structure of the project.
+
 
 \subsubsection{Game}
 The user interface for the game is not the focus of this project, so a pre-existing interface written by ... will used. The implementation will be refactored so it can be used in the project. This module will hold the game setup and define the rules and constraints of the game e.g. take an action, find legal moves, game board setup ... etc.
@@ -192,11 +159,111 @@ There are 3 types of agents will be implemented for this project, all agents wil
 \end{itemize}
 
 \subsubsection{Modnet}
-This module defines the operations for extracting features from the game board, testing, training, reading and writing three kinds of modular nueral networks. The architecture of those networks is explained in section-\ref{modnet}. This module heavily depends on Subnet module. A game-specific gating program is implemented in this class which determines which subnetwork applies to a given set of extracted features.
+This module will define the operations for extracting features from the game board, testing and training modular nueral network. This module will heavily depend on Subnet module. A game-specific gating program will be implemented in this class which determines which subnetwork applies to a given set of extracted features. For the different modular nueral networks to be trained for this project, different instances of this class will be created as each modular network will require the gating program to be modified.
 
 \subsubsection{Subnet}
-This module includes the Nueral Network implementation using tensorflow. It provides routines for storing and accessing model, checkpoints and summaries generated by tensorflow.  
+This module will include the Nueral Network implementation using tensorflow. It will provide routines for storing and accessing model, checkpoints and summaries generated by tensorflow. In addition, it will include the forward propagation and backpropagation algorithm. All networks created for this project will use an instance of this module; networks used in modular nueral network architecture and monolithic nueral network. The architecture of those networks will be explained in the next section.
 
+\subsection{Nueral Network Architecture} \label{modnet}
+\subsubsection{Monolithic Nueral Network}
+For this network, it will be based on Tesauro's TD Gammon implementation; a fully-connected feed-forward nueral networks with a single hidden layer. Initially, the architecture will consist of one input layer I with 298 units which will consist of 288 raw inputs representing the checkers configuration on the board, each field in the board is represented by 6 units as there are 24 fields so 144 total units and each player has thier own configuration represented seperately making the total 288, and in addition 10 input units as expert features, table-\ref{exfeat}.
+\begin{table}[htb]
+    \centering
+    \caption{Expert features for input layer}
+    \vspace*{6pt}
+    \label{exfeat}
+    \begin{tabular}{cp{12cm}}
+        \hline
+        \hline
+        Feature name & Description \\ 
+        \hline
+        x\_token & 1 if the player is playing with x token perspective, 0 otherwise \\
+        \hline
+        o\_token & 1 if the player is playing with o token perspective, 0 otherwise \\
+        \hline
+        bar\_pieces\_1 & number of checkers held on the bar for current player\\
+        \hline
+        bar\_pieces\_2 & number of checkers held on the bar for opponent\\
+        \hline
+        pip\_count\_1 & pip count for current player \\
+        \hline
+        pip\_count\_2 & pip count for opponent \\
+        \hline
+        off\_pieces\_1 & percentage of pieces that current player has beared off \\
+        \hline
+        off\_pieces\_2 & percentage of pieces that opponent has beared off \\
+        \hline
+        hit\_pieces\_1 & percentage of pieces that are at risk of being hit (single checker in a position which the opponent can hit) for current player \\
+        \hline
+        hit\_pieces\_2 & percentage of pieces that are at risk of being hit (single checker in a position which the player can hit) for opponent\\
+        \hline
+    \end{tabular}
+\end{table}
+
+As part of the network architecture, there will be one hidden layer H with 50 units and one output layer O with 1 unit representing the winning probability. The network will have weights $w_{ih}$ for all input units $I_i$ to hidden unit $H_h$ and weights $w_{ho}$ for all hidden units $H_h$ to output unit $O_o$. The weights will be intialized to be random values, hence the initial strategy is a random strategy (Tesauro 1992, 2002). Each hidden unit and output unit will have a bias $b_h$ and $b_o$ with sigmoid activation. Each bias will be intialized to an array of constant values of $0.1$. 
+\begin{figure}[htb] 
+    \centering
+    \begin{minipage}{0.4\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mononn}.png}
+    \end{minipage}
+    \caption{Nueral Network architecture}
+    \label{board}
+\end{figure}
+
+The implementation of this network will be written in python using tensorflow package. Tensorflow was picked as it is easy to use, to generate training progress summary, to save and to restore the trained network. A lot of implementations of this network are available in the open source community and will be used as a reference for this project; two code basis from github \_ and \_ will be used and referred through out the life cycle of the project. The main challenge with using open source code will be debugging the code and checking its correctness.
+
+
+\subsubsection{Modular Nueral Network}
+The modular nueral networks that will be implemented for this project consist of a combination of the following networks:
+\begin{enumerate}
+    \item One network for racing game; the checkers cannot be hit anymore by another checker or the checkers layout is close to this outcome (it becomes a race for who can bear off faster)
+    \item One network for back game positions; the player is behind in the race (pipcount) but has two or more anchors (two checkers at one field) in the opponent's home board. This network is also used when there are many checkers on the bar
+    \item One network for priming game; if the player has a prime of 4-5 fields (a long wall of checkers). This is considered a defensive game
+    \item One default network for all other positions
+\end{enumerate}
+% \begin{figure}[htb] 
+%     \centering
+%     \begin{minipage}{0.4\textwidth}
+%         \centering
+%         \includegraphics[width=1\textwidth]{{back_game}.png}
+%     \end{minipage}
+%     \begin{minipage}{0.4\textwidth}
+%         \centering
+%         \includegraphics[width=1\textwidth]{{prime}.png}
+%     \end{minipage}
+%     \caption{Back Game and Prime Game for Backgammon}
+%     \label{strategies}
+% \end{figure}
+Initially each network will have the same layout/architecture as the monolithic nueral network, however the networks don't necessarly need to have the same layout. Different layouts will be tested to configure each nueral network e.g. racing game network does not need inputs for all fields since most checkers will be beared off or close to being beared off. This could help reduce computing time and thus increase the efficiency of the training. Modular Nueral Network architecture generally results in the need to train the network on more games than the monolithich network and this is due that not all networks could be accessed equal amount of time and thus not trained enough (Boyan but check this again).
+
+There are two types of Modular Nueral Network architectures that will be implemented in this project:
+\begin{itemize}
+    \item \textbf{Designer Domain Decomposition Network (DDD) -}The DDD network consists of n monolithic nueral networks and a hard-coded gating program, figrue \ref{ddd}. The gating program, based on the work of Boyan (year), partition the domain space into n classes. For this project the n classes are represented by the different backgammon strategies; there are other possible decompositions for the backgammon strategies but Racing, Back and Prime games are going to be focused on the most. 
+    \begin{figure}[htb] 
+        \centering
+        \begin{minipage}{0.8\textwidth}
+            \centering
+            \includegraphics[width=1\textwidth]{{dddnn}.png}
+        \end{minipage}
+        \caption{Designer Domain Decomposition Network, gating program classifying the input to belong to the middle network and only that network is active and gives an output}
+        \label{ddd}
+    \end{figure}
+    In both forward feeding and backward propagation, the gating program will be called to select an appropiate network for the current board extracted features (inputs). Exactly one network is activate at any time. This architecture will be used in the first stages of the project.
+
+    \item \textbf{Meta-Pi Networks -}
+    The gating program in the DDD network will suffer from a blemish effect as noted by Boyan (year). The Meta-Pi network is a trainable gating network, figure \ref{metapi}.
+    \begin{figure}[htb] 
+        \centering
+        \begin{minipage}{0.8\textwidth}
+            \centering
+            \includegraphics[width=1\textwidth]{{metapinn}.png}
+        \end{minipage}
+        \caption{Meta-Pi gating network, the output of this network is the best suited network for the given input, that network's outcome is then evaulated}
+        \label{metapi}
+    \end{figure}
+    This network will be used to determine the most suited network to be triggered based on a give input. The benefit of this approach is that it could discover that some conditions that could have been missed in the gating program; reduce the stiffness introduced by hard coding the triggers for the networks. This will allow the agent to develop a more flexible strategy and eventually better decisions. This network requries the other networks to be fully trained and locked and only the meta-pi network would be updated in the training process. As a result, this network will be introduced in later stages of the project once all needed networks for the modular network are trained.
+\end{itemize}
 
 \subsection{Training}
 \subsection{Monolothic Nueral Network}

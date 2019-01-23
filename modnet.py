@@ -146,7 +146,7 @@ class Modnet:
                         feats[min(i, 5)] += 1
                 features += feats
             # print('pip_count before off pieces', pip_count)
-            features.append(float(len(game.bar_pieces[p])) / 2.)
+            features.append(float(len(game.bar_pieces[p])) / 2.) # td gammon had it like this to scale the range between 0 and 1
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
             # pip_count for the player the closer to home the less the value is
             # print(game.bar_pieces[p], game.off_pieces[p])
