@@ -1,15 +1,15 @@
 # Fdb version 3
-["bibtex designpaper"] 1548285460 "designpaper.aux" "designpaper.bbl" "designpaper" 1548285878
+["bibtex designpaper"] 1548332269 "designpaper.aux" "designpaper.bbl" "designpaper" 1548332272
   "/usr/local/texlive/2016/texmf-dist/bibtex/bst/harvard/agsm.bst" 1136766823 25549 e3d0f1ab4ae55e777f7352db30e2c6f7 ""
-  "designpaper.aux" 1548285877 4080 300d64fcfca44e68dd2eb65a2a71b0cd ""
+  "designpaper.aux" 1548332271 3932 4adfe738fefeeaeea45e00beae1ed6b0 ""
   "designpaper.bcf" 0 -1 0 ""
   "projectpaper.bib" 1288995656 471 a2ae6de230ec84ae1095e4c22721ab0b ""
   (generated)
   "designpaper.bbl"
   "designpaper.blg"
-["pdflatex"] 1548285876 "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" "./designpaper.pdf" "designpaper" 1548285878
-  "./designpaper.aux" 1548285877 4080 300d64fcfca44e68dd2eb65a2a71b0cd ""
-  "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" 1548285876 19405 e3d67576065eba2a8a663abd742c6abe ""
+["pdflatex"] 1548332269 "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" "./designpaper.pdf" "designpaper" 1548332272
+  "./designpaper.aux" 1548332271 3932 4adfe738fefeeaeea45e00beae1ed6b0 ""
+  "/Users/FatemaK/Desktop/Gammon/design_report/designpaper.tex" 1548332265 19918 2052f0cdd3e7be416ca4208691f84871 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2016/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1136768653 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -71,17 +71,20 @@
   "/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1480246516 1888048 f2c5faed5981a516f406b2ccc20bff71 ""
   "/usr/local/texlive/2016/texmf-var/web2c/pdftex/pdflatex.fmt" 1480246552 3873398 95537fc27d949865190528796909ef46 ""
   "/usr/local/texlive/2016/texmf.cnf" 1463979140 577 2938757e76f31531e65cc647e3507693 ""
+  "backgame.png" 1548325239 26921 741ecf80025fa7ac92da8417d9c64a09 ""
   "backgammon.png" 1548017963 1850203 dc4eb36d93115740bb258c70e3ab6dff ""
   "dddnn.png" 1548243826 103565 83d1e09e18427d8615e4b014f53dfc4d ""
-  "designpaper.aux" 1548285877 4080 300d64fcfca44e68dd2eb65a2a71b0cd ""
-  "designpaper.bbl" 1548285460 462 1822dbc9b54cab12e34c1d80f4e5c05c "bibtex designpaper"
-  "designpaper.tex" 1548285876 19405 e3d67576065eba2a8a663abd742c6abe ""
+  "designpaper.aux" 1548332271 3932 4adfe738fefeeaeea45e00beae1ed6b0 ""
+  "designpaper.bbl" 1548332269 462 1822dbc9b54cab12e34c1d80f4e5c05c "bibtex designpaper"
+  "designpaper.tex" 1548332265 19918 2052f0cdd3e7be416ca4208691f84871 ""
   "durhampaper.sty" 1265123134 2229 2ff83ec57d52d4d004a6047c981d45a8 ""
   "metapinn.png" 1548283118 139270 3823d415e035e2c101276590a07d19cc ""
   "mononn.png" 1548240373 107849 6da12ef801d089b1fc19583e44615169 ""
+  "prime.png" 1548325231 23798 aad2aa493b91a0591d3b6193aba44204 ""
+  "syscomp.png" 1548324320 62334 70934338c1310be22f18ff59ffa91de4 ""
   (generated)
-  "designpaper.aux"
-  "designpaper.log"
-  "designpaper.pdf"
-  "./designpaper.log"
   "./designpaper.pdf"
+  "designpaper.aux"
+  "./designpaper.log"
+  "designpaper.pdf"
+  "designpaper.log"
