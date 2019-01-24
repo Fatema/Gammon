@@ -25,13 +25,14 @@
 
 \begin{abstract}
 \subsection{Context/Background}
-TD-Gammon  of Tesauro \cite{DBLP:conf/icml/Tesauro92,DBLP:journals/ai/Tesauro02} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{DBLP:journals/ai/Tesauro02}. However, the monolithic nueral network soon reached its limitation an outcome studied by Boyan \cite{} and a modular nueral network becomes more suitable to over come this limitation. The newest software for Backgammon build on top of the modular architecture such as eXtreme Gammon \cite{exg} and GNUBG \cite{gnubg}.
+Backgammon has been the subject of many studies involving artificial intelligence and machine learning. 
+TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, the monolithic nueral network soon reached its limitation an outcome studied by Boyan \cite{} and a modular nueral network becomes more suitable to over come this limitation. The newest software for Backgammon build on top of the modular architecture such as eXtreme Gammon \cite{} and GNUBG \cite{}.
 \subsection{Aims}
-The aim of this project is to study the influence of including a hybrid of known backgammon strategies such as Priming and Back games as part of the nueral network architecture and to find a combination of strategies to maximize the performance. 
+The aim of this project is to find new startegy for backgammon; a hybrid of known startegies will be used as the basis for the new startegy. 
 \subsection{Method}
-Initially the nueral network from Tesauro's TD Gammon will be implemented and trained. This network will be referred to as monolithic nueral network. Then, multiple Modular Nueral Networks that include hybrid of backgammon strategies will be implemented and trained. 
+A modular neural network architecture will be used to incorporate the different backgammon strategies. The priming and back games will be used for this project. Two modular networks will be implemented and trained, one that will include the 2 strategies seperately and another one that will include a hybrid of the 2 startegies. A single nueral network based on TD Gammon will also be implemented and trained. The modular networks will be evaulated against the single network. Test games against an expert user will be included to validate the new startegy.
 \subsection{Proposed Solution}
-
+A python script that allows a user 
 
 \end{abstract}
 \begin{keywords}
@@ -39,14 +40,8 @@ Backgammon; Reinforcement Learning; Modular Nueral Network;
 \end{keywords}
 
 \section{Introduction}
-\subsection{Reinforcement Learning}
-Backgammon and many other boardgames have been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Monolithic Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, TD Gammon network ignored some important aspects like the racing game (no hits are possible as both player's checkers are past each other). Boyan \cite{} showed that the use of different networks for different subtasks of the game can improve over learning with a single neural network for the entire game. 
-
-\subsection{Project Overview}
-This project will focus on the modular nueral network following a similar architecture to the one used by Boyan \cite{} to incorporate different backgammon strategies. 
-
-\subsection{Backgammon Game}
-Backgammon is a game played with dice and checkers on a board consisting of 24 fields, in which each player tries to move his checkers home and bear them off while preventing the opponent from doing the same thing. Figure \ref{board} illustrates the basic setup that will be used for this project.
+\subsection{Backgammon}
+Backgammon is a game played with dice and checkers on a board consisting of 24 fields, in which each player tries to move his checkers home and bear them off while preventing the opponent from doing the same thing \cite{}. Figure \ref{board} illustrates the basic setup that will be used for this project.
 \begin{figure}[htp] 
     \centering
     \begin{minipage}{0.6\textwidth}
@@ -54,10 +49,38 @@ Backgammon is a game played with dice and checkers on a board consisting of 24 f
         \includegraphics[width=1\textwidth]{{boardsetup}.png}
     \end{minipage}
     \caption{Backgammon board setup}
-    \label{board}
+    \label{bbs}
 \end{figure}
 
-\subsection{Research Questions}
+\subsection{Early work}
+Backgammon and many other boardgames have been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a single neural network that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. Extending on the work of Tesauro, Boyan \cite{} showed that the use of different networks for different subtasks of the game can improve over learning with a single neural network for the entire game. Many AI softwares for Backgammon use modular neural network architecture; GNU-Backgammon \cite{} uses 3 different nueral networks. 
+
+\subsection{Project Overview}
+This project will focus on modular neural network architecture in incoporating a hybrid of backgammon startegies to find a new strategy. In addition, the performance of the new strategy will be evaluated by comparing it to another network that includes the strategies seperately. Combinations of 2 startegies will be studied: \textbf{The back game}, the player tries to hold both anchors as long as possible and force his opponent to bear in or bear off awkwardly \cite{}. \textbf{The priming game}, a particular type of holding game that involves building a prime — a long wall of the player's pieces, ideally 6 points in a row — in order to block the movement of the opponent’s pieces that are behind the wall \cite{}.
+\begin{figure}[htb] 
+    \centering
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{prime}.png}
+    \end{minipage}
+    \hspace{1.2em}
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{backgame}.png}
+    \end{minipage}
+    \caption{Illustration of Prime and Back games}
+    \label{games}
+\end{figure}
+
+\subsection{Rsearch Questions}
+The following questions will be investigated in this project:
+\begin{enumerate}
+    \item How will combining game strategies for backgammon influence learning outcome? 
+    \item Would using hybrid startegies result in the agent learning a new strategy? or would one strategy be more dominant than the other?
+    \item How effective would the hybrid startegies if the startegies were included seperately?
+    \item How would adding doubling cube to the network evaluation influence the learning outcome?
+\end{enumerate}
+\subsection{Deliverables}
 \begin{itemize}
     \item minimum objectives
     \begin{enumerate}
@@ -102,13 +125,11 @@ Backgammon is a game played with dice and checkers on a board consisting of 24 f
         \hline
         FR3 & Monolithic Nueral Network should be implemented and trained based on Tesauro's TD Gammon & High \\
         \hline
-        FR4 & Modular Nueral Network that includes Racing Game strategy should be implemented and trained & High \\
+        FR7 & Modular Nueral Network that includes Holding and Priming Game strategies seperately should be implemented and trained & High \\
         \hline
-        FR5 & Modular Nueral Network that includes Racing and Holding Game strategies should be implemented and trained & High \\
+        FR7 & Modular Nueral Network that includes a hybrid of Holding and Priming Game strategies should be implemented and trained & High \\
         \hline
-        FR6 & Modular Nueral Network that includes Racing and Priming Game strategies should be implemented and trained & High \\
-        \hline
-        FR7 & Modular Nueral Network that includes Racing, Holding and Priming Game strategies should be implemented and trained & High \\
+        FR7 & A testing module should provide capabilities of evaluating and testing the nueral networks & High \\
         \hline
         FR8 & depth (n-ply) search algorithm should be implemented and incoporated into AI agent in FR2 & Medium \\
         \hline
@@ -116,7 +137,7 @@ Backgammon is a game played with dice and checkers on a board consisting of 24 f
         \hline
         FR10 & Graphical User interface for a Human agent to play against the AI agent from FR2 should be implemented & Low \\
         \hline
-        FR10 & Doubling cude evaluation. A hueritic function should be implemented to determine when to use the doubling cube or to accept or refuse the double & Low \\
+        FR10 & Doubling cude evaluation. A hueristic function should be implemented to determine when to use the doubling cube or to accept or refuse the double & Low \\
         \hline
         
     \end{tabular}
@@ -144,7 +165,7 @@ Backgammon is a game played with dice and checkers on a board consisting of 24 f
 Temporal difference will be used 
 
 \subsubsection{1-ply search algorithm}
-A ply is one turn taken by one user; n-ply refers to how far the player will look ahead when evaluating a move/action \cite{backgammon galore}. For the first stages of the project, the AI agent will use a 1-ply search algorithm to pick the best legal action for the current turn. Each action will be evaulated in the nueral network, forward propagation, and the action with the maximum outcome will be returned.
+A ply is one turn taken by one user; n-ply refers to how far the player will look ahead when evaluating a move/action \cite{}. For the first stages of the project, the AI agent will use a 1-ply search algorithm to pick the best legal action for the current turn. Each action will be evaulated in the nueral network, forward propagation, and the action with the maximum outcome will be returned.
 
 \subsection{System Components}
 Python 3.6 will used as the language for this project. The nueral networks will be implemented using tensorflow package. Tensorflow will be used as it is easy to use, to generate training progress summary, to save and to restore the trained network. Figure \ref{syscomp} shows the expected structure and component dependencie of this project. 
@@ -223,26 +244,13 @@ As part of the network architecture, there will be one hidden layer H with 50 un
 \subsubsection{Modular Nueral Network}
 To incorporate backgammon startegies, modular nueral architecture will be implemented. The strategies will be represeneted by different monolithic nueral networks that will be activated when certain board configurations are reached. This approach has been implemented by Boyan() and what most recent softwares such as GNU-Backgammpn follow. The modular networks that will be implemented for this project will consist of a combination of the following networks:
 \begin{enumerate}
-    \item One network for racing game; the checkers cannot be hit anymore by another checker or the checkers layout is close to this outcome (it becomes a race for who can bear off faster) The goal of this network is for the player to bear off the checkers as quickly as possible \cite{}.
-    \item One network for back game positions; the player is behind in the race (pipcount) but has two or more anchors (two checkers at one field) in the opponent's home board. This network will also be used when there are many checkers on the bar. The back game player tries to hold both anchors as long as possible and force his opponent to bear in or bear off awkwardly \cite{}. 
-    \item One network for priming game; if the player has a prime of 4-5 fields (a long wall of checkers). This is considered a defensive game and the goal is to trap the opponent checker behind the prime \cite{}. 
+    \item One network for racing game; the checkers cannot be hit anymore by another checker or the checkers layout is close to this outcome.
+    \item One network for back game positions; the player is behind in the race (pipcount) but has two or more anchors (two checkers at one field) in the opponent's home board. This network will also be used when there are many checkers on the bar.
+    \item One network for priming games; if the player has a prime of 4-5 fields (a long wall of checkers) 
+    \item One network for a hybrid priming and back game; combines the conditions for both games
     \item One default network for all other positions
 \end{enumerate}
 Those networks will be used to allow the learning agent to better evaluate the positions and reach a strategy that is close to the strategy followed by professional players from each network. Initially each network will have the same layout/architecture as the monolithic nueral network, however the networks don't necessarly need to have the same layout. At later stages, different layouts will be tested to configure each nueral network e.g. racing game network does not need inputs for all fields since most checkers will be beared off or close to being beared off. This could help reduce computing time and thus increase the efficiency of the training.
-\begin{figure}[htb] 
-    \centering
-    \begin{minipage}{0.2\textwidth}
-        \centering
-        \includegraphics[width=1\textwidth]{{prime}.png}
-    \end{minipage}
-    \hspace{1em}
-    \begin{minipage}{0.3\textwidth}
-        \centering
-        \includegraphics[width=1\textwidth]{{backgame}.png}
-    \end{minipage}
-    \caption{Illustration of Prime and Back games}
-    \label{games}
-\end{figure}
 
 There are two types of Modular Nueral Network architectures that will be implemented in this project:
 \begin{itemize}
@@ -275,16 +283,16 @@ There are two types of Modular Nueral Network architectures that will be impleme
 \subsection{Training}
 A total of 5 networks will be trained; 1 monolithic network and 4 modular network with different strategy combinations. 
 
-The training strategy will be based on the work of Tesauro, Boyan and Weiring. The monolithic network and the modular networks with the DDD architecture will be trained by self-play using TD($\lambda$) learning with a decaying learning rate $\alpha$ strating from 0.1 until 0.01, a discount factor $\gamma$ of 1 and a decaying value for $\lambda$ starting from 0.9 until 0.7; exponetial decay will be used for both learning rate $\alpha$ and $\lambda$. Each network will be trained on 1,000,000 games. After each 5000 games, the network will be tested for 2500 games against the previously stored version of the network itself. This will allow to monitor the progress of the network's training. 
+The training strategy will be based on the work of Tesauro, Boyan and Weiring. The monolithic network and the modular networks with the DDD architecture will be trained by self-play using TD($\lambda$) learning with a decaying learning rate $\alpha$ strating from 0.1 until 0.01, a discount factor $\gamma$ of 1 and a decaying value for $\lambda$ starting from 0.9 until 0.7; exponetial decay will be used for both learning rate $\alpha$ and $\lambda$. Each network will be trained on 500,000 games. After each 5000 games, the network will be tested for 2500 games against the previously stored version of the network itself. This will allow to monitor the progress of the network's training. 
 
-Before running the full training with 1,000,000 games, different configurations for each network will be tested e.g. the addition of expert features as part of the input layer. The number of training games will be reduced to 100,000 and the resultant network will be tested against the other configurations of that network for 2000 games. The best combination of configurations will be used to fully train each network.
+Before running the full training with 500,000 games, different configurations for each network will be tested e.g. the addition of expert features as part of the input layer. The number of training games will be reduced to 100,000 and the resultant network will be tested against the other configurations of that network for 2000 games. The best combination of configurations will be used to fully train each network.
 
-Once DDD networks are finished training, meta-pi gating network will be trained in a similar way, but it will be continuingly tested against the DDD network .
+Once DDD networks are finished training, meta-pi gating network will be trained following the same strategy, but it will be continuously tested against the DDD network .
 
 \subsection{Evaluation}
 All modular networks will be tested for 5000 games against the monolithic network. The result obtained will give an indication of the general performance of the modular networks and effictiveness of the implemented architecture. 
 
-Test games with certain starting configurations will also be used to evaluate the strategies followed by each modular network, answering the question if the modular networks have indeed learned the strategy imposed for the specific network. For a random sample of games, the actions taken by the AI agent will be recorded and compared for each network. Other statistical values will also be collected and averaged such as the number of turns taken and the end outcome (win/lose). 
+Test games with certain starting configurations, 5 different configurations for each racing, back and prime games, will also be used to evaluate the strategies followed by each modular network, answering the question if the modular networks have indeed learned the strategy imposed for the specific network. The dice roll for each game will be set such that all networks will have the same dice roll each turn. The opponent will be set to be an ai agent that use the monolithic network. 1000 games will be ran for each configuration. For a random sample of games, the actions taken by the AI agent will be recorded and manually traced for each network. Other statistical values will also be collected and averaged such as the number of turns taken and the end outcome (win/lose). 
 
 To further evaluate the networks, few test games against an expert-level backgammon human player will be conducted. The expert will be asked to provide feedback about the AI agent's actions and strategy for each modular network. The expert won't be told any details regarding the model that the AI agent will be using. 
 
