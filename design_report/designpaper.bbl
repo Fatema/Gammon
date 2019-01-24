@@ -1,15 +1,3 @@
 \begin{thebibliography}{xx}
 
-\harvarditem{Budgen}{2003}{budgen}
-Budgen, D.  \harvardyearleft 2003\harvardyearright , {\em Software Design}, 2nd
-  edn, Addison Wesley.
-
-\harvarditem{Euther}{2006}{euther}
-Euther, K.  \harvardyearleft 2006\harvardyearright , Title of paper.
-\newblock unpublished.
-
-\harvarditem{Futher}{2006}{futher}
-Futher, R.  \harvardyearleft 2006\harvardyearright , Title of paper 2.
-\newblock submitted for publication.
-
 \end{thebibliography}

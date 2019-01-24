@@ -8,45 +8,45 @@ Warning--I didn't find a database entry for "DBLP:journals/ai/Tesauro02"
 Warning--I didn't find a database entry for ""
 Warning--I didn't find a database entry for "exg"
 Warning--I didn't find a database entry for "gnubg"
-You've used 3 entries,
+You've used 0 entries,
             2909 wiz_defined-function locations,
-            659 strings with 5024 characters,
-and the built_in function-call counts, 5340 in all, are:
-= -- 812
-> -- 72
+            644 strings with 4858 characters,
+and the built_in function-call counts, 32 in all, are:
+= -- 0
+> -- 0
 < -- 0
-+ -- 345
-- -- 21
-* -- 386
-:= -- 1238
-add.period$ -- 5
-call.type$ -- 3
-change.case$ -- 42
-chr.to.int$ -- 3
-cite$ -- 3
-duplicate$ -- 34
-empty$ -- 66
-format.name$ -- 27
-if$ -- 922
++ -- 0
+- -- 0
+* -- 0
+:= -- 18
+add.period$ -- 0
+call.type$ -- 0
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 0
+duplicate$ -- 0
+empty$ -- 1
+format.name$ -- 0
+if$ -- 1
 int.to.chr$ -- 5
 int.to.str$ -- 0
-missing$ -- 2
-newline$ -- 14
-num.names$ -- 30
-pop$ -- 12
+missing$ -- 0
+newline$ -- 3
+num.names$ -- 0
+pop$ -- 0
 preamble$ -- 1
-purify$ -- 45
+purify$ -- 0
 quote$ -- 0
-skip$ -- 30
+skip$ -- 1
 stack$ -- 0
-substring$ -- 1065
-swap$ -- 1
-text.length$ -- 42
+substring$ -- 0
+swap$ -- 0
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 10
+type$ -- 0
 warning$ -- 0
-while$ -- 63
+while$ -- 0
 width$ -- 0
-write$ -- 41
+write$ -- 2
 (There were 5 warnings)
