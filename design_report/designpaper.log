@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  24 JAN 2019 22:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  24 JAN 2019 23:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -156,20 +156,20 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10.95> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 26.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 38.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 38.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 37.
  <boardsetup.png, id=1, 683.1924pt x 386.4036pt>
 File: boardsetup.png Graphic file (type png)
  <use boardsetup.png>
-Package pdftex.def Info: boardsetup.png used on input line 49.
+Package pdftex.def Info: boardsetup.png used on input line 48.
 (pdftex.def)             Requested size: 276.68193pt x 156.4867pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 50.
+(Font)              <12> on input line 49.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 50.
+(Font)              <8> on input line 49.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 50.
+(Font)              <6> on input line 49.
  [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
@@ -182,42 +182,42 @@ Missing character: There is no ” in font ptmr7t!
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
- <prime.png, id=11, 66.9702pt x 64.0794pt>
+ <prime.png, id=10, 66.9702pt x 64.0794pt>
 File: prime.png Graphic file (type png)
  <use prime.png>
-Package pdftex.def Info: prime.png used on input line 64.
+Package pdftex.def Info: prime.png used on input line 63.
 (pdftex.def)             Requested size: 138.34096pt x 132.37169pt.
- <backgame.png, id=12, 105.0324pt x 61.1886pt>
+ <backgame.png, id=11, 105.0324pt x 61.1886pt>
 File: backgame.png Graphic file (type png)
  <use backgame.png>
-Package pdftex.def Info: backgame.png used on input line 69.
+Package pdftex.def Info: backgame.png used on input line 68.
 (pdftex.def)             Requested size: 216.73254pt x 126.26183pt.
  [2 <./boardsetup.png>]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 85.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 84.
  (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 85.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 84.
  [3 <./prime.png> <./backgame.png>] [4] <syscomp.png, id=27, 840.741pt x 350.2686pt>
 File: syscomp.png Graphic file (type png)
  <use syscomp.png>
-Package pdftex.def Info: syscomp.png used on input line 176.
+Package pdftex.def Info: syscomp.png used on input line 175.
 (pdftex.def)             Requested size: 368.9069pt x 153.69643pt.
  [5 <./syscomp.png>] <mononn.png, id=32, 369.0588pt x 369.0588pt>
 File: mononn.png Graphic file (type png)
  <use mononn.png>
-Package pdftex.def Info: mononn.png used on input line 235.
+Package pdftex.def Info: mononn.png used on input line 234.
 (pdftex.def)             Requested size: 184.44994pt x 184.4501pt.
  [6] [7 <./mononn.png>] <dddnn.png, id=43, 886.0302pt x 377.2494pt>
 File: dddnn.png Graphic file (type png)
  <use dddnn.png>
-Package pdftex.def Info: dddnn.png used on input line 262.
+Package pdftex.def Info: dddnn.png used on input line 261.
 (pdftex.def)             Requested size: 368.9069pt x 157.07365pt.
  <metapinn.png, id=44, 1015.6344pt x 510.708pt>
 File: metapinn.png Graphic file (type png)
  <use metapinn.png>
-Package pdftex.def Info: metapinn.png used on input line 275.
+Package pdftex.def Info: metapinn.png used on input line 274.
 (pdftex.def)             Requested size: 368.9069pt x 185.49901pt.
  [8 <./dddnn.png>] [9 <./metapinn.png>] (./designpaper.bbl
 
@@ -227,13 +227,13 @@ LaTeX Warning: Empty `thebibliography' environment on input line 3.
 Here is how much of TeX's memory you used:
  2352 strings out of 493014
  33914 string characters out of 6133350
- 99741 words of memory out of 5000000
+ 97741 words of memory out of 5000000
  5850 multiletter control sequences out of 15000+600000
  19803 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,10n,23p,940b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,10n,23p,964b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ./designpaper.pdf (11 pages, 1435658 bytes).
+Output written on ./designpaper.pdf (11 pages, 1435852 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
  52 compressed objects within 1 object stream

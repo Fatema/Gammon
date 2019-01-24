@@ -25,14 +25,13 @@
 
 \begin{abstract}
 \subsection{Context/Background}
-Backgammon has been the subject of many studies involving artificial intelligence and machine learning. 
-TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, the monolithic nueral network soon reached its limitation an outcome studied by Boyan \cite{} and a modular nueral network becomes more suitable to over come this limitation. The newest software for Backgammon build on top of the modular architecture such as eXtreme Gammon \cite{} and GNUBG \cite{}.
+Backgammon has been the subject of many studies involving artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, the monolithic nueral network soon reached its limitation an outcome studied by Boyan \cite{} and a modular nueral network becomes more suitable to over come this limitation. The newest software for Backgammon build on top of the modular architecture such as eXtreme Gammon \cite{} and GNUBG \cite{}. The trained networks learnt their own strategies which gave an insight for other potential strategies that weren't considered before.
 \subsection{Aims}
 The aim of this project is to find new startegy for backgammon; a hybrid of known startegies will be used as the basis for the new startegy. 
 \subsection{Method}
 A modular neural network architecture will be used to incorporate the different backgammon strategies. The priming and back games will be used for this project. Two modular networks will be implemented and trained, one that will include the 2 strategies seperately and another one that will include a hybrid of the 2 startegies. A single nueral network based on TD Gammon will also be implemented and trained. The modular networks will be evaulated against the single network. Test games against an expert user will be included to validate the new startegy.
 \subsection{Proposed Solution}
-A python script that allows a user 
+A python package that will include modules to train and test the networks using self-play. It will also include a module for setting both a textual and a graphical user interface to play against the trained networks; this will allow to interact with the networks to analyse the strategies used in the games. 
 
 \end{abstract}
 \begin{keywords}
