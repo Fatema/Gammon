@@ -32,43 +32,54 @@ The aim of this project is to study the influence of including a hybrid of known
 Initially the nueral network from Tesauro's TD Gammon will be implemented and trained. This network will be referred to as monolithic nueral network. Then, multiple Modular Nueral Networks that include hybrid of backgammon strategies will be implemented and trained. 
 \subsection{Proposed Solution}
 
+
 \end{abstract}
 \begin{keywords}
 Backgammon; Reinforcement Learning; Modular Nueral Network; 
 \end{keywords}
 
 \section{Introduction}
-This section briefly introduces the project, the research question you are addressing.  Do not change the font sizes or line spacing in order to put in more text.
+\subsection{Reinforcement Learning}
+Backgammon and many other boardgames have been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Monolithic Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, TD Gammon network ignored some important aspects like the racing game (no hits are possible as both player's checkers are past each other). Boyan \cite{} showed that the use of different networks for different subtasks of the game can improve over learning with a single neural network for the entire game. 
 
-Note that the whole report, including the references, should not be longer than 12 pages in length (there is no penalty for short papers if the required content is included). There should be at least 5 referenced papers.
+\subsection{Project Overview}
+This project will focus on the modular nueral network following a similar architecture to the one used by Boyan \cite{} to incorporate different backgammon strategies. 
 
 \subsection{Backgammon Game}
-Game rules followed and game set up.
+Backgammon is a game played with dice and checkers on a board consisting of 24 fields, in which each player tries to move his checkers home and bear them off while preventing the opponent from doing the same thing. Figure \ref{board} illustrates the basic setup that will be used for this project.
 \begin{figure}[htp] 
     \centering
     \begin{minipage}{0.6\textwidth}
         \centering
-        \includegraphics[width=1\textwidth]{{backgammon}.png}
+        \includegraphics[width=1\textwidth]{{boardsetup}.png}
     \end{minipage}
     \caption{Backgammon board setup}
     \label{board}
 \end{figure}
 
-\subsection{TD Gammon}
-first implementation, limitations
-
-\subsection{Searching Algorithm}
-depth of lookup to choose the best action for the current turn (1-ply, 2-ply ... etc)
-
-\subsection{Learning Method}
-
-\subsection{Nueral Network architecture}
-
 \subsection{Research Questions}
-
+\begin{itemize}
+    \item minimum objectives
+    \begin{enumerate}
+    \item create a basic backgammon player to be used as a bench player 
+    \item create a player that uses the Priming Game 
+    \item create a player that uses the Back Game
+    \item create a player that combines the Priming and Back Games
+    \item evaluate the performance of the players with strategies against the basic player
+    \end{enumerate}
+    \item intermediate objectives
+    \begin{enumerate}
+    \item create a basic player with a bigger hidden network  
+    \item evaluate the performance of the best player with a strategy against the new basic player
+    \end{enumerate}
+    \item advanced objectives
+    \begin{enumerate}
+    \item include doubling cube to the players  
+    \item perform a rollout for one of the games
+    \item test the effect of including other Backgammon Game strategies
+    \end{enumerate}
+    \end{itemize}
 \section{Design}
-
-This section presents the proposed solutions of the problems in detail. The design details should all be placed in this section. You may create a number of subsections, each focusing on one issue.
 
 \subsection{Requirements}
 \begin{table}[htb]
@@ -124,52 +135,19 @@ This section presents the proposed solutions of the problems in detail. The desi
         \hline
         NFR2 & The AI agent should pick a legal move/action within 1s. In other word the search algorithm for the best move/action should return a value within 1s & Medium \\
         \hline
+        NFR3 & The AI agent should pick a legal move 100\% of the time & High \\
+        \hline
     \end{tabular}
 \end{table}
 \subsection{Algorithms}
-\subsubsection{Reinforcement Learning}
-- Define Reinforcement Learning components in term of Backgammon
+\subsubsection{Temporal Difference, TD($\lambda$)}
+Temporal difference will be used 
 
-- Temporal difference learning
-
-- value function with nueral network (backprobogation)
-
-- after state value function
-
-\subsubsection{n-ply search algorithm}
-% (https://www.gnu.org/software/gnubg/manual/html_node/The-depth-to-search-and-plies.html)
-Following Tesauro's research and recent backgammon softwares, the search algorithm used to determine the current turn's move will effect the general training outcome; it is evident from (backgammon league table) that better results are expected from 2-ply and 3-ply search. 1-ply and 2-ply search algorithms will be tested in this project. The 2-ply algorithm algorithm will be implemented as follows:
-
-\begin{algorithm}
-    \caption{2-ply search}\label{euclid}
-    \begin{algorithmic}[1]
-    \State $legalActions \gets \textit{getLegalActions()}$
-    \State $actions \gets []$
-    \For {$action \textit{ in } legalActions$}
-    \State $\textit{takeAction}(action)$
-    \State $features \gets \textit{extractFeatures}()$
-    \State $v \gets \textit{getModelOutput}(features)$ \Comment{get the outcome of the taken action, forward propagation}
-    \State $actions.\textit{append}((action,v))$
-    \State $\textit{undoAction}(action)$
-    \EndFor
-    \State $\textit{sortActions}(actions)$ \Comment{sort actions in descending order}
-    \State $topActions \gets \textit{getSubList}(actions, 5)$ \Comment{get first five actions}
-    \State $actionsOutcome \gets []$
-    \For {$action \textit{ in } topActions$}
-    \State $\textit{takeAction}(action)$
-    \State $outcomes \gets \textit{runAllPossibleDiceRollForOpp}()$ \Comment{20 legal moves considered for each roll}
-    \State $avgOutcome \gets \textit{avg}(outcomes)$
-    \State $actionsOutcome.\textit{append}((action, avgOutcome))$
-    \State $\textit{undoAction}(action)$
-    \EndFor
-    \Return $\textit{getBestRankAction}(actionsOutcome)$ \Comment{best rank action }
-    \end{algorithmic}
-    \end{algorithm}
-
-It is important to note that this computation could take some time and in timed games this could be unfavourable. The only difference between 1-ply and 2-ply is that the 1-ply won't check all the possible rolls of the opponents and stops after evaulating the immediate best action. 1-ply will be used initially for this project.
+\subsubsection{1-ply search algorithm}
+A ply is one turn taken by one user; n-ply refers to how far the player will look ahead when evaluating a move/action \cite{backgammon galore}. For the first stages of the project, the AI agent will use a 1-ply search algorithm to pick the best legal action for the current turn. Each action will be evaulated in the nueral network, forward propagation, and the action with the maximum outcome will be returned.
 
 \subsection{System Components}
-Python 3.6 will used as the language for this project. The nueral networks will be implemented using tensorflow package. Tensorflow was picked as it is easy to use, to generate training progress summary, to save and to restore the trained network. Figure \ref{syscomp} shows the expected structure and component dependencie of this project. 
+Python 3.6 will used as the language for this project. The nueral networks will be implemented using tensorflow package. Tensorflow will be used as it is easy to use, to generate training progress summary, to save and to restore the trained network. Figure \ref{syscomp} shows the expected structure and component dependencie of this project. 
 \begin{figure}[htb] 
     \centering
     \begin{minipage}{0.8\textwidth}
@@ -301,7 +279,7 @@ The training strategy will be based on the work of Tesauro, Boyan and Weiring. T
 
 Before running the full training with 1,000,000 games, different configurations for each network will be tested e.g. the addition of expert features as part of the input layer. The number of training games will be reduced to 100,000 and the resultant network will be tested against the other configurations of that network for 2000 games. The best combination of configurations will be used to fully train each network.
 
-For Modular networks with Meta-pi network architecture, they will be trained similarly but only the meta-pi gating network will be trained.
+Once DDD networks are finished training, meta-pi gating network will be trained in a similar way, but it will be continuingly tested against the DDD network .
 
 \subsection{Evaluation}
 All modular networks will be tested for 5000 games against the monolithic network. The result obtained will give an indication of the general performance of the modular networks and effictiveness of the implemented architecture. 
@@ -315,6 +293,38 @@ The last evaluation will be for the best trained network in which 5000 games for
 \subsection{Extensions}
 \subsubsection{Doubling Cube}
 As an extension of this project, doubling cube will be included as part of evaulating the actions taken by the AI agent. This will be implemented by including a hueristic function as part of the action evaluation process. The best trained network will be retrained with the doubling cube taken into consideration. The newly trained network will be tested for 5000 games against the older version of the network. 
+
+\subsubsection{2-ply search algorithm}
+% (https://www.gnu.org/software/gnubg/manual/html_node/The-depth-to-search-and-plies.html)
+Following Tesauro's research and recent backgammon softwares, the search algorithm used to determine the current turn's move will effect the general training outcome; it is evident from (backgammon league table) that better results are expected from 2-ply and 3-ply search. The 2-ply algorithm algorithm will be implemented as follows:
+
+\begin{algorithm}
+    \caption{2-ply search}\label{euclid}
+    \begin{algorithmic}[1]
+    \State $legalActions \gets \textit{getLegalActions()}$
+    \State $actions \gets []$
+    \For {$action \textit{ in } legalActions$}
+    \State $\textit{takeAction}(action)$
+    \State $features \gets \textit{extractFeatures}()$
+    \State $v \gets \textit{getModelOutput}(features)$ \Comment{get the outcome of the taken action, forward propagation}
+    \State $actions.\textit{append}((action,v))$
+    \State $\textit{undoAction}(action)$
+    \EndFor
+    \State $\textit{sortActions}(actions)$ \Comment{sort actions in descending order}
+    \State $topActions \gets \textit{getSubList}(actions, 5)$ \Comment{get first five actions}
+    \State $actionsOutcome \gets []$
+    \For {$action \textit{ in } topActions$}
+    \State $\textit{takeAction}(action)$
+    \State $outcomes \gets \textit{runAllPossibleDiceRollForOpp}()$ \Comment{20 legal moves considered for each roll, the best outcome of the move of each roll will be returned}
+    \State $avgOutcome \gets \textit{avg}(outcomes)$
+    \State $actionsOutcome.\textit{append}((action, avgOutcome))$
+    \State $\textit{undoAction}(action)$
+    \EndFor
+    \Return $\textit{getBestRankAction}(actionsOutcome)$ \Comment{best rank action }
+    \end{algorithmic}
+    \end{algorithm}
+
+It is important to note that this computation could take some time and in timed games this could be unfavourable. The only difference between 1-ply and 2-ply is that the 1-ply won't check all the possible rolls of the opponents and stops after evaulating the immediate best action.
 
 \bibliography{projectpaper}
 

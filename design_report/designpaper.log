@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  24 JAN 2019 15:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  24 JAN 2019 17:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -85,11 +85,7 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip45
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) (./designpaper.aux
-
-LaTeX Warning: Label `board' multiply defined.
-
-)
+) (./designpaper.aux)
 \openout1 = `designpaper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -176,81 +172,104 @@ LaTeX Warning: Citation 'exg' on page 1 undefined on input line 28.
 LaTeX Warning: Citation 'gnubg' on page 1 undefined on input line 28.
 
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 36.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 36.
-<backgammon.png, id=1, 798.985pt x 423.5825pt>
-File: backgammon.png Graphic file (type png)
- <use backgammon.png>
-Package pdftex.def Info: backgammon.png used on input line 51.
-(pdftex.def)             Requested size: 276.68193pt x 146.6855pt.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 52.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 52.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 52.
- [1
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 37.
+[1
 
-{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2 <./backgammon.png>] <syscomp.png, id=15, 688.4922pt x 350.2686pt>
-File: syscomp.png Graphic file (type png)
- <use syscomp.png>
-Package pdftex.def Info: syscomp.png used on input line 177.
-(pdftex.def)             Requested size: 368.9069pt x 187.68314pt.
- [3]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 189.
+{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+
+LaTeX Warning: Reference `board' on page 2 undefined on input line 49.
+
+<boardsetup.png, id=9, 683.1924pt x 386.4036pt>
+File: boardsetup.png Graphic file (type png)
+ <use boardsetup.png>
+Package pdftex.def Info: boardsetup.png used on input line 54.
+(pdftex.def)             Requested size: 276.68193pt x 156.4867pt.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 55.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 55.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 55.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 62.
  (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 189.
- [4 <./syscomp.png>] <mononn.png, id=27, 369.0588pt x 369.0588pt>
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 62.
+ [2 <./boardsetup.png>]
+
+LaTeX Warning: Citation 'backgammon galore' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Reference `syscomp' on page 3 undefined on input line 150.
+
+<syscomp.png, id=16, 688.4922pt x 350.2686pt>
+File: syscomp.png Graphic file (type png)
+ <use syscomp.png>
+Package pdftex.def Info: syscomp.png used on input line 155.
+(pdftex.def)             Requested size: 368.9069pt x 187.68314pt.
+ [3]
+
+LaTeX Warning: Reference `exfeat' on page 4 undefined on input line 179.
+
+<mononn.png, id=21, 369.0588pt x 369.0588pt>
 File: mononn.png Graphic file (type png)
  <use mononn.png>
-Package pdftex.def Info: mononn.png used on input line 236.
+Package pdftex.def Info: mononn.png used on input line 214.
 (pdftex.def)             Requested size: 184.44994pt x 184.4501pt.
- [5 <./mononn.png>] <prime.png, id=33, 66.9702pt x 64.0794pt>
+ [4 <./syscomp.png>] [5 <./mononn.png>] <prime.png, id=32, 66.9702pt x 64.0794pt>
 File: prime.png Graphic file (type png)
  <use prime.png>
-Package pdftex.def Info: prime.png used on input line 258.
+Package pdftex.def Info: prime.png used on input line 236.
 (pdftex.def)             Requested size: 92.22496pt x 88.24486pt.
- <backgame.png, id=34, 105.0324pt x 61.1886pt>
+ <backgame.png, id=33, 105.0324pt x 61.1886pt>
 File: backgame.png Graphic file (type png)
  <use backgame.png>
-Package pdftex.def Info: backgame.png used on input line 263.
+Package pdftex.def Info: backgame.png used on input line 241.
 (pdftex.def)             Requested size: 138.34096pt x 80.59364pt.
- <dddnn.png, id=35, 886.0302pt x 377.2494pt>
+
+
+LaTeX Warning: Reference `ddd' on page 6 undefined on input line 249.
+
+<dddnn.png, id=34, 886.0302pt x 377.2494pt>
 File: dddnn.png Graphic file (type png)
  <use dddnn.png>
-Package pdftex.def Info: dddnn.png used on input line 276.
+Package pdftex.def Info: dddnn.png used on input line 254.
 (pdftex.def)             Requested size: 368.9069pt x 157.07365pt.
- <metapinn.png, id=36, 1015.6344pt x 510.708pt>
+
+
+LaTeX Warning: Reference `metapi' on page 6 undefined on input line 262.
+
+<metapinn.png, id=35, 1015.6344pt x 510.708pt>
 File: metapinn.png Graphic file (type png)
  <use metapinn.png>
-Package pdftex.def Info: metapinn.png used on input line 289.
+Package pdftex.def Info: metapinn.png used on input line 267.
 (pdftex.def)             Requested size: 368.9069pt x 185.49901pt.
- [6 <./prime.png> <./backgame.png>] [7 <./dddnn.png> <./metapinn.png>] (./designpaper.bbl
+ [6 <./prime.png> <./backgame.png> <./dddnn.png>] [7 <./metapinn.png>]
+No file designpaper.bbl.
+[8] [9] [10] [11] (./designpaper.aux)
 
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
+LaTeX Warning: There were undefined references.
 
-) [8] [9] [10] (./designpaper.aux)
 
-LaTeX Warning: There were multiply-defined labels.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 2356 strings out of 493014
- 34001 string characters out of 6133350
- 102772 words of memory out of 5000000
- 5853 multiletter control sequences out of 15000+600000
+ 2355 strings out of 493014
+ 33991 string characters out of 6133350
+ 103652 words of memory out of 5000000
+ 5854 multiletter control sequences out of 15000+600000
  20910 words of font info for 41 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,10n,23p,832b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,10n,23p,933b,351s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ./designpaper.pdf (10 pages, 2094994 bytes).
+Output written on ./designpaper.pdf (11 pages, 1430644 bytes).
 PDF statistics:
- 85 PDF objects out of 1000 (max. 8388607)
- 50 compressed objects within 1 object stream
+ 88 PDF objects out of 1000 (max. 8388607)
+ 52 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
