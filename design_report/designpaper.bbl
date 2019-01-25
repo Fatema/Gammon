@@ -1,3 +1,65 @@
 \begin{thebibliography}{xx}
 
+\harvarditem{Boyan}{1992}{boyan}
+Boyan, J.~A.  \harvardyearleft 1992\harvardyearright , Modular neural networks
+  for learning context-dependent game strategies, Technical report, Master’s
+  thesis, Computer Speech and Language Processing.
+
+\harvarditem{Depreli}{2012}{botbattle}
+Depreli, M.  \harvardyearleft 2012\harvardyearright , `Bot comparison final
+  table'.
+\newline\harvardurl{http://www.extremegammon.com/studies.aspx\#D2012}
+
+\harvarditem{Fleming}{2016}{fomorians}
+Fleming, J.  \harvardyearleft 2016\harvardyearright , `td-gammon'.
+\newline\harvardurl{https://github.com/fomorians/td-gammon}
+
+\harvarditem{Fürnkranz}{2000}{survey}
+Fürnkranz, J.  \harvardyearleft 2000\harvardyearright , Machine learning in
+  games: A survey, {\em in} `MACHINES THAT LEARN TO PLAY GAMES, CHAPTER 2',
+  Nova Science Publishers, pp.~11--59.
+
+\harvarditem{Hannun}{2013}{awni}
+Hannun, A.  \harvardyearleft 2013\harvardyearright , `backgammon'.
+\newline\harvardurl{https://github.com/awni/backgammon}
+
+\harvarditem{Keith}{1995}{glossary}
+Keith, T.  \harvardyearleft 1995\harvardyearright , `Backgammon galore
+  glossary'.
+\newline\harvardurl{http://www.bkgm.com/glossary.html}
+
+\harvarditem{Silver}{2006}{gnubg}
+Silver, A.  \harvardyearleft 2006\harvardyearright , `All about gnu'.
+\newline\harvardurl{http://www.bkgm.com/gnu/AllAboutGNU.html}
+
+\harvarditem{Sutton \harvardand\ Barto}{1998}{rl}
+Sutton, R.~S. \harvardand\ Barto, A.~G.  \harvardyearleft 1998\harvardyearright
+  , {\em Introduction to Reinforcement Learning}, 1st edn, MIT Press,
+  Cambridge, MA, USA.
+
+\harvarditem{Tesauro}{1992}{DBLP:conf/icml/Tesauro92}
+Tesauro, G.  \harvardyearleft 1992\harvardyearright , Temporal difference
+  learning of backgammon strategy, {\em in} D.~H. Sleeman \harvardand\
+  P.~Edwards, eds, `Proceedings of the Ninth International Workshop on Machine
+  Learning {(ML} 1992), Aberdeen, Scotland, UK, July 1-3, 1992', Morgan
+  Kaufmann, pp.~451--457.
+
+\harvarditem{Tesauro}{1994}{DBLP:journals/neco/Tesauro94}
+Tesauro, G.  \harvardyearleft 1994\harvardyearright , `Td-gammon, a
+  self-teaching backgammon program, achieves master-level play', {\em Neural
+  Computation} {\bf 6}(2),~215--219.
+\newline\harvardurl{https://doi.org/10.1162/neco.1994.6.2.215}
+
+\harvarditem{Tesauro}{2002}{DBLP:journals/ai/Tesauro02}
+Tesauro, G.  \harvardyearleft 2002\harvardyearright , `Programming backgammon
+  using self-teaching neural nets', {\em Artif. Intell.} {\bf
+  134}(1-2),~181--199.
+\newline\harvardurl{https://doi.org/10.1016/S0004-3702(01)00110-2}
+
+\harvarditem{Wiering}{2010}{DBLP:journals/jilsa/Wiering10}
+Wiering, M.~A.  \harvardyearleft 2010\harvardyearright , `Self-play and using
+  an expert to learn to play backgammon with temporal difference learning',
+  {\em {JILSA}} {\bf 2}(2),~57--68.
+\newline\harvardurl{https://doi.org/10.4236/jilsa.2010.22009}
+
 \end{thebibliography}

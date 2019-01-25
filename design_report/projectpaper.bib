@@ -1,12 +1,14 @@
 % example .bib file for use with projectpaper.tex
 
-@book{budgen
-  ,author = {David Budgen}
-  ,title = {Software Design}
-  ,edition = "2nd"
-  ,year = 2003
-  ,publisher = {Addison Wesley}
-}
+@book{rl,
+ author = {Sutton, Richard S. and Barto, Andrew G.},
+ title = {Introduction to Reinforcement Learning},
+ year = {1998},
+ isbn = {0262193981},
+ edition = {1st},
+ publisher = {MIT Press},
+ address = {Cambridge, MA, USA},
+} 
 
 @unpublished{euther
   ,author = {K. Euther}
@@ -318,19 +320,27 @@
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@online{MichaelDepreliStudy2012,
+@online{botbattle,
     author = "Michael Depreli",
     title = "Bot Comparison Final Table",
-    note   = {\url{http://www.extremegammon.com/studies.aspx\#D2012}, accessed: 20/09/2018},
+    url = {http://www.extremegammon.com/studies.aspx\#D2012}, 
     year   = 2012
 }
 
 @online{gnubg,
-    author = "Albert Silver",
-    title = "All About GNU",
-    note  = {\url{http://www.bkgm.com/gnu/AllAboutGNU.html},accessed: 24/09/2018},
-    keywords = "latex,gnu,backgammon",
-    year = 2006
+  author    = {Albert Silver},
+  title     = {All About GNU},
+  year      = {2006},
+  url       = {http://www.bkgm.com/gnu/AllAboutGNU.html},
+  timestamp = {Mon, 24 Sep 2018 13:18:23 +0200},
+}
+
+@online{glossary,
+  author    = {Tom Keith},
+  title     = {Backgammon Galore Glossary},
+  year      = {1995},
+  url       = {http://www.bkgm.com/glossary.html},
+  timestamp = {Mon, 24 Sep 2018 13:18:23 +0200},
 }
 
 @online{exg,
@@ -348,8 +358,38 @@
     keywords = "latex,gnu,backgammon",
     year = 2017
 }
-@article{modularNeuralNetwork,
-  author    = {Justin A. Boyan},
-  title     = {Modular Neural Networks for Learning Context-Dependent Game Strategies},
-  year      = {1992},
+@TECHREPORT{boyan,
+    author = {Justin A. Boyan},
+    title = {Modular Neural Networks for Learning Context-Dependent Game Strategies},
+    institution = {Master’s thesis, Computer Speech and Language Processing},
+    year = {1992}
+}
+
+@INPROCEEDINGS{survey,
+    author = {Johannes Fürnkranz},
+    title = {Machine Learning in Games: A Survey},
+    booktitle = {MACHINES THAT LEARN TO PLAY GAMES, CHAPTER 2},
+    year = {2000},
+    pages = {11--59},
+    publisher = {Nova Science Publishers}
+}
+
+@misc{awni,
+  author = {Awni Hannun},
+  title = {backgammon},
+  year = {2013},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  url = {https://github.com/awni/backgammon},
+  commit = {aee5843b23f542b95e42549091d3f11d30b5af3e}
+}
+
+@misc{fomorians,
+  author = {Jim Fleming},
+  title = {td-gammon},
+  year = {2016},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  url = {https://github.com/fomorians/td-gammon},
+  commit = {3a027b5f70e8ba907b6fbcf2b6fd6f44c4bcb99a}
 }
