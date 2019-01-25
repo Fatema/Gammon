@@ -25,13 +25,14 @@
 
 \begin{abstract}
 \subsection{Context/Background}
-Backgammon has been the subject of many studies involving artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, the monolithic nueral network soon reached its limitation an outcome studied by Boyan \cite{} and a modular nueral network becomes more suitable to over come this limitation. The newest software for Backgammon build on top of the modular architecture such as eXtreme Gammon \cite{} and GNUBG \cite{}. The trained networks learnt their own strategies which gave an insight for other potential strategies that weren't considered before.
+Backgammon has been the subject of many studies involving artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. However, the monolithic nueral network soon reached its limitation an outcome studied by Boyan \cite{} and a modular nueral network becomes more suitable to over come this limitation. The newest software for Backgammon build on top of the modular architecture such as eXtreme Gammon \cite{} and GNUBG \cite{}. 
+Modular Neural Networks have allowed for a more complex 
 \subsection{Aims}
 The aim of this project is to find new startegy for backgammon; a hybrid of known startegies will be used as the basis for the new startegy. 
 \subsection{Method}
-A modular neural network architecture will be used to incorporate the different backgammon strategies. The priming and back games will be used for this project. Two modular networks will be implemented and trained, one that will include the 2 strategies seperately and another one that will include a hybrid of the 2 startegies. A single nueral network based on TD Gammon will also be implemented and trained. The modular networks will be evaulated against the single network. Test games against an expert user will be included to validate the new startegy.
+A modular neural network architecture will be used to incorporate the different backgammon strategies. The priming and back games will be used for this project. Two modular networks will be implemented and trained, one that will include the 2 strategies seperately and another one that will include a hybrid of the 2 startegies. A single nueral network based on TD Gammon will also be implemented and trained. The modular networks will be evaulated against the single network and against each other. Test games against an expert user will be included to validate the new startegy.
 \subsection{Proposed Solution}
-A python package that will include modules to train and test the networks using self-play. It will also include a module for setting both a textual and a graphical user interface to play against the trained networks; this will allow to interact with the networks to analyse the strategies used in the games. 
+A python package that will include modules to train and test the networks using self-play. It will also include a module for setting both a textual and a graphical user interfaces to play against the trained networks. 
 
 \end{abstract}
 \begin{keywords}
@@ -52,7 +53,10 @@ Backgammon is a game played with dice and checkers on a board consisting of 24 f
 \end{figure}
 
 \subsection{Early work}
-Backgammon and many other boardgames have been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a single neural network that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. Extending on the work of Tesauro, Boyan \cite{} showed that the use of different networks for different subtasks of the game can improve over learning with a single neural network for the entire game. Many AI softwares for Backgammon use modular neural network architecture; GNU-Backgammon \cite{} uses 3 different nueral networks. 
+Backgammon and many other boardgames have been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a single neural network that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{}. Extending on the work of Tesauro, Boyan \cite{} showed that the use of different networks for different subtasks of the game can improve over learning with a single neural network for the entire game. Many AI softwares for Backgammon use modular neural network architecture; GNU-Backgammon \cite{} uses 3 different nueral networks. Before going into modular neural networks, the following section will go over TD methods and backgammon as a Reinforcement Learning problem.
+
+\subsection{Reinforcement Learning}
+A reinforcement learning algorithms allows an agent to learn from its experience generated by its interactions with an environment \cite{}. In reinforcement learning, this problem is known as the trade-off between exploration of new options and exploitation of already acquired knowledge. in backgammon, the dice rolls guarantee sufficient variability in the games so that all regions of the feature space will be explored. This characteristic made it perfectly suited for learning from self-play. 
 
 \subsection{Project Overview}
 This project will focus on modular neural network architecture in incoporating a hybrid of backgammon startegies to find a new strategy. In addition, the performance of the new strategy will be evaluated by comparing it to another network that includes the strategies seperately. Combinations of 2 startegies will be studied: \textbf{The back game}, the player tries to hold both anchors as long as possible and force his opponent to bear in or bear off awkwardly \cite{}. \textbf{The priming game}, a particular type of holding game that involves building a prime — a long wall of the player's pieces, ideally 6 points in a row — in order to block the movement of the opponent’s pieces that are behind the wall \cite{}.
@@ -67,40 +71,25 @@ This project will focus on modular neural network architecture in incoporating a
         \centering
         \includegraphics[width=1\textwidth]{{backgame}.png}
     \end{minipage}
-    \caption{Illustration of Prime and Back games}
+    \caption{Illustration of Priming and Back games}
     \label{games}
 \end{figure}
 
 \subsection{Rsearch Questions}
 The following questions will be investigated in this project:
 \begin{enumerate}
-    \item How will combining game strategies for backgammon influence learning outcome? 
     \item Would using hybrid startegies result in the agent learning a new strategy? or would one strategy be more dominant than the other?
-    \item How effective would the hybrid startegies if the startegies were included seperately?
+    \item How effective would the hybrid startegies over the startegies being included seperately?
     \item How would adding doubling cube to the network evaluation influence the learning outcome?
 \end{enumerate}
 \subsection{Deliverables}
 \begin{itemize}
-    \item minimum objectives
-    \begin{enumerate}
-    \item create a basic backgammon player to be used as a bench player 
-    \item create a player that uses the Priming Game 
-    \item create a player that uses the Back Game
-    \item create a player that combines the Priming and Back Games
-    \item evaluate the performance of the players with strategies against the basic player
-    \end{enumerate}
-    \item intermediate objectives
-    \begin{enumerate}
-    \item create a basic player with a bigger hidden network  
-    \item evaluate the performance of the best player with a strategy against the new basic player
-    \end{enumerate}
-    \item advanced objectives
-    \begin{enumerate}
-    \item include doubling cube to the players  
-    \item perform a rollout for one of the games
-    \item test the effect of including other Backgammon Game strategies
-    \end{enumerate}
-    \end{itemize}
+    \item \textbf{Trained neural networks}: a single neural network based on Tesauro's TD Gammon, a modular neural network that use a new startegy, hybrid priming and back startegy and a modular neural network that use two seperate know strategies, priming and back strategies
+    \item \textbf{AI agent}: this agent will be able to use the trained network to evaluate and make moves
+    \item \textbf{User interface and human agent}: This will be a simple command line interface which takes user inputs to make moves and to play against the trained networks. Another complex implementation will be a graphical user interface which captures the user clicks for the making moves.
+    \item \textbf{Testing suit}: This will be used to run all tests and evaluations to be done on the networks.
+    \item \textbf{Project Report}: All tests and evaluations will be recorded and analysed in this report.
+\end{itemize}
 \section{Design}
 
 \subsection{Requirements}
@@ -116,7 +105,7 @@ The following questions will be investigated in this project:
         \hline
         FR1 & A module for Backgammon game must be implemented. This will include the actual board setup with the rules and constraints of the game e.g. legal moves and the dice role & High \\
         \hline
-        FR2 & An AI agent should be created such that it uses a nueral network to evaulate legal moves/actions to play backgammon and a greedy search algorithm to pick the best legal move/action & High \\
+        FR2 & An AI agent should be created such that it uses a nueral network to evaulate legal moves/actions to play backgammon and a 1-ply search algorithm to pick the best legal move/action & High \\
         \hline
         FR3 & A module for the nueral network should be created. It should support the funtionalities required for the nueral network e.g. updating weights through back-propagation, saving and restoring the network meta-data & High \\
         \hline
@@ -130,7 +119,7 @@ The following questions will be investigated in this project:
         \hline
         FR7 & A testing module should provide capabilities of evaluating and testing the nueral networks & High \\
         \hline
-        FR8 & depth (n-ply) search algorithm should be implemented and incoporated into AI agent in FR2 & Medium \\
+        FR8 & 2-ply search algorithm should be implemented and incoporated into AI agent in FR2 & Medium \\
         \hline
         FR9 & Textual User interface for a Human agent to play against the AI agent from FR2 should be implemented & Medium \\
         \hline
@@ -161,7 +150,15 @@ The following questions will be investigated in this project:
 \end{table}
 \subsection{Algorithms}
 \subsubsection{Temporal Difference, TD($\lambda$)}
-Temporal difference will be used 
+TD Gammon used the gradient-decent form of the TD($\lambda$) algorithm with the gradients computed by the error backpropogation algorithm. The update rule is as follows
+$$\vec{\theta}_{t+1} = \vec{\theta}_{t} + \alpha\delta_t\vec{e}_{t}$$ 
+where $\delta_t$ is the TD error,
+$$\delta_{t} = r_{t+1} + \gamma V_t(s_{t+1}) - V_t(s_t)$$ 
+and $\vec{e}_t$ is a column vector of eligibility traces, one for each component of $\vec{\theta}_t$, updated by 
+$$\vec{e}_{t} = \gamma\alpha\vec{\theta}_{t-1} + \nabla_{\vec{\theta}_{t}}V_t(s_t)$$ 
+For backgammon, $\gamma=1$ and the reward is always zero except when winning. 
+
+
 
 \subsubsection{1-ply search algorithm}
 A ply is one turn taken by one user; n-ply refers to how far the player will look ahead when evaluating a move/action \cite{}. For the first stages of the project, the AI agent will use a 1-ply search algorithm to pick the best legal action for the current turn. Each action will be evaulated in the nueral network, forward propagation, and the action with the maximum outcome will be returned.
