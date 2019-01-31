@@ -6,18 +6,21 @@ creation of multiple instances of the network
 import os
 import time
 import numpy as np
+from tensorflow.python.tools import inspect_checkpoint as chkp
 
 from utils import *
 
 
 class SubNet:
-    def set_strategy_name(self, name):
+    def set_network_name(self, name):
         self.STRATEGY = name
 
     def set_paths(self, model_path, summary_path, checkpoint_path):
         self.model_path = model_path + self.STRATEGY + '/'
         self.summary_path = summary_path + self.STRATEGY + '/'
-        self.checkpoint_path = checkpoint_path + self.STRATEGY + '/'
+        self.checkpoint_path = checkpoint_path + self.STRATEGY + '/latest/'
+        self.previous_checkpoint_path = checkpoint_path + self.STRATEGY + '/previous/'
+
 
         if not os.path.exists(self.model_path):
             os.makedirs(self.model_path)
@@ -25,12 +28,15 @@ class SubNet:
         if not os.path.exists(self.checkpoint_path):
             os.makedirs(self.checkpoint_path)
 
+        if not os.path.exists(self.previous_checkpoint_path):
+            os.makedirs(self.previous_checkpoint_path)
+
         if not os.path.exists(self.summary_path):
             os.makedirs(self.summary_path)
 
     def start_session(self, restore=False):
         graph = tf.Graph()
-        session = tf.Session(graph=graph, config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
+        session = tf.Session(graph=graph)
         with session.as_default(), graph.as_default():
             self.sess = session
             self.global_step = tf.Variable(0, trainable=False, name='global_step')
@@ -39,6 +45,8 @@ class SubNet:
             # after training a model, we can restore checkpoints here
             if restore:
                 self.restore()
+            else:
+                self.set_previous_checkpoint()
 
     def set_decay(self):
         # lambda decay
@@ -166,6 +174,7 @@ class SubNet:
 
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
+        self.pre_saver = tf.train.Saver(max_to_keep=1)
 
         # run variable initializers
         self.sess.run(tf.global_variables_initializer())
@@ -178,6 +187,24 @@ class SubNet:
         if latest_checkpoint_path:
             print('Restoring checkpoint: {0}'.format(latest_checkpoint_path))
             self.saver.restore(self.sess, latest_checkpoint_path)
+            chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
+
+    def restore_previous(self):
+        print('restoring previous')
+        latest_checkpoint_path = tf.train.latest_checkpoint(self.previous_checkpoint_path)
+        if latest_checkpoint_path:
+            print('Restoring previous checkpoint: {0}'.format(latest_checkpoint_path))
+            self.pre_saver.restore(self.sess, latest_checkpoint_path)
+            chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
+
+    def set_previous_checkpoint(self):
+        self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
+
+    def print_checkpoints(self):
+        latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
+        previous_checkpoint_path = tf.train.latest_checkpoint(self.previous_checkpoint_path)
+        chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
+        chkp.print_tensors_in_checkpoint_file(previous_checkpoint_path, tensor_name='', all_tensors=True)
 
     def get_output(self, x):
         return self.sess.run(self.V, feed_dict={self.x: x})

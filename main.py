@@ -2,11 +2,9 @@
 This code is forked from https://github.com/fomorians/td-gammon
 """
 
-import os
 import tensorflow as tf
 
-from modnet import Modnet
-from mono_nn import MonoNN
+from tester import *
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -34,9 +32,9 @@ if __name__ == '__main__':
     model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test:
         if FLAGS.mono:
-            model_mono.test(episodes=1000)
+            test_self(model_mono, episodes=1000)
         else:
-            model_mod.test_random(episodes=1000)
+            test_random(model_mod, episodes=1000)
     elif FLAGS.play:
         if FLAGS.mono:
             model_mono.play()

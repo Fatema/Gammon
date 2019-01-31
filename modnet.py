@@ -2,71 +2,51 @@ from __future__ import division
 
 import random
 
-from backgammon.game import Game
-from backgammon.agents.human_agent import HumanAgent
-from backgammon.agents.random_agent import RandomAgent
+import tester
 from backgammon.agents.ai_agent import TDAgent
-from mono_nn import MonoNN
+from backgammon.agents.human_agent import HumanAgent
+from backgammon.game import Game
 
 from subnet import *
 
-
 class Modnet:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
-        self.default_net = SubNet()
-        self.default_net.set_strategy_name('default')
-        self.default_net.set_paths(model_path, summary_path, checkpoint_path)
-        self.default_net.start_session(restore=restore)
+        self.model_path = model_path
+        self.summary_path = summary_path
+        self.checkpoint_path = checkpoint_path
+        self.restore = restore
 
-        self.racing_net = SubNet()
-        self.racing_net.set_strategy_name('racing')
-        self.racing_net.set_paths(model_path, summary_path, checkpoint_path)
-        self.racing_net.start_session(restore=restore)
+        self.default_net = self.create_network('default')
 
-        self.holding_net = SubNet()
-        self.holding_net.set_strategy_name('holding')
-        self.holding_net.set_paths(model_path, summary_path, checkpoint_path)
-        self.holding_net.start_session(restore=restore)
+        self.racing_net = self.create_network('racing')
+
+        self.holding_net = self.create_network('holding')
 
         self.networks = {'d' : self.default_net, 'r' : self.racing_net, 'h' : self.holding_net}
+
+    def create_network(self, name):
+        network = SubNet()
+        network.set_network_name(name)
+        network.set_paths(self.model_path, self.summary_path, self.checkpoint_path)
+        network.start_session(restore=self.restore)
+        return network
+
+    def set_previous_checkpoint(self):
+        for net in self.networks:
+            self.networks[net].set_previous_checkpoint()
+
+    def print_checkpoints(self):
+        for net in self.networks:
+            self.networks[net].print_checkpoints()
+
+    def restore_previous(self):
+        for net in self.networks:
+            self.networks[net].restore_previous()
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
         game = Game.new()
         game.play([HumanAgent(Game.TOKENS[0]), TDAgent(Game.TOKENS[1], self)], draw=True)
-
-    def test_mono(self, episodes=100, draw=False):
-        # there is not much use of making mono part of this class so make it a normal object call instead
-        players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self.mono_nn)]
-        winners = [0, 0]
-        for episode in range(episodes):
-            game = Game.new()
-
-            winner = game.play(players, draw=draw)
-            winners[winner] += 1
-
-            winners_total = sum(winners)
-            print("[Episode %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
-                players[0].player, players[0].player,
-                players[1].player, players[1].player,
-                winners[0], winners[1], winners_total,
-                (winners[0] / winners_total) * 100.0))
-
-    def test_random(self, episodes=100, draw=False):
-        players = [TDAgent(Game.TOKENS[0], self), RandomAgent(Game.TOKENS[1])]
-        winners = [0, 0]
-        for episode in range(episodes):
-            game = Game.new()
-
-            winner = game.play(players, draw=draw)
-            winners[winner] += 1
-
-            winners_total = sum(winners)
-            print("[Episode %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
-                players[0].player, players[0].player,
-                players[1].player, players[1].player,
-                winners[0], winners[1], winners_total,
-                (winners[0] / winners_total) * 100.0))
 
     # gating program - decide which subnet to run based on the input features
     def get_output(self, x):
@@ -170,7 +150,8 @@ class Modnet:
 
         for episode in range(episodes):
             if episode != 0 and episode % validation_interval == 0:
-                self.test_random(episodes=100)
+                tester.test_self(self)
+                # self.print_checkpoints()
 
             game = Game.new()
             game.generate_random_game()
@@ -204,4 +185,4 @@ class Modnet:
         for net in self.networks:
             self.networks[net].training_end()
 
-        self.test_random(episodes=1000)
+        tester.test_self(self)
