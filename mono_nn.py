@@ -92,6 +92,7 @@ class MonoNN:
             # print('episode', episode)
             if episode != 0 and episode % validation_interval == 0:
                 tester.test_self(self)
+                self.mono_nn.set_test_checkpoint()
                 # self.print_checkpoints()
 
             game = Game.new()

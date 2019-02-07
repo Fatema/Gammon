@@ -20,6 +20,7 @@ class SubNet:
         self.summary_path = summary_path + self.STRATEGY + '/'
         self.checkpoint_path = checkpoint_path + self.STRATEGY + '/latest/'
         self.previous_checkpoint_path = checkpoint_path + self.STRATEGY + '/previous/'
+        self.test_checkpoint_path = checkpoint_path + self.STRATEGY + '/test/'
 
 
         if not os.path.exists(self.model_path):
@@ -30,6 +31,9 @@ class SubNet:
 
         if not os.path.exists(self.previous_checkpoint_path):
             os.makedirs(self.previous_checkpoint_path)
+
+        if not os.path.exists(self.test_checkpoint_path):
+            os.makedirs(self.test_checkpoint_path)
 
         if not os.path.exists(self.summary_path):
             os.makedirs(self.summary_path)
@@ -92,11 +96,7 @@ class SubNet:
         delta_op = self.V_next - self.V
 
         # mean squared error of the difference between the next state and the current state
-        loss_op = tf.reduce_mean(tf.square(self.V_next - self.V), name='loss')
-
-        # check if the model predicts the correct state
-        accuracy_op = tf.reduce_sum(tf.cast(tf.equal(tf.round(self.V_next), tf.round(self.V)), dtype='float'),
-                                    name='accuracy')
+        loss_op = tf.reduce_mean(tf.square(delta_op), name='loss')
 
         # track the number of steps and average loss for the current game
         with tf.variable_scope('game'):
@@ -104,31 +104,24 @@ class SubNet:
             game_step_op = game_step.assign_add(1.0)
 
             loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
-            # delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
-            accuracy_sum = tf.Variable(tf.constant(0.0), name='accuracy_sum', trainable=False)
+            delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
 
             loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
             delta_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-            accuracy_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
 
             loss_sum_op = loss_sum.assign_add(loss_op)
-            # delta_sum_op = delta_sum.assign_add(delta_op)
-            accuracy_sum_op = accuracy_sum.assign_add(accuracy_op)
+            delta_sum_op = delta_sum.assign_add(delta_op)
 
             loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
-            # delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
-            accuracy_avg_op = accuracy_sum / tf.maximum(game_step, 1.0)
+            delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
 
             loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
-            # delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
-            accuracy_avg_ema_op = accuracy_avg_ema.apply([accuracy_avg_op])
+            delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
 
             tf.summary.scalar('game/loss_avg', loss_avg_op)
-            # tf.summary.scalar('game/delta_avg', delta_avg_op)
-            tf.summary.scalar('game/accuracy_avg', accuracy_avg_op)
+            tf.summary.scalar('game/delta_avg', delta_avg_op)
             tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
-            # tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
-            tf.summary.scalar('game/accuracy_avg_ema', accuracy_avg_ema.average(accuracy_avg_op))
+            tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
 
             # reset per-game monitoring variables
             game_step_reset_op = game_step.assign(0.0)
@@ -180,11 +173,9 @@ class SubNet:
             global_step_op,
             game_step_op,
             loss_sum_op,
-            # delta_sum_op,
-            accuracy_sum_op,
+            delta_sum_op,
             loss_avg_ema_op,
-            # delta_avg_ema_op,
-            accuracy_avg_ema_op
+            delta_avg_ema_op,
         ]):
             # define single operation to apply all gradient updates
             self.train_op = tf.group(*apply_gradients, name='train')
@@ -195,6 +186,7 @@ class SubNet:
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
         self.pre_saver = tf.train.Saver(max_to_keep=1)
+        self.testing_saver = tf.train.Saver(max_to_keep=None)
 
         # run variable initializers
         self.sess.run(tf.global_variables_initializer())
@@ -219,6 +211,15 @@ class SubNet:
 
     def set_previous_checkpoint(self):
         self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
+
+    def set_test_checkpoint(self):
+        self.pre_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, int(time.time()), 'checkpoint'), global_step=self.global_step)
+
+    def restore_test_checkpoint(self, timestamp):
+        print('restoring previous')
+        latest_checkpoint_path = tf.train.latest_checkpoint('{0}{1}/'.format(self.test_checkpoint_path, timestamp))
+        print(latest_checkpoint_path)
+        # todo figure out a strategy to run the tests for multiple checkpoints
 
     def print_checkpoints(self):
         latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
@@ -271,3 +272,4 @@ class SubNet:
         # V_unpacked = tf.unstack(grads)
         # for unit in V_unpacked:
         #     print(unit)
+        return
