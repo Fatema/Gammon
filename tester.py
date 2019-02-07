@@ -7,12 +7,15 @@ from backgammon.game import Game
 from modnet import Modnet
 from mono_nn import MonoNN
 
+import numpy as np
+
 model_path = os.environ.get('MODEL_PATH', 'models/')
 summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
 checkpoint_path = os.environ.get('CHECKPOINT_PATH', 'checkpoints/')
 
 previous_mod = Modnet(model_path, summary_path, checkpoint_path, restore=True)
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
+
 
 def test_random(model, episodes=1000, draw=False):
     players = [TDAgent(Game.TOKENS[0], model), RandomAgent(Game.TOKENS[1])]
@@ -54,3 +57,17 @@ def test_self(model, episodes=1000, draw=False):
                                                                               winners[0], winners[1], winners_total,
                                                                               (winners[0] / winners_total) * 100.0))
     model.set_previous_checkpoint()
+
+
+    def testing_gradients():
+        i = np.array([[0,1,2,3,4,5]])
+        h = np.array([[0,1,2,3]])
+        o = np.array([[0,1,2]])
+        w = np.array([[0,1,2],[3,4,5],[6,7,8],[9,10,11]])
+
+        print(i.shape, h.shape, o.shape, w.shape)
+
+        iho = i[0][:, np.newaxis, np.newaxis] * (h * (1 - h))[0][np.newaxis, :, np.newaxis] * w[np.newaxis, :, :] * \
+              (o * (1 - o))[0][np.newaxis, np.newaxis, :]
+
+        print(iho.shape)

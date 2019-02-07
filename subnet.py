@@ -62,24 +62,34 @@ class SubNet:
 
     def set_nn(self):
         # describe network size
-        layer_size_input = 296
+        # set input layer such that each field is 4 units
+        layer_size_input = 200
         layer_size_hidden = 50
-        layer_size_output = 1
+        # set output layer to 4 units
+        # 2 represent the odds of white or black winning
+        # 2 represent either getting a gammon
+        layer_size_output = 4
 
         # placeholders for input and target output
         self.x = tf.placeholder('float', [1, layer_size_input], name='x')
         self.V_next = tf.placeholder('float', [1, layer_size_output], name='V_next')
 
         # build network arch. (just 2 layers with sigmoid activation)
-        prev_y = dense_layer(self.x, [layer_size_input, layer_size_hidden], tf.sigmoid, name='layer1')
-        self.V = dense_layer(prev_y, [layer_size_hidden, layer_size_output], tf.sigmoid, name='layer2')
+        self.prev_y = dense_layer(self.x, [layer_size_input, layer_size_hidden], tf.sigmoid, name='layer1')
+        self.V = dense_layer(self.prev_y, [layer_size_hidden, layer_size_output], tf.sigmoid, name='layer2')
 
         # watch the individual value predictions over time
-        tf.summary.scalar('V_next', tf.reduce_sum(self.V_next))
-        tf.summary.scalar('V', tf.reduce_sum(self.V))
+        tf.summary.scalar('o_next', self.V_next[0][0])
+        tf.summary.scalar('o_gammon_next', self.V_next[0][2])
+        tf.summary.scalar('x_next', self.V_next[0][1])
+        tf.summary.scalar('x_gammon_next', self.V_next[0][3])
+        tf.summary.scalar('o', self.V[0][0])
+        tf.summary.scalar('o_gammon', self.V[0][2])
+        tf.summary.scalar('x', self.V[0][1])
+        tf.summary.scalar('x_gammon', self.V[0][3])
 
         # delta = V_next - V
-        delta_op = tf.reduce_sum(self.V_next - self.V, name='delta')
+        delta_op = self.V_next - self.V
 
         # mean squared error of the difference between the next state and the current state
         loss_op = tf.reduce_mean(tf.square(self.V_next - self.V), name='loss')
@@ -94,7 +104,7 @@ class SubNet:
             game_step_op = game_step.assign_add(1.0)
 
             loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
-            delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
+            # delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
             accuracy_sum = tf.Variable(tf.constant(0.0), name='accuracy_sum', trainable=False)
 
             loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
@@ -102,22 +112,22 @@ class SubNet:
             accuracy_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
 
             loss_sum_op = loss_sum.assign_add(loss_op)
-            delta_sum_op = delta_sum.assign_add(delta_op)
+            # delta_sum_op = delta_sum.assign_add(delta_op)
             accuracy_sum_op = accuracy_sum.assign_add(accuracy_op)
 
             loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
-            delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
+            # delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
             accuracy_avg_op = accuracy_sum / tf.maximum(game_step, 1.0)
 
             loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
-            delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
+            # delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
             accuracy_avg_ema_op = accuracy_avg_ema.apply([accuracy_avg_op])
 
             tf.summary.scalar('game/loss_avg', loss_avg_op)
-            tf.summary.scalar('game/delta_avg', delta_avg_op)
+            # tf.summary.scalar('game/delta_avg', delta_avg_op)
             tf.summary.scalar('game/accuracy_avg', accuracy_avg_op)
             tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
-            tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
+            # tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
             tf.summary.scalar('game/accuracy_avg_ema', accuracy_avg_ema.average(accuracy_avg_op))
 
             # reset per-game monitoring variables
@@ -130,10 +140,11 @@ class SubNet:
 
         # get gradients of output V wrt trainable variables (weights and biases)
         tvars = tf.trainable_variables()
-        grads = tf.gradients(self.V, tvars)
+        grads = self.manual_gradients(tvars)
 
         # watch the weight and gradient distributions
         for grad, var in zip(grads, tvars):
+            print(grad)
             tf.summary.histogram(var.name, var)
             tf.summary.histogram(var.name + '/gradients/grad', grad)
 
@@ -142,6 +153,7 @@ class SubNet:
         apply_gradients = []
         with tf.variable_scope('apply_gradients'):
             for grad, var in zip(grads, tvars):
+                print(var)
                 with tf.variable_scope('trace'):
                     # e-> = lambda * e-> + <grad of output w.r.t weights>
                     trace = tf.Variable(tf.zeros(grad.get_shape()), trainable=False, name='trace')
@@ -149,8 +161,16 @@ class SubNet:
                     tf.summary.histogram(var.name + '/traces', trace)
 
                 # grad with trace = alpha * delta * e
-                grad_trace = self.alpha * delta_op * trace_op
+                if 'layer1' in var.name:
+                    grad_trace = self.alpha * tf.reduce_sum(tf.multiply(delta_op, trace_op), axis=len(trace_op.get_shape()) - 1)
+                elif 'layer2/bias' in var.name:
+                    grad_trace = self.alpha * tf.reduce_sum(delta_op * trace_op, axis=0)
+                else:
+                    grad_trace = self.alpha * delta_op * trace_op
+
                 tf.summary.histogram(var.name + '/gradients/trace', grad_trace)
+
+                print('grade trace', grad_trace.get_shape(), delta_op.get_shape(), trace_op.get_shape())
 
                 grad_apply = var.assign_add(grad_trace)
                 apply_gradients.append(grad_apply)
@@ -160,10 +180,10 @@ class SubNet:
             global_step_op,
             game_step_op,
             loss_sum_op,
-            delta_sum_op,
+            # delta_sum_op,
             accuracy_sum_op,
             loss_avg_ema_op,
-            delta_avg_ema_op,
+            # delta_avg_ema_op,
             accuracy_avg_ema_op
         ]):
             # define single operation to apply all gradient updates
@@ -215,17 +235,39 @@ class SubNet:
     def create_model(self):
         tf.train.write_graph(self.sess.graph_def, self.model_path, self.STRATEGY + '_net.pb', as_text=False)
 
-    def update_model(self, x, winner, episode, episodes, players, game_step):
+    def update_model(self, x, out, episode, episodes, players, game_step):
         _, global_step, summaries, _ = self.sess.run([
             self.train_op,
             self.global_step,
             self.summaries_op,
             self.reset_op
-        ], feed_dict={self.x: x, self.V_next: np.array([[winner]], dtype='float')})
+        ], feed_dict={self.x: x, self.V_next: out})
         self.summary_writer.add_summary(summaries, global_step=global_step)
 
-        print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[winner].player, game_step))
+        p = 0 if out[0][0] else 1
+
+        print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[p].player, game_step))
         self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
 
     def training_end(self):
         self.summary_writer.close()
+
+    def manual_gradients(self, tvars):
+        _, _, w2, _ = tvars
+        dw1_iho = self.x[0][:, np.newaxis, np.newaxis] * (self.prev_y * (1 - self.prev_y))[0][np.newaxis, :, np.newaxis] * w2[np.newaxis, :, :] * \
+              (self.V * (1 - self.V))[0][np.newaxis, np.newaxis, :]
+        db1_ho = (self.prev_y * (1 - self.prev_y))[0][:, np.newaxis] * w2[:, :] * \
+              (self.V * (1 - self.V))[0][np.newaxis, :]
+        dw2_ho = self.prev_y[0][:, np.newaxis] * (self.V * (1 - self.V))[0][np.newaxis, :]
+        db2_o = self.V * (1 - self.V)
+        return [dw1_iho, db1_ho, dw2_ho, db2_o]
+
+    def tf_gradients(self, tvars):
+        # print(tvars)
+        # print(tf.gradients(self.V[0], tvars))
+        # print(tf.range(tf.shape(self.V)[-1]))
+        # grads = tf.map_fn(lambda m : tf.gradients(self.V[m], tvars), tf.range(tf.shape(self.V)[-1]), tf.float32)
+        #
+        # V_unpacked = tf.unstack(grads)
+        # for unit in V_unpacked:
+        #     print(unit)

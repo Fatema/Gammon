@@ -250,6 +250,9 @@ class Game:
         """
         return len(self.off_pieces[self.players[0]]) == self.num_pieces[self.players[0]]
 
+    def check_gammon(self, opp):
+        return len(self.off_pieces[self.players[opp]]) == 0
+
     def is_over(self):
         """
         Checks if the game is over.
@@ -451,42 +454,6 @@ class Game:
             return Game.OFF
 
         return None
-
-    def extract_features(self, player):
-        features = []
-        # print(player)
-        # the order in which the players are evaluated matters
-        for k in range(len(self.players)):
-            p = self.players[k]
-            pip_count = 0
-            for j in range(len(self.grid)):
-                col = self.grid[j]
-                feats = [0.] * 6
-                if len(col) > 0 and col[0] == p:
-                    if k == 0:
-                        temp = len(col) * (24 - j)
-                        pip_count += temp
-                        # print(p,'count per col', j, temp, pip_count, len(col))
-                    else:
-                        temp = len(col) * (j + 1)
-                        pip_count += temp
-                        # print(p,'count per col', j, temp, pip_count, len(col))
-                    for i in range(len(col)):
-                        feats[min(i, 5)] += 1
-                features += feats
-            # print('pip_count before off pieces', pip_count)
-            features.append(float(len(self.bar_pieces[p])) / 2.)
-            features.append(float(len(self.off_pieces[p])) / self.num_pieces[p])
-            # pip_count for the player the closer to home the less the value is
-            # print(self.bar_pieces[p], self.off_pieces[p])
-            pip_count += len(self.bar_pieces[p]) * 25
-            features.append(float(pip_count))
-            # print('pip count for', p, pip_count)
-        if player == self.players[0]:
-            features += [1., 0.]
-        else:
-            features += [0., 1.]
-        return np.array(features).reshape(1, -1)
 
     def generate_random_game(self, losing=True):
         new_grid = [[] for _ in range(Game.NUMCOLS)]

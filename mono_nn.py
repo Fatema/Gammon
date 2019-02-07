@@ -39,6 +39,45 @@ class MonoNN:
     def print_checkpoints(self):
         self.mono_nn.print_checkpoints()
 
+    def extract_features(self, game, player):
+        features = []
+        # print(player)
+        # the order in which the players are evaluated matters
+        for k in range(len(game.players)):
+            p = game.players[k]
+            pip_count = 0
+            for j in range(len(game.grid)):
+                col = game.grid[j]
+                feats = [0.] * 4
+                if len(col) > 0 and col[0] == p:
+                    if k == 0:
+                        temp = len(col) * (24 - j)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    else:
+                        temp = len(col) * (j + 1)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    # set the features to be 4 units each, last unit is set to (n-3)/2
+                    for i in range(len(col)):
+                        if i >= 3: break
+                        feats[i] += 1
+                    feats[3] = (len(col) - 3) / 2. if len(col) > 3 else 0
+                features += feats
+            # print('pip_count before off pieces', pip_count)
+            features.append(float(len(game.bar_pieces[p])) / 2.) # td gammon had it like this to scale the range between 0 and 1
+            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
+            # pip_count for the player the closer to home the less the value is
+            # print(game.bar_pieces[p], game.off_pieces[p])
+            pip_count += len(game.bar_pieces[p]) * 24
+            features.append(float(pip_count))
+            # print('pip count for', p, pip_count)
+        if player == game.players[0]:
+            features += [1., 0.]
+        else:
+            features += [0., 1.]
+        return np.array(features).reshape(1, -1)
+
     def train(self, episodes=5000):
         self.mono_nn.create_model()
 
@@ -58,7 +97,7 @@ class MonoNN:
             game = Game.new()
             player_num = random.randint(0, 1)
 
-            x = game.extract_features(players[player_num].player)
+            x = self.extract_features(game, players[player_num].player)
 
             # print('game beginning ...')
             # game.draw_screen()
@@ -66,7 +105,7 @@ class MonoNN:
             game_step = 0
             while not game.is_over():
                 # print('Player', players[player_num].player, 'turn')
-                # print('extracted features:', x)
+                # print('player', players[player_num].player ,'\nextracted features:', x)
                 roll = game.roll_dice()
                 # print('dice roll', roll)
                 # game.draw_screen()
@@ -77,8 +116,8 @@ class MonoNN:
                     game.reverse()
                 player_num = (player_num + 1) % 2
 
-                x_next = game.extract_features(players[player_num].player)
-                # print('next features extracted', x_next)
+                x_next = self.extract_features(game, players[player_num].player)
+                # print('player', players[player_num].player ,'\nextracted features:', x_next)
                 _, V_next = self.get_output(x_next)
                 # print('next output', V_next)
 
@@ -89,8 +128,13 @@ class MonoNN:
                 game_step += 1
 
             winner = game.winner()
+            # the value passed is either 1 for o winning or 0 for x winning
+            # o is always the player
+            gammon_win = game.check_gammon(winner)
 
-            self.mono_nn.update_model(x, winner,episode, episodes, players, game_step)
+            out = np.array([[winner, not winner, gammon_win and winner, gammon_win and not winner]], dtype='float')
+
+            self.mono_nn.update_model(x, out,episode, episodes, players, game_step)
 
         self.mono_nn.training_end()
 
