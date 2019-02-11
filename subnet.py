@@ -96,37 +96,38 @@ class SubNet:
         delta_op = self.V_next - self.V
 
         # mean squared error of the difference between the next state and the current state
-        loss_op = tf.reduce_mean(tf.square(delta_op), name='loss')
+        # loss_op = tf.reduce_mean(tf.square(delta_op), name='loss')
 
         # track the number of steps and average loss for the current game
         with tf.variable_scope('game'):
             game_step = tf.Variable(tf.constant(0.0), name='game_step', trainable=False)
             game_step_op = game_step.assign_add(1.0)
 
-            loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
-            delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
-
-            loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-            delta_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-
-            loss_sum_op = loss_sum.assign_add(loss_op)
-            delta_sum_op = delta_sum.assign_add(delta_op)
-
-            loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
-            delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
-
-            loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
-            delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
-
-            tf.summary.scalar('game/loss_avg', loss_avg_op)
-            tf.summary.scalar('game/delta_avg', delta_avg_op)
-            tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
-            tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
+            # # todo sort out the summaries
+            # loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
+            # delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
+            #
+            # loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
+            # delta_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
+            #
+            # loss_sum_op = loss_sum.assign_add(loss_op)
+            # delta_sum_op = delta_sum.assign_add(delta_op)
+            #
+            # loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
+            # delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
+            #
+            # loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
+            # delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
+            #
+            # tf.summary.scalar('game/loss_avg', loss_avg_op)
+            # tf.summary.scalar('game/delta_avg', delta_avg_op)
+            # tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
+            # tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
 
             # reset per-game monitoring variables
             game_step_reset_op = game_step.assign(0.0)
-            loss_sum_reset_op = loss_sum.assign(0.0)
-            self.reset_op = tf.group(*[loss_sum_reset_op, game_step_reset_op])
+            # loss_sum_reset_op = loss_sum.assign(0.0)
+            self.reset_op = tf.group(*[game_step_reset_op])
 
         # increment global step: we keep this as a variable so it's saved with checkpoints
         global_step_op = self.global_step.assign_add(1)
@@ -137,7 +138,7 @@ class SubNet:
 
         # watch the weight and gradient distributions
         for grad, var in zip(grads, tvars):
-            print(grad)
+            # print(grad)
             tf.summary.histogram(var.name, var)
             tf.summary.histogram(var.name + '/gradients/grad', grad)
 
@@ -146,7 +147,7 @@ class SubNet:
         apply_gradients = []
         with tf.variable_scope('apply_gradients'):
             for grad, var in zip(grads, tvars):
-                print(var)
+                # print(var)
                 with tf.variable_scope('trace'):
                     # e-> = lambda * e-> + <grad of output w.r.t weights>
                     trace = tf.Variable(tf.zeros(grad.get_shape()), trainable=False, name='trace')
@@ -163,7 +164,7 @@ class SubNet:
 
                 tf.summary.histogram(var.name + '/gradients/trace', grad_trace)
 
-                print('grade trace', grad_trace.get_shape(), delta_op.get_shape(), trace_op.get_shape())
+                # print('grade trace', grad_trace.get_shape(), delta_op.get_shape(), trace_op.get_shape())
 
                 grad_apply = var.assign_add(grad_trace)
                 apply_gradients.append(grad_apply)
@@ -172,10 +173,10 @@ class SubNet:
         with tf.control_dependencies([
             global_step_op,
             game_step_op,
-            loss_sum_op,
-            delta_sum_op,
-            loss_avg_ema_op,
-            delta_avg_ema_op,
+            # loss_sum_op,
+            # delta_sum_op,
+            # loss_avg_ema_op,
+            # delta_avg_ema_op,
         ]):
             # define single operation to apply all gradient updates
             self.train_op = tf.group(*apply_gradients, name='train')
@@ -191,8 +192,10 @@ class SubNet:
         # run variable initializers
         self.sess.run(tf.global_variables_initializer())
 
+        self.timestamp = int(time.time())
+
         self.summary_writer = tf.summary.FileWriter(
-            '{0}{1}'.format(self.summary_path, int(time.time()), self.sess.graph_def))
+            '{0}{1}'.format(self.summary_path, self.timestamp, self.sess.graph_def))
 
     def restore(self):
         latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
@@ -213,7 +216,7 @@ class SubNet:
         self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
 
     def set_test_checkpoint(self):
-        self.pre_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, int(time.time()), 'checkpoint'), global_step=self.global_step)
+        self.pre_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'), global_step=self.global_step)
 
     def restore_test_checkpoint(self, timestamp):
         print('restoring previous')
