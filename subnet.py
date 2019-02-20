@@ -216,7 +216,7 @@ class SubNet:
         self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
 
     def set_test_checkpoint(self):
-        self.pre_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'), global_step=self.global_step)
+        self.testing_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'), global_step=self.global_step)
 
     def restore_test_checkpoint(self, timestamp):
         print('restoring previous')
@@ -265,14 +265,3 @@ class SubNet:
         dw2_ho = self.prev_y[0][:, np.newaxis] * (self.V * (1 - self.V))[0][np.newaxis, :]
         db2_o = self.V * (1 - self.V)
         return [dw1_iho, db1_ho, dw2_ho, db2_o]
-
-    def tf_gradients(self, tvars):
-        # print(tvars)
-        # print(tf.gradients(self.V[0], tvars))
-        # print(tf.range(tf.shape(self.V)[-1]))
-        # grads = tf.map_fn(lambda m : tf.gradients(self.V[m], tvars), tf.range(tf.shape(self.V)[-1]), tf.float32)
-        #
-        # V_unpacked = tf.unstack(grads)
-        # for unit in V_unpacked:
-        #     print(unit)
-        return

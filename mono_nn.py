@@ -41,7 +41,6 @@ class MonoNN:
 
     def extract_features(self, game, player):
         features = []
-        # print(player)
         # the order in which the players are evaluated matters
         for k in range(len(game.players)):
             p = game.players[k]
@@ -53,25 +52,20 @@ class MonoNN:
                     if k == 0:
                         temp = len(col) * (24 - j)
                         pip_count += temp
-                        # print(p,'count per col', j, temp, pip_count, len(col))
                     else:
                         temp = len(col) * (j + 1)
                         pip_count += temp
-                        # print(p,'count per col', j, temp, pip_count, len(col))
                     # set the features to be 4 units each, last unit is set to (n-3)/2
                     for i in range(len(col)):
                         if i >= 3: break
                         feats[i] += 1
                     feats[3] = (len(col) - 3) / 2. if len(col) > 3 else 0
                 features += feats
-            # print('pip_count before off pieces', pip_count)
             features.append(float(len(game.bar_pieces[p])) / 2.) # td gammon had it like this to scale the range between 0 and 1
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
             # pip_count for the player the closer to home the less the value is
-            # print(game.bar_pieces[p], game.off_pieces[p])
             pip_count += len(game.bar_pieces[p]) * 24
             features.append(float(pip_count))
-            # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]
         else:
