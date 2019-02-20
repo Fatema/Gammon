@@ -57,17 +57,3 @@ def test_self(model, episodes=1000, draw=False):
                                                                               winners[0], winners[1], winners_total,
                                                                               (winners[0] / winners_total) * 100.0))
     model.set_previous_checkpoint()
-
-
-    def testing_gradients():
-        i = np.array([[0,1,2,3,4,5]])
-        h = np.array([[0,1,2,3]])
-        o = np.array([[0,1,2]])
-        w = np.array([[0,1,2],[3,4,5],[6,7,8],[9,10,11]])
-
-        print(i.shape, h.shape, o.shape, w.shape)
-
-        iho = i[0][:, np.newaxis, np.newaxis] * (h * (1 - h))[0][np.newaxis, :, np.newaxis] * w[np.newaxis, :, :] * \
-              (o * (1 - o))[0][np.newaxis, np.newaxis, :]
-
-        print(iho.shape)
