@@ -7,8 +7,6 @@ from backgammon.game import Game
 from modnet import Modnet
 from mono_nn import MonoNN
 
-import numpy as np
-
 model_path = os.environ.get('MODEL_PATH', 'models/')
 summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
 checkpoint_path = os.environ.get('CHECKPOINT_PATH', 'checkpoints/')
@@ -23,7 +21,7 @@ def test_random(model, episodes=1000, draw=False):
     for episode in range(episodes):
         game = Game.new()
 
-        winner = game.play(players, draw=draw)
+        winner = 1 - game.play(players, draw=draw)
         winners[winner] += 1
 
         winners_total = sum(winners)
@@ -47,7 +45,7 @@ def test_self(model, episodes=1000, draw=False):
     for episode in range(episodes):
         game = Game.new()
 
-        winner = game.play(players, draw=draw)
+        winner = 1 - game.play(players, draw=draw)
         winners[winner] += 1
 
         winners_total = sum(winners)

@@ -83,51 +83,28 @@ class SubNet:
         self.V = dense_layer(self.prev_y, [layer_size_hidden, layer_size_output], tf.sigmoid, name='layer2')
 
         # watch the individual value predictions over time
-        tf.summary.scalar('o_next', self.V_next[0][0])
-        tf.summary.scalar('o_gammon_next', self.V_next[0][2])
-        tf.summary.scalar('x_next', self.V_next[0][1])
-        tf.summary.scalar('x_gammon_next', self.V_next[0][3])
-        tf.summary.scalar('o', self.V[0][0])
-        tf.summary.scalar('o_gammon', self.V[0][2])
-        tf.summary.scalar('x', self.V[0][1])
-        tf.summary.scalar('x_gammon', self.V[0][3])
+        with tf.variable_scope('V_next'):
+            tf.summary.scalar('player_next', self.V_next[0][0])
+            tf.summary.scalar('player_gammon_next', self.V_next[0][2])
+            tf.summary.scalar('opponent_next', self.V_next[0][1])
+            tf.summary.scalar('opponent_gammon_next', self.V_next[0][3])
+
+        with tf.variable_scope('V'):
+            tf.summary.scalar('player', self.V[0][0])
+            tf.summary.scalar('player_gammon', self.V[0][2])
+            tf.summary.scalar('opponent', self.V[0][1])
+            tf.summary.scalar('opponent_gammon', self.V[0][3])
 
         # delta = V_next - V
         delta_op = self.V_next - self.V
 
-        # mean squared error of the difference between the next state and the current state
-        # loss_op = tf.reduce_mean(tf.square(delta_op), name='loss')
-
         # track the number of steps and average loss for the current game
-        with tf.variable_scope('game'):
-            game_step = tf.Variable(tf.constant(0.0), name='game_step', trainable=False)
-            game_step_op = game_step.assign_add(1.0)
+        game_step = tf.Variable(tf.constant(0.0), name='game_step', trainable=False)
+        game_step_op = game_step.assign_add(1.0)
 
-            # # todo sort out the summaries
-            # loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
-            # delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
-            #
-            # loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-            # delta_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-            #
-            # loss_sum_op = loss_sum.assign_add(loss_op)
-            # delta_sum_op = delta_sum.assign_add(delta_op)
-            #
-            # loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
-            # delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
-            #
-            # loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
-            # delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
-            #
-            # tf.summary.scalar('game/loss_avg', loss_avg_op)
-            # tf.summary.scalar('game/delta_avg', delta_avg_op)
-            # tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
-            # tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
-
-            # reset per-game monitoring variables
-            game_step_reset_op = game_step.assign(0.0)
-            # loss_sum_reset_op = loss_sum.assign(0.0)
-            self.reset_op = tf.group(*[game_step_reset_op])
+        # reset per-game monitoring variables
+        game_step_reset_op = game_step.assign(0.0)
+        self.reset_op = tf.group(*[game_step_reset_op])
 
         # increment global step: we keep this as a variable so it's saved with checkpoints
         global_step_op = self.global_step.assign_add(1)
@@ -173,16 +150,30 @@ class SubNet:
         with tf.control_dependencies([
             global_step_op,
             game_step_op,
-            # loss_sum_op,
-            # delta_sum_op,
-            # loss_avg_ema_op,
-            # delta_avg_ema_op,
         ]):
             # define single operation to apply all gradient updates
             self.train_op = tf.group(*apply_gradients, name='train')
 
         # merge summaries for TensorBoard
         self.summaries_op = tf.summary.merge_all()
+
+        # keep track on the number of games taken
+        self.game_number = tf.Variable(tf.constant(0.0), name='game_number', trainable=False)
+        game_number_op = self.game_number.assign_add(1)
+
+        with tf.variable_scope('game'):
+            ppg = tf.reduce_sum(self.V_next) * (self.V_next[0][0] - self.V_next[0][1])
+            ppg_sum = tf.Variable(tf.constant(0.0), name='ppg_sum', trainable=False)
+            ppg_sum_op = ppg_sum.assign_add(ppg)
+            with tf.control_dependencies([
+                ppg_sum_op,
+                game_number_op
+                ]):
+                self.ppg_avg_op = ppg_sum / tf.maximum(self.game_number, 1.0)
+            ppg_avg_summary = tf.summary.scalar('ppg', self.ppg_avg_op)
+            game_step_summary = tf.summary.scalar('game_step', game_step)
+
+        self.ppg_summary_op = tf.summary.merge([ppg_avg_summary, game_step_summary])
 
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
@@ -240,13 +231,21 @@ class SubNet:
         tf.train.write_graph(self.sess.graph_def, self.model_path, self.STRATEGY + '_net.pb', as_text=False)
 
     def update_model(self, x, out, episode, episodes, players, game_step):
-        _, global_step, summaries, _ = self.sess.run([
+        _, global_step, summaries = self.sess.run([
             self.train_op,
             self.global_step,
             self.summaries_op,
-            self.reset_op
         ], feed_dict={self.x: x, self.V_next: out})
         self.summary_writer.add_summary(summaries, global_step=global_step)
+
+        _, game_number, ppg_summaries, _ = self.sess.run([
+            self.ppg_avg_op,
+            self.game_number,
+            self.ppg_summary_op,
+            self.reset_op
+        ], feed_dict={self.V_next: out})
+
+        self.summary_writer.add_summary(ppg_summaries, game_number)
 
         p = 0 if out[0][0] else 1
 

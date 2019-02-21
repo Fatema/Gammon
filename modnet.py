@@ -72,10 +72,10 @@ class Modnet:
 
         # the calculation is based on the player view
         # min means that it is closer to the perspective player home and max is the opposite
-        # opp_min = 23 - np.argmax(opp_checkers[::-1]) // 6
+        opp_min = 23 - np.argmax(opp_checkers[::-1]) // 6
         opp_max = np.argmax(opp_checkers) // 6
 
-        # player_min = np.argmax(player_checkers) // 6
+        player_min = np.argmax(player_checkers) // 6
         player_max = 23 - np.argmax(player_checkers[::-1]) // 6
 
         net = 'd'
@@ -83,14 +83,14 @@ class Modnet:
         if player_max < opp_max or player_pip > opp_pip:
             net = 'r'
         else:
-            # player_close_pos = 0
+            player_close_pos = 0
             player_trapped_pos = 0
             player_trapped_count = 0
-            # opp_trapped_pos = 0
-            # opp_trapped_count = 0
+            opp_trapped_pos = 0
+            opp_trapped_count = 0
 
-            # for i in range(player_min, opp_max):
-            #     player_close_pos += player_checkers[i * 6]
+            for i in range(player_min, opp_max):
+                player_close_pos += player_checkers[i * 6]
 
             for i in range(opp_max + 1, player_max + 1):
                 # if sum is 1 move to a defensive strategy

@@ -20,12 +20,12 @@ class TDAgent:
         v_best = 0
         a_best = None
 
-        p = 0 if self.player == game.players[0] else 1
+        # p = 0 if self.player == game.players[0] else 1
 
         """
         1-ply method, it is greedy selection for an action
         """
-        # print('considering actions:', actions)
+        # print('player', self.player,'considering actions:', actions)
         for a in actions:
             # print('action considered:', a)
             ateList = game.take_action(a, self.player)
@@ -36,12 +36,13 @@ class TDAgent:
             # print('features after action:', features)
             _, v = self.model.get_output(features)
             # print('NN output', v)
-            if v[0][p] > v_best:
-                v_best = v[0][p]
+            # game is always taken from o perspective
+            if v[0][0] > v_best:
+                v_best = v[0][0]
                 a_best = a
             game.undo_action(a, self.player, ateList)
 
-        # print('best action selected', a_best)
+        # print('best action selected', a_best, v_best)
 
         return a_best
 

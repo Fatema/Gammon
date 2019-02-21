@@ -45,10 +45,12 @@ class MonoNN:
         for k in range(len(game.players)):
             p = game.players[k]
             pip_count = 0
+            hit_count = 0
             for j in range(len(game.grid)):
                 col = game.grid[j]
                 feats = [0.] * 4
                 if len(col) > 0 and col[0] == p:
+                    if len(col) == 1: hit_count += 1
                     if k == 0:
                         temp = len(col) * (24 - j)
                         pip_count += temp
@@ -61,7 +63,8 @@ class MonoNN:
                         feats[i] += 1
                     feats[3] = (len(col) - 3) / 2. if len(col) > 3 else 0
                 features += feats
-            features.append(float(len(game.bar_pieces[p])) / 2.) # td gammon had it like this to scale the range between 0 and 1
+            # td gammon had it like this to scale the range between 0 and 1
+            features.append(float(len(game.bar_pieces[p])) / 2.)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
             # pip_count for the player the closer to home the less the value is
             pip_count += len(game.bar_pieces[p]) * 24
@@ -116,7 +119,6 @@ class MonoNN:
                 _, V_next = self.get_output(x_next)
                 # print('next output', V_next)
 
-                ## why are we feeding x here??
                 self.mono_nn.run_output(x, V_next)
 
                 x = x_next
@@ -128,9 +130,9 @@ class MonoNN:
             gammon_win = game.check_gammon(winner)
 
             out = np.array([[winner, not winner, gammon_win and winner, gammon_win and not winner]], dtype='float')
-
+            print(out)
             self.mono_nn.update_model(x, out,episode, episodes, players, game_step)
 
         self.mono_nn.training_end()
 
-        tester.test_self(self)
+        # tester.test_self(self)
