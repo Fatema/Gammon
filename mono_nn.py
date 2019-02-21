@@ -124,12 +124,16 @@ class MonoNN:
                 x = x_next
                 game_step += 1
 
+            # if not game.is_over():
+            #     print('game skipped step count exceeded')
+            #     continue
+
             winner = game.winner()
             # the value passed is either 1 for o winning or 0 for x winning
             # o is always the player
             gammon_win = game.check_gammon(winner)
 
-            out = np.array([[winner, not winner, gammon_win and winner, gammon_win and not winner]], dtype='float')
+            out = np.array([[not winner, winner, gammon_win and not winner, gammon_win and winner]], dtype='float')
             print(out)
             self.mono_nn.update_model(x, out,episode, episodes, players, game_step)
 

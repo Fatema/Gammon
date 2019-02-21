@@ -247,7 +247,7 @@ class SubNet:
 
         self.summary_writer.add_summary(ppg_summaries, game_number)
 
-        p = 0 if out[0][0] else 1
+        p = 1 if out[0][0] else 0
 
         print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[p].player, game_step))
         self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
