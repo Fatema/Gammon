@@ -15,7 +15,7 @@ previous_mod = Modnet(model_path, summary_path, checkpoint_path, restore=True)
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
 
-def test_random(model, episodes=1000, draw=False):
+def test_random(model, episodes=100, draw=False):
     players = [TDAgent(Game.TOKENS[0], model), RandomAgent(Game.TOKENS[1])]
     winners = [0, 0]
     for episode in range(episodes):
@@ -32,7 +32,7 @@ def test_random(model, episodes=1000, draw=False):
                                                                               (winners[0] / winners_total) * 100.0))
 
 
-def test_self(model, episodes=1000, draw=False):
+def test_self(model, episodes=100, draw=False):
     if isinstance(model, Modnet):
         previous_model = previous_mod
     else:
@@ -45,13 +45,13 @@ def test_self(model, episodes=1000, draw=False):
     for episode in range(episodes):
         game = Game.new()
 
-        winner = 1 - game.play(players, draw=draw)
-        winners[winner] += 1
+        winner = game.play(players, draw=draw)
+        print(winner)
+        winners[not winner] += 1
 
         winners_total = sum(winners)
-        print("[Episode %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
-                                                                              players[0].player, players[0].player,
-                                                                              players[1].player, players[1].player,
-                                                                              winners[0], winners[1], winners_total,
-                                                                              (winners[0] / winners_total) * 100.0))
-    model.set_previous_checkpoint()
+        print("[Episode %d] (%s) vs (%s) %d:%d of %d games (%.2f%%)" % (episode,
+                                                                        players[0].player,
+                                                                        players[1].player,
+                                                                        winners[0], winners[1], winners_total,
+                                                                        (winners[0] / winners_total) * 100.0))

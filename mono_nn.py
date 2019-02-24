@@ -81,7 +81,7 @@ class MonoNN:
         # the agent plays against itself, making the best move for each player
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
 
-        validation_interval = 1000
+        validation_interval = 100
 
         for episode in range(episodes):
             # print()
@@ -89,6 +89,8 @@ class MonoNN:
             # print('episode', episode)
             if episode != 0 and episode % validation_interval == 0:
                 tester.test_self(self)
+                tester.test_random(self)
+                self.mono_nn.set_previous_checkpoint()
                 self.mono_nn.set_test_checkpoint()
                 # self.print_checkpoints()
 
@@ -124,19 +126,12 @@ class MonoNN:
                 x = x_next
                 game_step += 1
 
-            # if not game.is_over():
-            #     print('game skipped step count exceeded')
-            #     continue
 
             winner = game.winner()
-            # the value passed is either 1 for o winning or 0 for x winning
-            # o is always the player
             gammon_win = game.check_gammon(winner)
-
-            out = np.array([[not winner, winner, gammon_win and not winner, gammon_win and winner]], dtype='float')
-            print(out)
-            self.mono_nn.update_model(x, out,episode, episodes, players, game_step)
+            out = np.array([[winner, gammon_win and winner, gammon_win and not winner]], dtype='float')
+            self.mono_nn.update_model(x, out, episode, episodes, players, game_step)
 
         self.mono_nn.training_end()
 
-        # tester.test_self(self)
+        tester.test_self(self)

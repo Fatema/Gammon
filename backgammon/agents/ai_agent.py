@@ -20,8 +20,6 @@ class TDAgent:
         v_best = 0
         a_best = None
 
-        # p = 0 if self.player == game.players[0] else 1
-
         """
         1-ply method, it is greedy selection for an action
         """
@@ -33,16 +31,19 @@ class TDAgent:
             # I can change this so it uses the model extract features
             features = self.model.extract_features(game, game.opponent(self.player))
             # game.draw_screen()
-            # print('features after action:', features)
             _, v = self.model.get_output(features)
             # print('NN output', v)
-            # game is always taken from o perspective
-            if v[0][0] > v_best:
-                v_best = v[0][0]
+            # v_w = 1 - v[0][0] if self.player == game.players[0] else v[0][0]
+            v_w = v[0][0]
+            # v_w = 2 * v[0][0] - 1 + 2 * (v[0][1] - v[0][2])
+            if v_w > v_best:
+                v_best = v_w
                 a_best = a
             game.undo_action(a, self.player, ateList)
 
-        # print('best action selected', a_best, v_best)
+        # print('features after action:', features)
+
+        # print('best action selected', a_best, v_best, self.player)
 
         return a_best
 

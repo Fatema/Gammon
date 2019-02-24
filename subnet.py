@@ -72,7 +72,7 @@ class SubNet:
         # set output layer to 4 units
         # 2 represent the odds of white or black winning
         # 2 represent either getting a gammon
-        layer_size_output = 4
+        layer_size_output = 3
 
         # placeholders for input and target output
         self.x = tf.placeholder('float', [1, layer_size_input], name='x')
@@ -84,16 +84,14 @@ class SubNet:
 
         # watch the individual value predictions over time
         with tf.variable_scope('V_next'):
-            tf.summary.scalar('player_next', self.V_next[0][0])
-            tf.summary.scalar('player_gammon_next', self.V_next[0][2])
-            tf.summary.scalar('opponent_next', self.V_next[0][1])
-            tf.summary.scalar('opponent_gammon_next', self.V_next[0][3])
+            tf.summary.scalar('winning', self.V_next[0][0])
+            tf.summary.scalar('winning_gammon_next', self.V_next[0][2])
+            tf.summary.scalar('losing_gammon_next', self.V_next[0][1])
 
         with tf.variable_scope('V'):
-            tf.summary.scalar('player', self.V[0][0])
-            tf.summary.scalar('player_gammon', self.V[0][2])
-            tf.summary.scalar('opponent', self.V[0][1])
-            tf.summary.scalar('opponent_gammon', self.V[0][3])
+            tf.summary.scalar('winning', self.V[0][0])
+            tf.summary.scalar('winning_gammon', self.V[0][2])
+            tf.summary.scalar('losing_gammon', self.V[0][1])
 
         # delta = V_next - V
         delta_op = self.V_next - self.V
@@ -162,7 +160,8 @@ class SubNet:
         game_number_op = self.game_number.assign_add(1)
 
         with tf.variable_scope('game'):
-            ppg = tf.reduce_sum(self.V_next) * (self.V_next[0][0] - self.V_next[0][1])
+            # cubeless equity = 2 * W - 1 + 2 * (WD - LD)
+            ppg = 2 * self.V_next[0][0] - 1 + 2 * (self.V_next[0][1] - self.V_next[0][2])
             ppg_sum = tf.Variable(tf.constant(0.0), name='ppg_sum', trainable=False)
             ppg_sum_op = ppg_sum.assign_add(ppg)
             with tf.control_dependencies([
@@ -247,7 +246,7 @@ class SubNet:
 
         self.summary_writer.add_summary(ppg_summaries, game_number)
 
-        p = 1 if out[0][0] else 0
+        p = 0 if out[0][0] else 1
 
         print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[p].player, game_step))
         self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
