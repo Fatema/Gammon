@@ -34,11 +34,15 @@ def test_random(model, episodes=100, draw=False):
 
 def test_self(model, episodes=100, draw=False):
     if isinstance(model, Modnet):
+        testing_mono = False
         previous_model = previous_mod
     else:
+        testing_mono = True
         previous_model = previous_mono
 
     previous_model.restore_previous()
+
+    model.print_checkpoints()
 
     players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
     winners = [0, 0]
