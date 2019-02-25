@@ -11,18 +11,19 @@ except:
 
 
 class Game:
-    LAYOUT = "0-2-o,5-5-x,7-3-x,11-5-o,12-5-x,16-3-o,18-5-o,23-2-x"
-    NUMCOLS = 24
+    LAYOUT = "0-2-x,5-5-o,7-3-o,11-5-x,12-5-o,16-3-x,18-5-x,23-2-o"
+    NUMFIELDS = 24
     QUAD = 6
     OFF = 'off'
     ON = 'on'
-    TOKENS = ['o','x']
+    PLAYERS = ['o','x']
 
     def __init__(self, layout=LAYOUT, grid=None, off_pieces=None,
-                 bar_pieces=None, num_pieces=None, gplayers=None):
+                 bar_pieces=None, num_pieces=None, players=None):
         """
         Define a new game object
         """
+        self.num_steps = 0
         self.die = Game.QUAD
         self.layout = layout
         if grid:
@@ -30,10 +31,10 @@ class Game:
             self.off_pieces = copy.deepcopy(off_pieces)
             self.bar_pieces = copy.deepcopy(bar_pieces)
             self.num_pieces = copy.deepcopy(num_pieces)
-            self.players = gplayers
+            self.players = players
             return
-        self.players = Game.TOKENS
-        self.grid = [[] for _ in range(Game.NUMCOLS)]
+        self.players = Game.PLAYERS
+        self.grid = [[] for _ in range(Game.NUMFIELDS)]
         self.off_pieces = {}
         self.bar_pieces = {}
         self.num_pieces = {}
@@ -43,6 +44,7 @@ class Game:
             self.num_pieces[t] = 0
         self.init = True
         self.roll = None
+        self.reversed = False
 
     @staticmethod
     def new(layout=LAYOUT):
@@ -62,33 +64,49 @@ class Game:
         return random.randint(1, self.die), random.randint(1, self.die)
 
     def play(self, players, draw=False):
+        assert len(players) == 2
+        assert players[0].player == self.players[0]
         player_num = random.randint(0, 1)
-        turns = 0
         while not self.is_over():
-            turns += 1
-            nodups = False
-            roll = self.roll_dice()
-            if draw:
-                self.draw(roll)
+            self.next_step(players[player_num], draw=draw)
             player_num = (player_num + 1) % 2
-            if player_num:
-                nodups = True
-                self.reverse()
-            self.take_turn(players[player_num], roll, draw=draw, nodups=nodups)
-            if player_num:
-                self.reverse()
-            time.sleep(.02)
+        if draw:
+            print("\nGame is over, winner: '%s'" % self.players[self.winner()])
         return self.winner()
 
-    def take_turn(self, player, roll, draw=False, nodups=False):
+    def next_step(self, player, draw=False):
+        self.num_steps += 1
+
+        roll = self.roll_dice()
+
         if draw:
-            print("Player %s rolled <%d, %d>." % (player.player, roll[0], roll[1]))
+            self.draw(roll)
+
+        self.take_turn(player, roll, draw=draw)
+
+    def take_turn(self, player, roll, draw=False, nodups=True):
+        if draw:
+            print("'%s' rolled <%d, %d>" % (player.player, roll[0], roll[1]))
             time.sleep(1)
+
+        if player.player == self.PLAYERS[0]:
+            self.reversed = True
+            self.grid.reverse()
+
+        # self.draw_screen()
         moves = self.get_actions(roll, player.player, nodups=nodups)
+        # print('moves to consider:', moves)
+
         move = player.get_action(moves, self) if moves else None
 
         if move:
             self.take_action(move, player.player)
+
+        if player.player == self.PLAYERS[0]:
+            self.grid.reverse()
+            # moves = self.flip_moves(moves)
+            # print('moves flipped ', moves)
+            self.reversed = False
 
     def take_action(self, action, token):
         """
@@ -225,13 +243,45 @@ class Game:
         """
         return self.is_over() and player!=self.players[self.winner()]
 
-    def reverse(self):
-        """
-        Reverses a game allowing it to be seen by the opponent
-        from the same perspective
-        """
-        self.grid.reverse()
-        self.players.reverse()
+    # @staticmethod
+    # def flip_position(pos):
+    #     return (pos + Game.NUMFIELDS // 2) % Game.NUMFIELDS
+    #
+    # def flip_board(self):
+    #     """
+    #     Flip the board, so 'x' layout becomes 'o' and vice versa
+    #     """
+    #     h = Game.NUMFIELDS // 2
+    #     for i in range(h):
+    #         self.grid[i], self.grid[i + h] = self.grid[i + h], self.grid[i]
+    #
+    # @staticmethod
+    # def flip_moves(moves):
+    #     """
+    #     Flip the moves, so 'x' move becomes 'o' move and vice versa
+    #     """
+    #     flipped_moves = set()
+    #
+    #     h = Game.NUMFIELDS // 2
+    #     for move in moves:
+    #         flipped_move = ()
+    #         for s, e in move:
+    #             if s != Game.ON:
+    #                 s = (s + h) % Game.NUMFIELDS
+    #             if e != Game.OFF:
+    #                 e = (e + h) % Game.NUMFIELDS
+    #             flipped_move += ((s, e),)
+    #         flipped_moves.add(flipped_move)
+    #
+    #     return flipped_moves
+
+    # def reverse(self):
+    #     """
+    #     Reverses a game allowing it to be seen by the opponent
+    #     from the same perspective
+    #     """
+    #     self.grid.reverse()
+    #     self.players.reverse()
 
     def new_game(self):
         """
@@ -248,10 +298,10 @@ class Game:
         """
         Get winner.
         """
-        return len(self.off_pieces[self.players[0]]) == self.num_pieces[self.players[0]]
+        return 0 if len(self.off_pieces[self.players[0]]) == self.num_pieces[self.players[0]] else 1
 
-    def check_gammon(self, opp):
-        return len(self.off_pieces[self.players[opp]]) == 0
+    def check_gammon(self, winner):
+        return len(self.off_pieces[self.players[not winner]]) == 0
 
     def is_over(self):
         """
@@ -264,7 +314,7 @@ class Game:
 
     def can_offboard(self,player):
         count = 0
-        for i in range(Game.NUMCOLS-self.die,Game.NUMCOLS):
+        for i in range(Game.NUMFIELDS-self.die,Game.NUMFIELDS):
             if len(self.grid[i]) > 0 and self.grid[i][0] == player:
                 count += len(self.grid[i])
         if count+len(self.off_pieces[player]) == self.num_pieces[player]:
@@ -287,14 +337,14 @@ class Game:
         In this function we assume we are cool to offboard,
         i.e. no pieces on the bar and all are in the home quadrant.
         """
-        if start < Game.NUMCOLS - self.die:
+        if start < Game.NUMFIELDS - self.die:
             return False
         if len(self.grid[start]) == 0 or self.grid[start][0] != player:
             return False
-        if start+r  ==  Game.NUMCOLS:
+        if start+r  ==  Game.NUMFIELDS:
             return True
-        if start+r > Game.NUMCOLS:
-            for i in range(start-1,Game.NUMCOLS-self.die-1,-1):
+        if start+r > Game.NUMFIELDS:
+            for i in range(start-1,Game.NUMFIELDS-self.die-1,-1):
                 if len(self.grid[i]) != 0 and self.grid[i][0] == self.players[0]:
                     return False
             return True
@@ -384,7 +434,7 @@ class Game:
                 hskip = -hskip
                 k = i - 12
             self.gridLocs.append([(WOFFSET_TOP + k * WSKIP + mid, hoff + j * hskip) for j in range(6)])
-        self.barLocs = {'x': [(376, 142), (376, 110)], 'o': [(376, 243), (376, 275)]}
+        self.barLocs = {'o': [(376, 142), (376, 110)], 'x': [(376, 243), (376, 275)]}
         self.board_img = pygame.transform.scale(pygame.image.load('images/board.png'), size)
         self.screen = pygame.display.set_mode(self.board_img.get_rect().size)
         self.tokIms = {'x': pygame.image.load('images/blackPiece.png'),
@@ -398,8 +448,8 @@ class Game:
         bOffH = 391
         wOffH = 11
         offSkip = 9
-        self.offLocs = {'x': [(outOff, bOffH - i * offSkip) for i in range(19)],
-                        'o': [(outOff, wOffH + i * offSkip) for i in range(19)]}
+        self.offLocs = {'o': [(outOff, bOffH - i * offSkip) for i in range(19)],
+                        'x': [(outOff, wOffH + i * offSkip) for i in range(19)]}
 
     def draw_gui(self, roll):
         if self.init:
@@ -456,7 +506,7 @@ class Game:
         return None
 
     def generate_random_game(self, losing=True):
-        new_grid = [[] for _ in range(Game.NUMCOLS)]
+        new_grid = [[] for _ in range(Game.NUMFIELDS)]
         o_remain = 15
         x_remain = 15
         if losing:
@@ -466,9 +516,9 @@ class Game:
         j = 0
         while o_remain > 0 or x_remain > 0:
             if random.random() < 0.5 or new_grid[j] != []:
-                j = (j + 1) % self.NUMCOLS
+                j = (j + 1) % self.NUMFIELDS
                 continue
-            token = random.choice(self.TOKENS)
+            token = random.choice(self.PLAYERS)
             if token == 'o':
                 rand = random.randint(0, min(o_remain, 6))
                 o_remain -= rand
@@ -476,13 +526,13 @@ class Game:
                 rand = random.randint(0, min(x_remain, 6))
                 x_remain -= rand
             new_grid[j] = [token for _ in range(rand)]
-            j = (j + 1) % self.NUMCOLS
+            j = (j + 1) % self.NUMFIELDS
         self.grid = new_grid
         print(new_grid)
 
 
 if __name__ == '__main__':
-    g = Game(Game.LAYOUT)
+    g = Game()
     g.new_game()
-    g.generate_random_game()
+    # g.generate_random_game()
     # g.draw((4,3))

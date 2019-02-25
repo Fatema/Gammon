@@ -16,12 +16,12 @@ previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
 
 def test_random(model, episodes=100, draw=False):
-    players = [TDAgent(Game.TOKENS[0], model), RandomAgent(Game.TOKENS[1])]
+    players = [TDAgent(Game.PLAYERS[0], model), RandomAgent(Game.PLAYERS[1])]
     winners = [0, 0]
     for episode in range(episodes):
         game = Game.new()
 
-        winner = 1 - game.play(players, draw=draw)
+        winner = game.play(players, draw=draw)
         winners[winner] += 1
 
         winners_total = sum(winners)
@@ -40,14 +40,16 @@ def test_self(model, episodes=100, draw=False):
 
     previous_model.restore_previous()
 
-    players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
+    # model.print_checkpoints()
+
+    players = [TDAgent(Game.PLAYERS[0], model), TDAgent(Game.PLAYERS[1], previous_model)]
     winners = [0, 0]
     for episode in range(episodes):
         game = Game.new()
 
         winner = game.play(players, draw=draw)
         print(winner)
-        winners[not winner] += 1
+        winners[winner] += 1
 
         winners_total = sum(winners)
         print("[Episode %d] (%s) vs (%s) %d:%d of %d games (%.2f%%)" % (episode,

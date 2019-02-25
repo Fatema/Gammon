@@ -33,8 +33,8 @@ class TDAgent:
             # game.draw_screen()
             _, v = self.model.get_output(features)
             # print('NN output', v)
-            # v_w = 1 - v[0][0] if self.player == game.players[0] else v[0][0]
-            v_w = v[0][0]
+            v_w = 1 - v[0][0] if self.player == game.players[0] else v[0][0]
+            # v_w = v[0][0]
             # v_w = 2 * v[0][0] - 1 + 2 * (v[0][1] - v[0][2])
             if v_w > v_best:
                 v_best = v_w

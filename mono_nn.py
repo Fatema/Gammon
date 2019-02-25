@@ -6,6 +6,8 @@ import tester
 from backgammon.agents.ai_agent import TDAgent
 from backgammon.agents.random_agent import RandomAgent
 from backgammon.game import Game
+
+from backgammon.agents.human_agent import HumanAgent
 from subnet import *
 
 
@@ -16,22 +18,8 @@ class MonoNN:
         self.mono_nn.set_paths(model_path, summary_path, checkpoint_path)
         self.mono_nn.start_session(restore=restore)
 
-    # this method is not really related to the model but it is encapsulated as part of the model class
-    def play(self):
-        turns = 0
-        num_games = 0
-        while turns < 500 and num_games < 500:
-            num_games += 1
-            print(num_games)
-            game = Game.new()
-            _, turns = game.play([RandomAgent(Game.TOKENS[0]), RandomAgent(Game.TOKENS[1])], draw=False)
-            print('num turns', turns)
-
     def get_output(self, x):
         return '', self.mono_nn.get_output(x)
-
-    def set_previous_checkpoint(self):
-        self.mono_nn.set_previous_checkpoint()
 
     def restore_previous(self):
         self.mono_nn.restore_previous()
@@ -51,11 +39,11 @@ class MonoNN:
                 feats = [0.] * 4
                 if len(col) > 0 and col[0] == p:
                     if len(col) == 1: hit_count += 1
-                    if k == 0:
-                        temp = len(col) * (24 - j)
+                    if k == game.reversed:
+                        temp = len(col) * (j + 1)
                         pip_count += temp
                     else:
-                        temp = len(col) * (j + 1)
+                        temp = len(col) * (24 - j)
                         pip_count += temp
                     # set the features to be 4 units each, last unit is set to (n-3)/2
                     for i in range(len(col)):
@@ -75,13 +63,19 @@ class MonoNN:
             features += [0., 1.]
         return np.array(features).reshape(1, -1)
 
+    def play(self):
+        game = Game.new()
+        game.play([TDAgent(Game.PLAYERS[0], self), HumanAgent(Game.PLAYERS[1])], draw=True)
+
     def train(self, episodes=5000):
         self.mono_nn.create_model()
 
         # the agent plays against itself, making the best move for each player
-        players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
+        players = [TDAgent(Game.PLAYERS[0], self), TDAgent(Game.PLAYERS[1], self)]
 
         validation_interval = 100
+
+        self.mono_nn.set_test_checkpoint()
 
         for episode in range(episodes):
             # print()
@@ -89,9 +83,9 @@ class MonoNN:
             # print('episode', episode)
             if episode != 0 and episode % validation_interval == 0:
                 tester.test_self(self)
-                tester.test_random(self)
                 self.mono_nn.set_previous_checkpoint()
                 self.mono_nn.set_test_checkpoint()
+                tester.test_random(self)
                 # self.print_checkpoints()
 
             game = Game.new()
@@ -104,32 +98,26 @@ class MonoNN:
 
             game_step = 0
             while not game.is_over():
-                # print('Player', players[player_num].player, 'turn')
-                # print('player', players[player_num].player ,'\nextracted features:', x)
-                roll = game.roll_dice()
-                # print('dice roll', roll)
                 # game.draw_screen()
-                if player_num:
-                    game.reverse()
-                game.take_turn(players[player_num], roll, nodups=True)
-                if player_num:
-                    game.reverse()
+
+                game.next_step(players[player_num])
                 player_num = (player_num + 1) % 2
 
                 x_next = self.extract_features(game, players[player_num].player)
-                # print('player', players[player_num].player ,'\nextracted features:', x_next)
-                _, V_next = self.get_output(x_next)
-                # print('next output', V_next)
+                V_next = self.mono_nn.get_output(x_next)
 
                 self.mono_nn.run_output(x, V_next)
 
                 x = x_next
-                game_step += 1
-
 
             winner = game.winner()
             gammon_win = game.check_gammon(winner)
             out = np.array([[winner, gammon_win and winner, gammon_win and not winner]], dtype='float')
+
+            print("[Train %d/%d] (winner: '%s') in %d turns" % (episode, episodes,
+                                                                players[winner].player,
+                                                                game.num_steps))
+
             self.mono_nn.update_model(x, out, episode, episodes, players, game_step)
 
         self.mono_nn.training_end()

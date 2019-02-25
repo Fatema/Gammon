@@ -169,10 +169,11 @@ class SubNet:
                 game_number_op
                 ]):
                 self.ppg_avg_op = ppg_sum / tf.maximum(self.game_number, 1.0)
-            ppg_avg_summary = tf.summary.scalar('ppg', self.ppg_avg_op)
+            ppg_summary = tf.summary.scalar('ppg', ppg)
+            ppg_avg_summary = tf.summary.scalar('ppg_avg', self.ppg_avg_op)
             game_step_summary = tf.summary.scalar('game_step', game_step)
 
-        self.ppg_summary_op = tf.summary.merge([ppg_avg_summary, game_step_summary])
+        self.ppg_summary_op = tf.summary.merge([ppg_summary, ppg_avg_summary, game_step_summary])
 
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
@@ -243,12 +244,8 @@ class SubNet:
             self.ppg_summary_op,
             self.reset_op
         ], feed_dict={self.V_next: out})
-
         self.summary_writer.add_summary(ppg_summaries, game_number)
 
-        p = 0 if out[0][0] else 1
-
-        print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[p].player, game_step))
         self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
 
     def training_end(self):
