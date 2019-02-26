@@ -33,14 +33,16 @@ class TDAgent:
             # game.draw_screen()
             # print('features after action:', features)
             _, v = self.model.get_output(features)
-            v = 1. - v if self.player == game.players[0] else v
+            # print(v)
+            # minimize the probability of the opponent winning
+            v = 1. - v
             # print('NN output', v)
             if v > v_best:
                 v_best = v
                 a_best = a
             game.undo_action(a, self.player, ateList)
 
-        # print('best action selected', a_best)
+        # print('best action selected', a_best, v_best, self.player)
 
         return a_best
 
