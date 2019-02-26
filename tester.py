@@ -14,7 +14,7 @@ checkpoint_path = os.environ.get('CHECKPOINT_PATH', 'checkpoints/')
 previous_mod = Modnet(model_path, summary_path, checkpoint_path, restore=True)
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
-def test_random(model, episodes=1000, draw=False):
+def test_random(model, episodes=100, draw=False):
     players = [TDAgent(Game.TOKENS[0], model), RandomAgent(Game.TOKENS[1])]
     winners = [0, 0]
     for episode in range(episodes):
@@ -31,7 +31,7 @@ def test_random(model, episodes=1000, draw=False):
                                                                               (winners[0] / winners_total) * 100.0))
 
 
-def test_self(model, episodes=1000, draw=False):
+def test_self(model, episodes=100, draw=False):
     if isinstance(model, Modnet):
         previous_model = previous_mod
     else:
