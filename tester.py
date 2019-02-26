@@ -21,10 +21,10 @@ def test_random(model, episodes=1000, draw=False):
         game = Game.new()
 
         winner = game.play(players, draw=draw)
-        winners[winner] += 1
+        winners[not winner] += 1
 
         winners_total = sum(winners)
-        print("[Episode %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
+        print("[Test %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
                                                                               players[0].player, players[0].player,
                                                                               players[1].player, players[1].player,
                                                                               winners[0], winners[1], winners_total,
@@ -38,6 +38,7 @@ def test_self(model, episodes=1000, draw=False):
         previous_model = previous_mono
 
     previous_model.restore_previous()
+    model.print_checkpoints()
 
     players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
     winners = [0, 0]
@@ -45,12 +46,11 @@ def test_self(model, episodes=1000, draw=False):
         game = Game.new()
 
         winner = game.play(players, draw=draw)
-        winners[winner] += 1
+        winners[not winner] += 1
 
         winners_total = sum(winners)
-        print("[Episode %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
+        print("[Test %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
                                                                               players[0].player, players[0].player,
                                                                               players[1].player, players[1].player,
                                                                               winners[0], winners[1], winners_total,
                                                                               (winners[0] / winners_total) * 100.0))
-    model.set_previous_checkpoint()

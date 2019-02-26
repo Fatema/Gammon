@@ -84,10 +84,6 @@ class SubNet:
         # mean squared error of the difference between the next state and the current state
         loss_op = tf.reduce_mean(tf.square(self.V_next - self.V), name='loss')
 
-        # check if the model predicts the correct state
-        accuracy_op = tf.reduce_sum(tf.cast(tf.equal(tf.round(self.V_next), tf.round(self.V)), dtype='float'),
-                                    name='accuracy')
-
         # track the number of steps and average loss for the current game
         with tf.variable_scope('game'):
             game_step = tf.Variable(tf.constant(0.0), name='game_step', trainable=False)
@@ -95,30 +91,25 @@ class SubNet:
 
             loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
             delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
-            accuracy_sum = tf.Variable(tf.constant(0.0), name='accuracy_sum', trainable=False)
 
             loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
             delta_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-            accuracy_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
 
             loss_sum_op = loss_sum.assign_add(loss_op)
             delta_sum_op = delta_sum.assign_add(delta_op)
-            accuracy_sum_op = accuracy_sum.assign_add(accuracy_op)
 
             loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
             delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
-            accuracy_avg_op = accuracy_sum / tf.maximum(game_step, 1.0)
 
             loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
             delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
-            accuracy_avg_ema_op = accuracy_avg_ema.apply([accuracy_avg_op])
 
+            tf.summary.scalar('game/loss', loss_op)
             tf.summary.scalar('game/loss_avg', loss_avg_op)
+            tf.summary.scalar('game/delta', delta_op)
             tf.summary.scalar('game/delta_avg', delta_avg_op)
-            tf.summary.scalar('game/accuracy_avg', accuracy_avg_op)
             tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
             tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
-            tf.summary.scalar('game/accuracy_avg_ema', accuracy_avg_ema.average(accuracy_avg_op))
 
             # reset per-game monitoring variables
             game_step_reset_op = game_step.assign(0.0)
@@ -161,10 +152,8 @@ class SubNet:
             game_step_op,
             loss_sum_op,
             delta_sum_op,
-            accuracy_sum_op,
             loss_avg_ema_op,
             delta_avg_ema_op,
-            accuracy_avg_ema_op
         ]):
             # define single operation to apply all gradient updates
             self.train_op = tf.group(*apply_gradients, name='train')
@@ -172,15 +161,38 @@ class SubNet:
         # merge summaries for TensorBoard
         self.summaries_op = tf.summary.merge_all()
 
+        # keep track on the number of games taken
+        self.game_number = tf.Variable(tf.constant(0.0), name='game_number', trainable=False)
+        game_number_op = self.game_number.assign_add(1)
+
+        with tf.variable_scope('game'):
+            # cubeless equity = 2 * W - 1
+            ppg = 2 * tf.reduce_sum(self.V_next) - 1
+            ppg_sum = tf.Variable(tf.constant(0.0), name='ppg_sum', trainable=False)
+            ppg_sum_op = ppg_sum.assign_add(ppg)
+            with tf.control_dependencies([
+                ppg_sum_op,
+                game_number_op
+                ]):
+                self.ppg_avg_op = ppg_sum / tf.maximum(self.game_number, 1.0)
+            ppg_summary = tf.summary.scalar('ppg', ppg)
+            ppg_avg_summary = tf.summary.scalar('ppg_avg', self.ppg_avg_op)
+            game_step_summary = tf.summary.scalar('game_step', game_step)
+
+        self.ppg_summary_op = tf.summary.merge([ppg_summary, ppg_avg_summary, game_step_summary])
+
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
         self.pre_saver = tf.train.Saver(max_to_keep=1)
+        self.testing_saver = tf.train.Saver(max_to_keep=None)
 
         # run variable initializers
         self.sess.run(tf.global_variables_initializer())
 
+        self.timestamp = int(time.time())
+
         self.summary_writer = tf.summary.FileWriter(
-            '{0}{1}'.format(self.summary_path, int(time.time()), self.sess.graph_def))
+            '{0}{1}'.format(self.summary_path, self.timestamp, self.sess.graph_def))
 
     def restore(self):
         latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
@@ -200,6 +212,16 @@ class SubNet:
     def set_previous_checkpoint(self):
         self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
 
+    def restore_test_checkpoint(self, timestamp):
+        print('restoring previous')
+        latest_checkpoint_path = tf.train.latest_checkpoint('{0}{1}/'.format(self.test_checkpoint_path, timestamp))
+        print(latest_checkpoint_path)
+        # todo figure out a strategy to run the tests for multiple checkpoints
+
+    def set_test_checkpoint(self):
+        self.testing_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'),
+                                global_step=self.global_step)
+
     def print_checkpoints(self):
         latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
         previous_checkpoint_path = tf.train.latest_checkpoint(self.previous_checkpoint_path)
@@ -215,16 +237,23 @@ class SubNet:
     def create_model(self):
         tf.train.write_graph(self.sess.graph_def, self.model_path, self.STRATEGY + '_net.pb', as_text=False)
 
-    def update_model(self, x, winner, episode, episodes, players, game_step):
-        _, global_step, summaries, _ = self.sess.run([
+    def update_model(self, x, winner):
+        _, global_step, summaries = self.sess.run([
             self.train_op,
             self.global_step,
             self.summaries_op,
-            self.reset_op
         ], feed_dict={self.x: x, self.V_next: np.array([[winner]], dtype='float')})
         self.summary_writer.add_summary(summaries, global_step=global_step)
 
-        print("Game %d/%d (Winner: %s) in %d turns" % (episode, episodes, players[winner].player, game_step))
+        _, game_number, ppg_summaries, _ = self.sess.run([
+            self.ppg_avg_op,
+            self.game_number,
+            self.ppg_summary_op,
+            self.reset_op
+        ], feed_dict={self.V_next: np.array([[winner]], dtype='float')})
+
+        self.summary_writer.add_summary(ppg_summaries, game_number)
+
         self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
 
     def training_end(self):
