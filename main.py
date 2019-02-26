@@ -42,6 +42,6 @@ if __name__ == '__main__':
             model_mod.play()
     else:
         if FLAGS.mono:
-            model_mono.train(episodes=1000000)
+            model_mono.train(episodes=500000)
         else:
-            model_mod.train()
+            model_mod.train(episodes=500000)
