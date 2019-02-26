@@ -44,7 +44,7 @@ class MonoNN:
             # print()
             # print()
             # print('episode', episode)
-            if episode != 0 and episode % validation_interval == 0:
+            if episode % validation_interval == 0:
                 tester.test_self(self)
                 self.mono_nn.set_previous_checkpoint()
                 self.mono_nn.set_test_checkpoint()

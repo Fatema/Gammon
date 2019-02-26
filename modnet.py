@@ -20,9 +20,14 @@ class Modnet:
 
         self.racing_net = self.create_network('racing')
 
-        self.holding_net = self.create_network('holding')
+        self.priming_net = self.create_network('priming')
 
-        self.networks = {'d' : self.default_net, 'r' : self.racing_net, 'h' : self.holding_net}
+        self.backgame_net = self.create_network('backgame')
+
+        self.networks = {'d': self.default_net,
+                         'r': self.racing_net,
+                         'p': self.priming_net,
+                         'b': self.backgame_net}
 
     def create_network(self, name):
         network = SubNet()
@@ -34,6 +39,10 @@ class Modnet:
     def set_previous_checkpoint(self):
         for net in self.networks:
             self.networks[net].set_previous_checkpoint()
+
+    def set_test_checkpoint(self):
+        for net in self.networks:
+            self.networks[net].set_test_checkpoint()
 
     def print_checkpoints(self):
         for net in self.networks:
@@ -54,8 +63,10 @@ class Modnet:
         flip = x[0][-1]
 
         if flip:
-           opp_pip = x[0][292]
-           player_pip = x[0][145]
+           opp_pip = x[0][293]
+           opp_bar = x[0][292] * 2
+           player_pip = x[0][146]
+           player_bar = x[0][145] * 2
 
            opp_checkers = x[0][147:291]
            player_checkers = x[0][0:144]
@@ -64,8 +75,10 @@ class Modnet:
            opp_checkers = opp_checkers[::-1]
            player_checkers = player_checkers[::-1]
         else:
-            opp_pip = x[0][145]
-            player_pip = x[0][292]
+            opp_pip = x[0][146]
+            opp_bar = x[0][145] * 2
+            player_pip = x[0][293]
+            player_bar = x[0][292] * 2
 
             opp_checkers = x[0][0:144]
             player_checkers = x[0][147:291]
@@ -80,26 +93,39 @@ class Modnet:
 
         net = 'd'
 
-        if player_max < opp_max or player_pip > opp_pip:
+        if player_max < opp_max:
             net = 'r'
         else:
             # player_close_pos = 0
             player_trapped_pos = 0
             player_trapped_count = 0
-            # opp_trapped_pos = 0
-            # opp_trapped_count = 0
+            player_prime = [0]
+            j = 0
 
             # for i in range(player_min, opp_max):
             #     player_close_pos += player_checkers[i * 6]
 
             for i in range(opp_max + 1, player_max + 1):
                 # if sum is 1 move to a defensive strategy
-                sum = np.sum(player_checkers[i * 6:(i + 1) * 6])
+                sum = np.sum(player_checkers[i * 4:(i + 1) * 4])
                 player_trapped_pos += 1 if sum > 0 else 0
                 player_trapped_count += sum
+                if sum > 1:
+                    player_prime[j] += 1
+                else:
+                    player_prime += [0]
+                    j += 1
 
-            if player_trapped_pos < 3 and player_trapped_count < 4:
-                net = 'r'
+                    # check for prime then do priming game
+                    if max(player_prime) > 4:
+                        net = 'p'
+                    # check if there are less than 4 checkers trapped in less than 3 fields then do racing game
+                    elif player_trapped_pos < 3 and player_trapped_count < 4:
+                        net = 'r'
+                    # check if the player is at a disadvantage and check for the checkers at opponent home if they
+                    # are more than 3 along with the checkers on the bar do the back game
+                    elif player_pip - opp_pip > 90 and np.sum(opp_checkers[108:144]) + player_bar > 3:
+                        net = 'b'
 
         return net, self.networks[net].get_output(x)
 
@@ -149,12 +175,14 @@ class Modnet:
         validation_interval = 1000
 
         for episode in range(episodes):
-            if episode != 0 and episode % validation_interval == 0:
+            if episode % validation_interval == 0:
                 tester.test_self(self)
+                self.set_previous_checkpoint()
+                self.set_test_checkpoint()
                 # self.print_checkpoints()
 
             game = Game.new()
-            game.generate_random_game()
+            # game.generate_random_game()
             player_num = random.randint(0, 1)
 
             x = self.extract_features(game, players[player_num].player)
@@ -179,8 +207,10 @@ class Modnet:
 
             winner = game.winner()
 
+            print("[Train %d/%d] (Winner: %s) in %d turns" % (episode, episodes, players[not winner].player, game_step))
+
             for net in self.networks:
-                self.networks[net].update_model(x, winner, episode, episodes, players, game_step)
+                self.networks[net].update_model(x, winner)
 
         for net in self.networks:
             self.networks[net].training_end()
