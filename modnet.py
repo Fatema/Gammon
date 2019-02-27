@@ -176,9 +176,10 @@ class Modnet:
 
         for episode in range(episodes):
             if episode % validation_interval == 0:
+                self.set_test_checkpoint()
                 tester.test_self(self)
                 self.set_previous_checkpoint()
-                self.set_test_checkpoint()
+                tester.test_random(self)
                 # self.print_checkpoints()
 
             game = Game.new()
