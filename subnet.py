@@ -20,6 +20,7 @@ class SubNet:
         self.summary_path = summary_path + self.STRATEGY + '/'
         self.checkpoint_path = checkpoint_path + self.STRATEGY + '/latest/'
         self.previous_checkpoint_path = checkpoint_path + self.STRATEGY + '/previous/'
+        self.test_checkpoint_path = checkpoint_path + self.STRATEGY + '/test/'
 
 
         if not os.path.exists(self.model_path):
@@ -30,6 +31,9 @@ class SubNet:
 
         if not os.path.exists(self.previous_checkpoint_path):
             os.makedirs(self.previous_checkpoint_path)
+
+        if not os.path.exists(self.test_checkpoint_path):
+            os.makedirs(self.test_checkpoint_path)
 
         if not os.path.exists(self.summary_path):
             os.makedirs(self.summary_path)
