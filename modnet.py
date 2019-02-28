@@ -93,7 +93,7 @@ class Modnet:
 
         net = 'd'
 
-        if player_max < opp_max:
+        if player_max < opp_max and opp_bar == 0 and player_bar == 0:
             net = 'r'
         else:
             # player_close_pos = 0
@@ -119,9 +119,6 @@ class Modnet:
                     # check for prime then do priming game
                     if max(player_prime) > 4:
                         net = 'p'
-                    # check if there are less than 4 checkers trapped in less than 3 fields then do racing game
-                    elif player_trapped_pos < 3 and player_trapped_count < 4:
-                        net = 'r'
                     # check if the player is at a disadvantage and check for the checkers at opponent home if they
                     # are more than 3 along with the checkers on the bar do the back game
                     elif player_pip - opp_pip > 90 and np.sum(opp_checkers[108:144]) + player_bar > 3:
