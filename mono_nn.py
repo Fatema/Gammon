@@ -29,6 +29,9 @@ class MonoNN:
     def restore_previous(self):
         self.mono_nn.restore_previous()
 
+    def restore_test_checkpoint(self, timestamp, game_number):
+        self.mono_nn.restore_test_checkpoint(timestamp, game_number)
+
     def print_checkpoints(self):
         self.mono_nn.print_checkpoints()
 
@@ -45,9 +48,7 @@ class MonoNN:
             # print()
             # print('episode', episode)
             if episode % validation_interval == 0:
-                self.mono_nn.set_test_checkpoint()
                 tester.test_self(self)
-                self.mono_nn.set_previous_checkpoint()
                 tester.test_random(self)
                 # self.print_checkpoints()
 

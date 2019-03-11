@@ -10,8 +10,9 @@ flags = tf.app.flags
 FLAGS = flags.FLAGS
 
 flags.DEFINE_boolean('test', False, 'If true, test against a random strategy.')
+flags.DEFINE_boolean('all', False, 'If true, test against a random strategy.')
 flags.DEFINE_boolean('play', False, 'If true, play against a trained TD-Gammon strategy.')
-flags.DEFINE_boolean('restore', False, 'If true, restore a checkpoint before training.')
+flags.DEFINE_boolean('restore', True, 'If true, restore a checkpoint before training.')
 flags.DEFINE_boolean('mono', False, 'If true, use monolithic NN.')
 
 model_path = os.environ.get('MODEL_PATH', 'models/')
@@ -30,7 +31,12 @@ if not os.path.exists(summary_path):
 if __name__ == '__main__':
     model_mod = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-    if FLAGS.test:
+    if FLAGS.test and FLAGS.all:
+        if FLAGS.mono:
+            test_all(model_mono)
+        else:
+            test_all(model_mod)
+    elif FLAGS.test:
         if FLAGS.mono:
             test_self(model_mono, episodes=1000)
         else:

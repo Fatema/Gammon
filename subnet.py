@@ -12,6 +12,9 @@ from utils import *
 
 
 class SubNet:
+    def __init__(self):
+        self.validation_interval = 1000
+
     def set_network_name(self, name):
         self.STRATEGY = name
 
@@ -185,6 +188,24 @@ class SubNet:
 
         self.ppg_summary_op = tf.summary.merge([ppg_summary, ppg_avg_summary, game_step_summary])
 
+        # self.test_game_number = tf.Variable(tf.constant(0.0), name='test_game_number', trainable=False)
+        # test_game_number_op = self.game_number.assign_add(1)
+
+        # with tf.variable_scope('test'):
+        #     # cubeless equity = 2 * W - 1
+        #     test_ppg = 2 * tf.reduce_sum(self.V_next) - 1
+        #     test_ppg_sum = tf.Variable(tf.constant(0.0), name='test_ppg_sum', trainable=False)
+        #     test_ppg_sum_op = test_ppg_sum.assign_add(test_ppg)
+        #     with tf.control_dependencies([
+        #         test_ppg_sum_op,
+        #         test_game_number_op
+        #         ]):
+        #         self.test_ppg_avg_op = test_ppg_sum / tf.maximum(self.test_game_number, 1.0)
+        #     test_ppg_summary = tf.summary.scalar('test_ppg', test_ppg)
+        #     test_ppg_avg_summary = tf.summary.scalar('test_ppg_avg', self.test_ppg_avg_op)
+        #
+        # self.test_ppg_summary_op = tf.summary.merge([test_ppg_summary, test_ppg_avg_summary])
+
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
         self.pre_saver = tf.train.Saver(max_to_keep=1)
@@ -206,7 +227,6 @@ class SubNet:
             chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
 
     def restore_previous(self):
-        print('restoring previous')
         latest_checkpoint_path = tf.train.latest_checkpoint(self.previous_checkpoint_path)
         if latest_checkpoint_path:
             print('Restoring previous checkpoint: {0}'.format(latest_checkpoint_path))
@@ -216,11 +236,14 @@ class SubNet:
     def set_previous_checkpoint(self):
         self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
 
-    def restore_test_checkpoint(self, timestamp):
-        print('restoring previous')
-        latest_checkpoint_path = tf.train.latest_checkpoint('{0}{1}/'.format(self.test_checkpoint_path, timestamp))
-        print(latest_checkpoint_path)
-        # todo figure out a strategy to run the tests for multiple checkpoints
+    def restore_test_checkpoint(self, timestamp, game_number):
+        latest_checkpoint_path = '{0}{1}/checkpoint-{2}'.format(self.test_checkpoint_path, timestamp, game_number)
+        if latest_checkpoint_path:
+            print('Restoring test checkpoint: {0}'.format(latest_checkpoint_path))
+            self.pre_saver.restore(self.sess, latest_checkpoint_path)
+            chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
+            return True
+        return False
 
     def set_test_checkpoint(self):
         self.testing_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'),
@@ -258,7 +281,20 @@ class SubNet:
 
         self.summary_writer.add_summary(ppg_summaries, game_number)
 
-        self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=global_step)
+        if (game_number - 1) % self.validation_interval == 0:
+            self.set_test_checkpoint()
+            self.set_previous_checkpoint()
+
+        self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=(game_number - 1))
+
+    # def update_test_summary(self, winner):
+    #     _, test_game_number, test_ppg_summaries, _ = self.sess.run([
+    #         self.test_ppg_avg_op,
+    #         self.test_game_number,
+    #         self.test_ppg_summary_op,
+    #     ], feed_dict={self.V_next: np.array([[winner]], dtype='float')})
+    #
+    #     self.summary_writer.add_summary(test_ppg_summaries, test_game_number)
 
     def training_end(self):
         self.summary_writer.close()

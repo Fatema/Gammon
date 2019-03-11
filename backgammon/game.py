@@ -78,7 +78,7 @@ class Game:
             if player_num:
                 self.reverse()
             time.sleep(.02)
-        print('Number of turns', turns)
+        # print('Number of turns', turns)
         return self.winner()
 
     def take_turn(self, player, roll, draw=False, nodups=False):

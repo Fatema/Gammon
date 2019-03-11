@@ -36,13 +36,9 @@ class Modnet:
         network.start_session(restore=self.restore)
         return network
 
-    def set_previous_checkpoint(self):
+    def print_checkpoints(self):
         for net in self.networks:
-            self.networks[net].set_previous_checkpoint()
-
-    def set_test_checkpoint(self):
-        for net in self.networks:
-            self.networks[net].set_test_checkpoint()
+            self.networks[net].print_checkpoints()
 
     def print_checkpoints(self):
         for net in self.networks:
@@ -51,6 +47,10 @@ class Modnet:
     def restore_previous(self):
         for net in self.networks:
             self.networks[net].restore_previous()
+
+    def restore_test_checkpoint(self, timestamp, game_number):
+        for net in self.networks:
+            self.networks[net].restore_test_checkpoint(timestamp, game_number)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
@@ -173,9 +173,7 @@ class Modnet:
 
         for episode in range(episodes):
             if episode % validation_interval == 0:
-                self.set_test_checkpoint()
                 tester.test_self(self)
-                self.set_previous_checkpoint()
                 tester.test_random(self)
                 # self.print_checkpoints()
 
