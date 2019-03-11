@@ -3,6 +3,7 @@ import os
 from backgammon.agents.ai_agent import TDAgent
 from backgammon.agents.random_agent import RandomAgent
 from backgammon.game import Game
+from tqdm import tqdm
 
 from modnet import Modnet
 from mono_nn import MonoNN
@@ -18,7 +19,7 @@ previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 def test_random(model, episodes=100, draw=False):
     players = [TDAgent(Game.TOKENS[0], model), RandomAgent(Game.TOKENS[1])]
     winners = [0, 0]
-    for episode in range(episodes):
+    for episode in tqdm(range(episodes)):
         game = Game.new()
 
         winner = game.play(players, draw=draw)
@@ -74,30 +75,30 @@ def test_all(model, timestamp=1551266794, episodes=100, draw=False):
                    5044881, 5096362, 510646, 5147388, 5198588, 5249906, 5301102, 5352559, 5403960, 5456058, 5507442,
                    5558949, 560921, 5610596, 5661887, 5713636, 5765307, 5816659, 5868460, 5919546, 610890, 660579,
                    710082, 759346, 808600, 857994, 908384, 95117, 957823]
-    sorted(checkpoints)
+    checkpoints = sorted(checkpoints)
 
     for i in range(len(checkpoints)):
         model.restore_test_checkpoint(timestamp, checkpoints[i])
         test_random(model, episodes=episodes, draw=draw)
 
-    for i in range(1, len(checkpoints)):
-        previous_model.restore_test_checkpoint(timestamp, checkpoints[i - 1])
-        model.restore_test_checkpoint(timestamp, checkpoints[i])
-
-        players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
-        winners = [0, 0]
-
-        for episode in range(episodes):
-            game = Game.new()
-
-            winner = game.play(players, draw=draw)
-            winners[not winner] += 1
-
-            winners_total = sum(winners)
-
-
-        print("[Test %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
-                           players[0].player, players[0].player,
-                           players[1].player, players[1].player,
-                           winners[0], winners[1], winners_total,
-                           (winners[0] / winners_total) * 100.0))
+    # for i in range(1, len(checkpoints)):
+    #     previous_model.restore_test_checkpoint(timestamp, checkpoints[i - 1])
+    #     model.restore_test_checkpoint(timestamp, checkpoints[i])
+    #
+    #     players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
+    #     winners = [0, 0]
+    #
+    #     for episode in tqdm(range(episodes)):
+    #         game = Game.new()
+    #
+    #         winner = game.play(players, draw=draw)
+    #         winners[not winner] += 1
+    #
+    #         winners_total = sum(winners)
+    #
+    #
+    #     print("[Test %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
+    #                        players[0].player, players[0].player,
+    #                        players[1].player, players[1].player,
+    #                        winners[0], winners[1], winners_total,
+    #                        (winners[0] / winners_total) * 100.0))
