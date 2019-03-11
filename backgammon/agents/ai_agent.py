@@ -40,9 +40,10 @@ class TDAgent:
             if v > v_best:
                 v_best = v
                 a_best = a
+                v_out = 1 - v
             game.undo_action(a, self.player, ateList)
 
-        # print('best action selected', a_best, v_best, self.player)
+        print('best action selected', a_best, v_out, self.player)
 
         return a_best
 

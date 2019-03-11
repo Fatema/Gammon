@@ -52,6 +52,10 @@ class SubNet:
             # after training a model, we can restore checkpoints here
             if restore:
                 self.restore()
+                game_number = self.sess.run([self.game_number])
+                if game_number == 0:
+                    self.set_test_checkpoint()
+                    self.set_previous_checkpoint()
             else:
                 self.set_previous_checkpoint()
 
@@ -234,7 +238,7 @@ class SubNet:
             chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
 
     def set_previous_checkpoint(self):
-        self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.global_step)
+        self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.game_number)
 
     def restore_test_checkpoint(self, timestamp, game_number):
         latest_checkpoint_path = '{0}{1}/checkpoint-{2}'.format(self.test_checkpoint_path, timestamp, game_number)
@@ -247,7 +251,7 @@ class SubNet:
 
     def set_test_checkpoint(self):
         self.testing_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'),
-                                global_step=self.global_step)
+                                global_step=self.game_number)
 
     def print_checkpoints(self):
         latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
@@ -281,7 +285,7 @@ class SubNet:
 
         self.summary_writer.add_summary(ppg_summaries, game_number)
 
-        if (game_number - 1) % self.validation_interval == 0:
+        if game_number > 1 and (game_number - 1) % self.validation_interval == 0:
             self.set_test_checkpoint()
             self.set_previous_checkpoint()
 

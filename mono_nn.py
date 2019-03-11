@@ -79,7 +79,7 @@ class MonoNN:
 
                 x_next = game.extract_features(players[player_num].player)
                 # print('next features extracted', x_next)
-                V_next = self.mono_nn.get_output(x_next)
+                V_next = 1 - self.mono_nn.get_output(x_next)
                 # print('next output', V_next)
 
                 self.mono_nn.run_output(x, V_next)
