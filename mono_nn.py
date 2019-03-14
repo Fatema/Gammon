@@ -74,34 +74,34 @@ class MonoNN:
 
     # determine the hitting probability based on fields that include single checkers that are within the opponents reach
     # hit_count / max(num_pieces - off_pieces - bar_pieces, 1)
-    def add_hit_prob(self, x, game):
+    def add_hit_prob(self, features, game):
         # make the indexes evaulated based on global variables
-        flip = x[0][-1]
+        flip = features[0][-1]
 
         if flip:
-            opp_bar = x[0][292] * 2
+            opp_bar = features[0][292] * 2
             opp_num_pieces = game.num_pieces[1]
-            opp_off = int(np.floor(x[0][291] * opp_num_pieces))
-            player_bar = x[0][145] * 2
+            opp_off = int(np.floor(features[0][291] * opp_num_pieces))
+            player_bar = features[0][145] * 2
             player_num_pieces = game.num_pieces[0]
-            player_off = int(np.floor(x[0][144] * player_num_pieces))
+            player_off = int(np.floor(features[0][144] * player_num_pieces))
 
-            opp_checkers = x[0][147:291]
-            player_checkers = x[0][0:144]
+            opp_checkers = features[0][147:291]
+            player_checkers = features[0][0:144]
 
             # flip the view - this is just a perspective change and not an actual copy
             opp_checkers = opp_checkers[::-1]
             player_checkers = player_checkers[::-1]
         else:
-            opp_bar = x[0][145] * 2
+            opp_bar = features[0][145] * 2
             opp_num_pieces = game.num_pieces[1]
-            opp_off = int(np.floor(x[0][144] * opp_num_pieces))
-            player_bar = x[0][292] * 2
+            opp_off = int(np.floor(features[0][144] * opp_num_pieces))
+            player_bar = features[0][292] * 2
             player_num_pieces = game.num_pieces[0]
-            player_off = int(np.floor(x[0][291] * player_num_pieces))
+            player_off = int(np.floor(features[0][291] * player_num_pieces))
 
-            opp_checkers = x[0][0:144]
-            player_checkers = x[0][147:291]
+            opp_checkers = features[0][0:144]
+            player_checkers = features[0][147:291]
 
         opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
 
@@ -124,9 +124,9 @@ class MonoNN:
         else:
             hit = [[opp_hit, player_hit]]
 
-        x = np.append(x, hit, axis=1)
+        features = np.append(features, hit, axis=1)
 
-        return x
+        return features
 
     def train(self, episodes=5000):
         self.mono_nn.create_model()
