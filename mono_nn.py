@@ -35,6 +35,99 @@ class MonoNN:
     def print_checkpoints(self):
         self.mono_nn.print_checkpoints()
 
+    def extract_features(self, game, player):
+        features = []
+        # print(player)
+        # the order in which the players are evaluated matters
+        for k in range(len(game.players)):
+            p = game.players[k]
+            pip_count = 0
+            for j in range(len(game.grid)):
+                col = game.grid[j]
+                feats = [0.] * 6
+                if len(col) > 0 and col[0] == p:
+                    if k == 0:
+                        temp = len(col) * (24 - j)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    else:
+                        temp = len(col) * (j + 1)
+                        pip_count += temp
+                        # print(p,'count per col', j, temp, pip_count, len(col))
+                    for i in range(len(col)):
+                        feats[min(i, 5)] += 1
+                features += feats
+            # print('pip_count before off pieces', pip_count)
+            features.append(float(len(game.bar_pieces[p])) / 2.)
+            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
+            # print(game.bar_pieces[p], game.off_pieces[p])
+            # if pip on the bar penalize the pip_count
+            pip_count += len(game.bar_pieces[p]) * 25
+            # pip_count for the player the closer to home the less the pip_count
+            features.append(float(pip_count))
+            # print('pip count for', p, pip_count)
+        if player == game.players[0]:
+            features += [1., 0.]
+        else:
+            features += [0., 1.]
+        return np.array(features).reshape(1, -1)
+
+    # determine the hitting probability based on fields that include single checkers that are within the opponents reach
+    # hit_count / max(num_pieces - off_pieces - bar_pieces, 1)
+    def add_hit_prob(self, x, game):
+        # make the indexes evaulated based on global variables
+        flip = x[0][-1]
+
+        if flip:
+            opp_bar = x[0][292] * 2
+            opp_num_pieces = game.num_pieces[1]
+            opp_off = int(np.floor(x[0][291] * opp_num_pieces))
+            player_bar = x[0][145] * 2
+            player_num_pieces = game.num_pieces[0]
+            player_off = int(np.floor(x[0][144] * player_num_pieces))
+
+            opp_checkers = x[0][147:291]
+            player_checkers = x[0][0:144]
+
+            # flip the view - this is just a perspective change and not an actual copy
+            opp_checkers = opp_checkers[::-1]
+            player_checkers = player_checkers[::-1]
+        else:
+            opp_bar = x[0][145] * 2
+            opp_num_pieces = game.num_pieces[1]
+            opp_off = int(np.floor(x[0][144] * opp_num_pieces))
+            player_bar = x[0][292] * 2
+            player_num_pieces = game.num_pieces[0]
+            player_off = int(np.floor(x[0][291] * player_num_pieces))
+
+            opp_checkers = x[0][0:144]
+            player_checkers = x[0][147:291]
+
+        opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
+
+        player_max = 23 - np.argmax(player_checkers[::-1]) // 6 if player_bar == 0 else 23
+
+        player_hit_count = 0
+        opp_hit_count = 0
+
+        for i in range(opp_max, player_max + 1):
+            player_field_count = np.sum(player_checkers[i * 4:(i + 1) * 4])
+            player_hit_count += 1 if player_field_count == 1 else 0
+            opp_field_count = np.sum(opp_checkers[i * 4:(i + 1) * 4])
+            opp_hit_count += 1 if opp_field_count == 1 else 0
+
+        player_hit = player_hit_count / max(player_num_pieces - player_off - player_bar, 1)
+        opp_hit = opp_hit_count / max(opp_num_pieces - opp_off - opp_bar, 1)
+
+        if flip:
+            hit = [[player_hit, opp_hit]]
+        else:
+            hit = [[opp_hit, player_hit]]
+
+        x = np.append(x, hit, axis=1)
+
+        return x
+
     def train(self, episodes=5000):
         self.mono_nn.create_model()
 
@@ -55,7 +148,7 @@ class MonoNN:
             game = Game.new()
             player_num = random.randint(0, 1)
 
-            x = game.extract_features(players[player_num].player)
+            x = self.extract_features(game, players[player_num].player)
 
             # print('game beginning ...')
             # game.draw_screen()
@@ -77,7 +170,7 @@ class MonoNN:
 
                 player_num = (player_num + 1) % 2
 
-                x_next = game.extract_features(players[player_num].player)
+                x_next = self.extract_features(game, players[player_num].player)
                 # print('next features extracted', x_next)
                 V_next = 1 - self.mono_nn.get_output(x_next)
                 # print('next output', V_next)

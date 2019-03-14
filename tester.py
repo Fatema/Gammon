@@ -51,7 +51,7 @@ def test_self(model, episodes=100, draw=False):
         winners[not winner] += 1
 
         winners_total = sum(winners)
-    print("[Test %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
+        print("[Test %d] %s (%s) vs %s (%s) %d:%d of %d games (%.2f%%)" % (episode,
                        players[0].player, players[0].player,
                        players[1].player, players[1].player,
                        winners[0], winners[1], winners_total,

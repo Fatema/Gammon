@@ -17,7 +17,7 @@ class TDAgent:
         Return best action according to self.evaluationFunction,
         with no lookahead.
         """
-        v_best = 0
+        v_best = -1 # game got stuck when this was 0, wasn't happy with games being stuck
         a_best = None
 
         """
@@ -40,10 +40,9 @@ class TDAgent:
             if v > v_best:
                 v_best = v
                 a_best = a
-                v_out = 1 - v
             game.undo_action(a, self.player, ateList)
 
-        print('best action selected', a_best, v_out, self.player)
+        # print('best action selected', a_best, v_out, self.player)
 
         return a_best
 

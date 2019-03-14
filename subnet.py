@@ -53,7 +53,9 @@ class SubNet:
             if restore:
                 self.restore()
                 game_number = self.sess.run([self.game_number])
-                if game_number == 0:
+                print(game_number)
+                if game_number[0] == 0.0:
+                    print('set')
                     self.set_test_checkpoint()
                     self.set_previous_checkpoint()
             else:
@@ -289,7 +291,7 @@ class SubNet:
             self.set_test_checkpoint()
             self.set_previous_checkpoint()
 
-        self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=(game_number - 1))
+        self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=self.game_number)
 
     # def update_test_summary(self, winner):
     #     _, test_game_number, test_ppg_summaries, _ = self.sess.run([
