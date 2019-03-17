@@ -70,7 +70,12 @@ class MonoNN:
             features += [1., 0.]
         else:
             features += [0., 1.]
-        return np.array(features).reshape(1, -1)
+
+        features = np.array(features).reshape(1, -1)
+
+        features = self.add_hit_prob(features, game)
+
+        return features
 
     # determine the hitting probability based on fields that include single checkers that are within the opponents reach
     # hit_count / max(num_pieces - off_pieces - bar_pieces, 1)
