@@ -40,10 +40,6 @@ class Modnet:
         for net in self.networks:
             self.networks[net].print_checkpoints()
 
-    def print_checkpoints(self):
-        for net in self.networks:
-            self.networks[net].print_checkpoints()
-
     def restore_previous(self):
         for net in self.networks:
             self.networks[net].restore_previous()
