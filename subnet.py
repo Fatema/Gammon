@@ -75,7 +75,7 @@ class SubNet:
 
     def set_nn(self):
         # describe network size
-        layer_size_input = 296
+        layer_size_input = 298
         layer_size_hidden = 50
         layer_size_output = 1
 
