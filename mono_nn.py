@@ -85,7 +85,7 @@ class MonoNN:
 
         opp = game.players[1]
         opp_num_pieces = game.num_pieces[opp]
-        
+
         player = game.players[0]
         player_num_pieces = game.num_pieces[player]
 

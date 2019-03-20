@@ -29,7 +29,7 @@ class TDAgent:
             ateList = game.take_action(a, self.player)
             # print('action taken outcome:', ateList)
             # I can change this so it uses the model extract features
-            features = self.model.extract_features(game.opponent(self.player))
+            features = self.model.extract_features(game, game.opponent(self.player))
             # game.draw_screen()
             # print('features after action:', features)
             _, v = self.model.get_output(features)
