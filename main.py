@@ -9,7 +9,7 @@ from tester import *
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
-flags.DEFINE_boolean('test', False, 'If true, test against a random strategy.')
+flags.DEFINE_boolean('test', False, 'If true, run a test')
 flags.DEFINE_boolean('all', False, 'If true, test against a random strategy.')
 flags.DEFINE_boolean('play', False, 'If true, play against a trained TD-Gammon strategy.')
 flags.DEFINE_boolean('restore', True, 'If true, restore a checkpoint before training.')
@@ -33,9 +33,9 @@ if __name__ == '__main__':
     model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test and FLAGS.all:
         if FLAGS.mono:
-            test_all(model_mono)
+            test_all_random(model_mono)
         else:
-            test_all(model_mod)
+            test_all_random(model_mod)
     elif FLAGS.test:
         if FLAGS.mono:
             test_random(model_mono, episodes=1000)
