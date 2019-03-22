@@ -64,7 +64,8 @@ class MonoNN:
             # if pip on the bar penalize the pip_count
             pip_count += len(game.bar_pieces[p]) * 25
             # pip_count for the player the closer to home the less the pip_count
-            features.append(float(pip_count))
+            # scale it out or include it as part of the reward
+            features.append(float(pip_count) / 167)
             # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]

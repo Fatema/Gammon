@@ -48,7 +48,7 @@ def test_self(model, episodes=100, draw=False):
 
     players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
     run_games(players, episodes, draw)
-
+3
 
 def test_all_random(model, timestamp=1551447819, max_checkpoint=500000, episodes=100, draw=False):
     for i in range(1, max_checkpoint, 1000):
