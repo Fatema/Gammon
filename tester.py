@@ -5,6 +5,7 @@ from backgammon.agents.random_agent import RandomAgent
 from backgammon.game import Game
 
 from modnet import Modnet
+from modnet_hybrid import ModnetHybrid
 from mono_nn import MonoNN
 
 model_path = os.environ.get('MODEL_PATH', 'models/')
@@ -12,6 +13,7 @@ summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
 checkpoint_path = os.environ.get('CHECKPOINT_PATH', 'checkpoints/')
 
 previous_mod = Modnet(model_path, summary_path, checkpoint_path, restore=True)
+previous_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, restore=True)
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
 
@@ -39,11 +41,12 @@ def test_random(model, episodes=100, draw=False):
 def test_self(model, episodes=100, draw=False):
     if isinstance(model, Modnet):
         previous_model = previous_mod
+    elif isinstance(model, ModnetHybrid):
+        previous_model = previous_mod_hybrid
     else:
         previous_model = previous_mono
 
     previous_model.restore_previous()
-    model.print_checkpoints()
 
     players = [TDAgent(Game.TOKENS[0], model), TDAgent(Game.TOKENS[1], previous_model)]
     run_games(players, episodes, draw)
@@ -61,6 +64,8 @@ def test_all_random(model, timestamp=1551447819, max_checkpoint=500000, episodes
 def test_all_best(model, timestamp=1551447819, max_checkpoint=500001, episodes=100, draw=False):
     if isinstance(model, Modnet):
         previous_model = previous_mod
+    elif isinstance(model, ModnetHybrid):
+        previous_model = previous_mod_hybrid
     else:
         previous_model = previous_mono
 

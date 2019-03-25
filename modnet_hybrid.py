@@ -9,7 +9,7 @@ from backgammon.game import Game
 
 from subnet import *
 
-class Modnet:
+class ModnetHybrid:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
         self.model_path = model_path
         self.summary_path = summary_path
@@ -17,18 +17,15 @@ class Modnet:
         self.restore = restore
         self.timestamp = int(time.time())
 
-        self.default_net = self.create_network('default')
+        self.default_net = self.create_network('h_default')
 
-        self.racing_net = self.create_network('racing')
+        self.racing_net = self.create_network('h_racing')
 
-        self.priming_net = self.create_network('priming')
-
-        self.backgame_net = self.create_network('backgame')
+        self.hybrid_net = self.create_network('h_hybrid')
 
         self.networks = {'d': self.default_net,
                          'r': self.racing_net,
-                         'p': self.priming_net,
-                         'b': self.backgame_net}
+                         'h': self.hybrid_net}
 
     def create_network(self, name):
         network = SubNet()
@@ -109,13 +106,9 @@ class Modnet:
                     player_prime += [0]
                     j += 1
 
-            # check for prime then do priming game
-            if max(player_prime) > 4:
-                net = 'p'
-            # check if the player is at a disadvantage and check for the checkers at opponent home if they
-            # are more than 3 along with the checkers on the bar do the back game
-            elif player_pip - opp_pip > 90 and np.sum(opp_checkers[108:144]) + player_bar > 3:
-                net = 'b'
+            # check for prime or back game combinations
+            if max(player_prime) > 4 or (player_pip - opp_pip > 90 and np.sum(opp_checkers[108:144]) + player_bar > 3):
+                net = 'h'
 
         return net, self.networks[net].get_output(x)
 
