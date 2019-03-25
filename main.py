@@ -56,7 +56,7 @@ if __name__ == '__main__':
             model_mod.play()
     else:
         if FLAGS.mono:
-            model_mono.train(episodes=500000)
+            model_mono.train(episodes=1000000)
         elif FLAGS.hybrid:
             model_mod_hybrid.train(episodes=1000000)
         else:
