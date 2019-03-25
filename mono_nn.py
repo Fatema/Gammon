@@ -21,7 +21,7 @@ class MonoNN:
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
-        game = Game.new()
+        game = Game.new(Game.LAYOUT)
         game.play([HumanAgent(Game.TOKENS[0]), TDAgent(Game.TOKENS[1], self)], draw=True)
 
     def get_output(self, x):

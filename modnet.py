@@ -236,13 +236,29 @@ class Modnet:
 
         validation_interval = 1000
 
-        for episode in range(episodes):
-            if episode % validation_interval == 0:
-                tester.test_self(self)
-                tester.test_random(self)
-                # self.print_checkpoints()
+        # set intervals for changing the layouts to the ones defined in the game class
+        layout_change_interval = 6000
+        layout_start_episode = layout_change_interval - 2000
+        l = 0
+        num_layouts = len(Game.LAYOUTS)
 
-            game = Game.new()
+        for episode in range(episodes):
+            # if episode % validation_interval == 0:
+            #     tester.test_self(self)
+            #     tester.test_random(self)
+
+            # change layout when episode % 5000 == 0 is reached
+            if episode > 0 and episode % layout_start_episode == 0:
+                l = (l + 1) % num_layouts
+
+            # keep this layout until episode % 6000 < 5000
+            if episode % layout_change_interval >= layout_start_episode:
+                layout = Game.LAYOUTS[l]
+            else:
+                # original layout of the game
+                layout = Game.LAYOUT
+
+            game = Game.new(layout=layout)
             # game.generate_random_game()
             player_num = random.randint(0, 1)
 

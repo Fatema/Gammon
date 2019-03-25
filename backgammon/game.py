@@ -12,6 +12,12 @@ except:
 
 class Game:
     LAYOUT = "0-2-o,5-5-x,7-3-x,11-5-o,12-5-x,16-3-o,18-5-o,23-2-x"
+    LAYOUTS = ["0-15-o,23-15-x", # one stack layout
+               "0-1-o,1-1-o,2-2-x,3-3-x,4-2-x,5-2-x,6-3-x,7-1-x,16-1-o,17-3-o,18-2-o,19-2-o,20-3-o,21-2-o,22-1-x,23-1-x", # prime against prime layout
+               "0-2-o,1-2-x,2-3-o,3-2-x,4-2-x,5-4-x,6-3-x,7-2-x,11-2-o,16-1-o,17-2-o,18-2-o,19-2-o,20-1-o", # o backgame layout
+               "23-2-x,22-2-o,21-3-x,20-2-o,19-2-o,18-4-o,17-3-o,16-2-o,12-2-x,7-1-x,6-2-x,5-2-x,4-2-x,3-1-x", # x backgame layout
+               "23-1-x,22-1-x,21-1-x,20-1-x,19-1-x,18-1-x,17-1-x,16-1-x,15-1-x,14-1-x,13-1-x,12-4-x,11-4-o,10-1-o,9-1-o,8-1-o,7-1-o,6-1-o,5-1-o,4-1-o,3-1-o,2-1-o,1-1-o,0-1-o", # hit layout
+               "23-1-o,22-1-o,21-1-o,20-1-o,19-1-o,18-1-o,17-1-o,16-1-o,15-1-o,14-1-o,13-1-o,12-4-o,11-4-x,10-1-x,9-1-x,8-1-x,7-1-x,6-1-x,5-1-x,4-1-x,3-1-x,2-1-x,1-1-x,0-1-x"] # racing game layout
     NUMCOLS = 24
     QUAD = 6
     OFF = 'off'
@@ -55,7 +61,7 @@ class Game:
         Return an exact copy of the game. Changes can be made
         to the cloned version without affecting the original.
         """
-        return Game(self.LAYOUT, self.grid, self.off_pieces,
+        return Game(self.layout, self.grid, self.off_pieces,
                     self.bar_pieces, self.num_pieces, self.players)
 
     def roll_dice(self):
@@ -518,5 +524,5 @@ class Game:
 if __name__ == '__main__':
     g = Game(Game.LAYOUT)
     g.new_game()
-    g.generate_random_game()
-    # g.draw((4,3))
+    # g.generate_random_game()
+    g.draw((4,3))
