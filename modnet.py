@@ -59,9 +59,9 @@ class Modnet:
         flip = x[0][-1]
 
         if flip:
-           opp_pip = x[0][293]
+           opp_pip = x[0][293] * 167
            opp_bar = x[0][292] * 2
-           player_pip = x[0][146]
+           player_pip = x[0][146] * 167
            player_bar = x[0][145] * 2
 
            opp_checkers = x[0][147:291]
@@ -71,9 +71,9 @@ class Modnet:
            opp_checkers = opp_checkers[::-1]
            player_checkers = player_checkers[::-1]
         else:
-            opp_pip = x[0][146]
+            opp_pip = x[0][146] * 167
             opp_bar = x[0][145] * 2
-            player_pip = x[0][293]
+            player_pip = x[0][293] * 167
             player_bar = x[0][292] * 2
 
             opp_checkers = x[0][0:144]
@@ -145,19 +145,85 @@ class Modnet:
                         feats[min(i, 5)] += 1
                 features += feats
             # print('pip_count before off pieces', pip_count)
-            features.append(float(len(game.bar_pieces[p])) / 2.) # td gammon had it like this to scale the range between 0 and 1
+            features.append(float(len(game.bar_pieces[p])) / 2.)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
-
-            # pip_count for the player the closer to home the less the value is
             # print(game.bar_pieces[p], game.off_pieces[p])
+            # if pip on the bar penalize the pip_count
             pip_count += len(game.bar_pieces[p]) * 25
-            features.append(float(pip_count))
+            # pip_count for the player the closer to home the less the pip_count
+            # scale it out or include it as part of the reward
+            features.append(float(pip_count) / 167)
             # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]
         else:
             features += [0., 1.]
-        return np.array(features).reshape(1, -1)
+
+        features = np.array(features).reshape(1, -1)
+
+        features = self.add_hit_prob(features, game)
+
+        return features
+
+    # determine the hitting probability based on fields that include single checkers that are within the opponents reach
+    # hit_count / max(num_pieces - off_pieces - bar_pieces, 1)
+    def add_hit_prob(self, features, game):
+        # make the indexes evaulated based on global variables
+        flip = features[0][-1]
+
+        opp = game.players[1]
+        opp_num_pieces = game.num_pieces[opp]
+
+        player = game.players[0]
+        player_num_pieces = game.num_pieces[player]
+
+        if flip:
+            opp_bar = features[0][292] * 2
+
+            opp_off = int(np.floor(features[0][291] * opp_num_pieces))
+            player_bar = features[0][145] * 2
+
+            player_off = int(np.floor(features[0][144] * player_num_pieces))
+
+            opp_checkers = features[0][147:291]
+            player_checkers = features[0][0:144]
+
+            # flip the view - this is just a perspective change and not an actual copy
+            opp_checkers = opp_checkers[::-1]
+            player_checkers = player_checkers[::-1]
+        else:
+            opp_bar = features[0][145] * 2
+            opp_off = int(np.floor(features[0][144] * opp_num_pieces))
+            player_bar = features[0][292] * 2
+            player_off = int(np.floor(features[0][291] * player_num_pieces))
+
+            opp_checkers = features[0][0:144]
+            player_checkers = features[0][147:291]
+
+        opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
+
+        player_max = 23 - np.argmax(player_checkers[::-1]) // 6 if player_bar == 0 else 23
+
+        player_hit_count = 0
+        opp_hit_count = 0
+
+        for i in range(opp_max, player_max + 1):
+            player_field_count = np.sum(player_checkers[i * 4:(i + 1) * 4])
+            player_hit_count += 1 if player_field_count == 1 else 0
+            opp_field_count = np.sum(opp_checkers[i * 4:(i + 1) * 4])
+            opp_hit_count += 1 if opp_field_count == 1 else 0
+
+        player_hit = player_hit_count / max(player_num_pieces - player_off - player_bar, 1)
+        opp_hit = opp_hit_count / max(opp_num_pieces - opp_off - opp_bar, 1)
+
+        if flip:
+            hit = [[player_hit, opp_hit]]
+        else:
+            hit = [[opp_hit, player_hit]]
+
+        features = np.append(features, hit, axis=1)
+
+        return features
 
     def train(self, episodes=5000):
         for net in self.networks:
@@ -192,6 +258,8 @@ class Modnet:
 
                 x_next = self.extract_features(game, players[player_num].player)
                 gated_net, V_next = self.get_output(x_next)
+
+                V_next = 1 - V_next
 
                 self.networks[gated_net].run_output(x, V_next)
 

@@ -150,9 +150,9 @@ class MonoNN:
             # print()
             # print()
             # print('episode', episode)
-            if episode % validation_interval == 0:
-                tester.test_self(self)
-                tester.test_random(self)
+            # if episode % validation_interval == 0:
+            #     tester.test_self(self)
+            #     tester.test_random(self)
                 # self.print_checkpoints()
 
             game = Game.new()
