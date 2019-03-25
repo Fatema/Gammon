@@ -231,9 +231,9 @@ class ModnetHybrid:
         num_layouts = len(Game.LAYOUTS)
 
         for episode in range(episodes):
-            # if episode % validation_interval == 0:
-            #     tester.test_self(self)
-            #     tester.test_random(self)
+            if episode % validation_interval == 0:
+                tester.test_self(self)
+                tester.test_random(self)
 
             # change layout when episode % 5000 == 0 is reached
             if episode > 0 and episode % layout_start_episode == 0:
