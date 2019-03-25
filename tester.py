@@ -3,7 +3,6 @@ import os
 from backgammon.agents.ai_agent import TDAgent
 from backgammon.agents.random_agent import RandomAgent
 from backgammon.game import Game
-from tqdm import tqdm
 
 from modnet import Modnet
 from mono_nn import MonoNN

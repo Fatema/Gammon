@@ -71,7 +71,12 @@ class MonoNN:
             features += [1., 0.]
         else:
             features += [0., 1.]
-        return np.array(features).reshape(1, -1)
+
+        features = np.array(features).reshape(1, -1)
+
+        features = self.add_hit_prob(features, game)
+
+        return features
 
     # determine the hitting probability based on fields that include single checkers that are within the opponents reach
     # hit_count / max(num_pieces - off_pieces - bar_pieces, 1)
@@ -79,12 +84,18 @@ class MonoNN:
         # make the indexes evaulated based on global variables
         flip = features[0][-1]
 
+        opp = game.players[1]
+        opp_num_pieces = game.num_pieces[opp]
+
+        player = game.players[0]
+        player_num_pieces = game.num_pieces[player]
+
         if flip:
             opp_bar = features[0][292] * 2
-            opp_num_pieces = game.num_pieces[1]
+
             opp_off = int(np.floor(features[0][291] * opp_num_pieces))
             player_bar = features[0][145] * 2
-            player_num_pieces = game.num_pieces[0]
+
             player_off = int(np.floor(features[0][144] * player_num_pieces))
 
             opp_checkers = features[0][147:291]
@@ -95,10 +106,8 @@ class MonoNN:
             player_checkers = player_checkers[::-1]
         else:
             opp_bar = features[0][145] * 2
-            opp_num_pieces = game.num_pieces[1]
             opp_off = int(np.floor(features[0][144] * opp_num_pieces))
             player_bar = features[0][292] * 2
-            player_num_pieces = game.num_pieces[0]
             player_off = int(np.floor(features[0][291] * player_num_pieces))
 
             opp_checkers = features[0][0:144]
