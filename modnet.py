@@ -15,6 +15,7 @@ class Modnet:
         self.summary_path = summary_path
         self.checkpoint_path = checkpoint_path
         self.restore = restore
+        self.timestamp = int(time.time())
 
         self.default_net = self.create_network('default')
 
@@ -33,6 +34,7 @@ class Modnet:
         network = SubNet()
         network.set_network_name(name)
         network.set_paths(self.model_path, self.summary_path, self.checkpoint_path)
+        network.set_timestamp(self.timestamp)
         network.start_session(restore=self.restore)
         return network
 

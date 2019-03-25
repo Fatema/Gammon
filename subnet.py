@@ -18,6 +18,9 @@ class SubNet:
     def set_network_name(self, name):
         self.STRATEGY = name
 
+    def set_timestamp(self, timestamp):
+        self.timestamp = timestamp
+
     def set_paths(self, model_path, summary_path, checkpoint_path):
         self.model_path = model_path + self.STRATEGY + '/'
         self.summary_path = summary_path + self.STRATEGY + '/'
@@ -194,24 +197,6 @@ class SubNet:
 
         self.ppg_summary_op = tf.summary.merge([ppg_summary, ppg_avg_summary, game_step_summary])
 
-        # self.test_game_number = tf.Variable(tf.constant(0.0), name='test_game_number', trainable=False)
-        # test_game_number_op = self.game_number.assign_add(1)
-
-        # with tf.variable_scope('test'):
-        #     # cubeless equity = 2 * W - 1
-        #     test_ppg = 2 * tf.reduce_sum(self.V_next) - 1
-        #     test_ppg_sum = tf.Variable(tf.constant(0.0), name='test_ppg_sum', trainable=False)
-        #     test_ppg_sum_op = test_ppg_sum.assign_add(test_ppg)
-        #     with tf.control_dependencies([
-        #         test_ppg_sum_op,
-        #         test_game_number_op
-        #         ]):
-        #         self.test_ppg_avg_op = test_ppg_sum / tf.maximum(self.test_game_number, 1.0)
-        #     test_ppg_summary = tf.summary.scalar('test_ppg', test_ppg)
-        #     test_ppg_avg_summary = tf.summary.scalar('test_ppg_avg', self.test_ppg_avg_op)
-        #
-        # self.test_ppg_summary_op = tf.summary.merge([test_ppg_summary, test_ppg_avg_summary])
-
         # create a saver for periodic checkpoints
         self.saver = tf.train.Saver(max_to_keep=1)
         self.pre_saver = tf.train.Saver(max_to_keep=1)
@@ -219,8 +204,6 @@ class SubNet:
 
         # run variable initializers
         self.sess.run(tf.global_variables_initializer())
-
-        self.timestamp = int(time.time())
 
         self.summary_writer = tf.summary.FileWriter(
             '{0}{1}'.format(self.summary_path, self.timestamp, self.sess.graph_def))

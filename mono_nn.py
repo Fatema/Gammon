@@ -16,6 +16,7 @@ class MonoNN:
         self.mono_nn = SubNet()
         self.mono_nn.set_network_name('mono')
         self.mono_nn.set_paths(model_path, summary_path, checkpoint_path)
+        self.mono_nn.set_timestamp(int(time.time()))
         self.mono_nn.start_session(restore=restore)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
