@@ -84,10 +84,14 @@ class Modnet:
         # the calculation is based on the player view
         # min means that it is closer to the perspective player home and max is the opposite
         # opp_min = 23 - np.argmax(opp_checkers[::-1]) // 6
-        opp_max = np.argmax(opp_checkers) // 6
+        opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
+        if np.max(opp_checkers) < 1:
+            opp_max = 24
 
         # player_min = np.argmax(player_checkers) // 6
-        player_max = 23 - np.argmax(player_checkers[::-1]) // 6
+        player_max = 23 - np.argmax(player_checkers[::-1]) // 6 if player_bar == 0 else 23
+        if np.max(player_checkers) < 1:
+            player_max = -1
 
         net = 'd'
 
@@ -142,14 +146,14 @@ class Modnet:
                         feats[min(i, 5)] += 1
                 features += feats
             # print('pip_count before off pieces', pip_count)
-            features.append(float(len(game.bar_pieces[p])) / 2.)
-            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
+            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p]) # off pieces percentage
+            features.append(float(len(game.bar_pieces[p])) / 2.) # bar pieces scaled
             # print(game.bar_pieces[p], game.off_pieces[p])
             # if pip on the bar penalize the pip_count
             pip_count += len(game.bar_pieces[p]) * 25
             # pip_count for the player the closer to home the less the pip_count
             # scale it out or include it as part of the reward
-            features.append(float(pip_count) / 167)
+            features.append(float(pip_count) / 167) # pip count scaled
             # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]
@@ -242,11 +246,11 @@ class Modnet:
             #     tester.test_self(self)
             #     tester.test_random(self)
 
-            # change layout when episode % 5000 == 0 is reached
+            # change layout when episode % 4000 == 0 is reached
             if episode > 0 and episode % layout_start_episode == 0:
                 l = (l + 1) % num_layouts
 
-            # keep this layout until episode % 6000 < 5000
+            # keep this layout until episode % 6000 < 4000
             if episode % layout_change_interval >= layout_start_episode:
                 layout = Game.LAYOUTS[l]
             else:
