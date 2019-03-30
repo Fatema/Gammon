@@ -135,8 +135,8 @@ class ModnetHybrid:
                         feats[min(i, 5)] += 1
                 features += feats
             # print('pip_count before off pieces', pip_count)
-            features.append(float(len(game.bar_pieces[p])) / 2.)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
+            features.append(float(len(game.bar_pieces[p])) / 2.)
             # print(game.bar_pieces[p], game.off_pieces[p])
             # if pip on the bar penalize the pip_count
             pip_count += len(game.bar_pieces[p]) * 25
