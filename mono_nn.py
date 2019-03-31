@@ -56,7 +56,9 @@ class MonoNN:
                         pip_count += temp
                         # print(p,'count per col', j, temp, pip_count, len(col))
                     for i in range(len(col)):
-                        feats[min(i, 5)] += 1
+                        if i >= 5: break
+                        feats[i] += 1
+                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0 # normalize the remaining pips
                 features += feats
             # print('pip_count before off pieces', pip_count)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
@@ -114,9 +116,9 @@ class MonoNN:
             opp_checkers = features[0][0:144]
             player_checkers = features[0][147:291]
 
-        opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
+        opp_max = np.argmax(opp_checkers == 1) // 6 if opp_bar == 0 else 0
 
-        player_max = 23 - np.argmax(player_checkers[::-1]) // 6 if player_bar == 0 else 23
+        player_max = 23 - np.argmax(player_checkers[::-1] == 1) // 6 if player_bar == 0 else 23
 
         player_hit_count = 0
         opp_hit_count = 0

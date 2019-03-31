@@ -84,12 +84,12 @@ class Modnet:
         # the calculation is based on the player view
         # min means that it is closer to the perspective player home and max is the opposite
         # opp_min = 23 - np.argmax(opp_checkers[::-1]) // 6
-        opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
+        opp_max = np.argmax(opp_checkers == 1) // 6 if opp_bar == 0 else 0
         if np.max(opp_checkers) < 1:
             opp_max = 24
 
         # player_min = np.argmax(player_checkers) // 6
-        player_max = 23 - np.argmax(player_checkers[::-1]) // 6 if player_bar == 0 else 23
+        player_max = 23 - np.argmax(player_checkers[::-1] == 1) // 6 if player_bar == 0 else 23
         if np.max(player_checkers) < 1:
             player_max = -1
 
@@ -143,7 +143,9 @@ class Modnet:
                         pip_count += temp
                         # print(p,'count per col', j, temp, pip_count, len(col))
                     for i in range(len(col)):
-                        feats[min(i, 5)] += 1
+                        if i >= 5: break
+                        feats[i] += 1
+                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0 # normalize the remaining pips
                 features += feats
             # print('pip_count before off pieces', pip_count)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p]) # off pieces percentage
@@ -201,9 +203,9 @@ class Modnet:
             opp_checkers = features[0][0:144]
             player_checkers = features[0][147:291]
 
-        opp_max = np.argmax(opp_checkers) // 6 if opp_bar == 0 else 0
+        opp_max = np.argmax(opp_checkers == 1) // 6 if opp_bar == 0 else 0
 
-        player_max = 23 - np.argmax(player_checkers[::-1]) // 6 if player_bar == 0 else 23
+        player_max = 23 - np.argmax(player_checkers[::-1] == 1) // 6 if player_bar == 0 else 23
 
         player_hit_count = 0
         opp_hit_count = 0
@@ -260,6 +262,7 @@ class Modnet:
             game = Game.new(layout=layout)
             # game.generate_random_game()
             player_num = random.randint(0, 1)
+            gates = {'x':[], 'o':[]}
 
             x = self.extract_features(game, players[player_num].player)
 
@@ -276,12 +279,20 @@ class Modnet:
                 x_next = self.extract_features(game, players[player_num].player)
                 gated_net, V_next = self.get_output(x_next)
 
+                gates[players[player_num].player] += [gated_net]
+
                 V_next = 1 - V_next
 
                 self.networks[gated_net].run_output(x, V_next)
 
                 x = x_next
                 game_step += 1
+
+                if game_step % 200 == 0:
+                    game.draw_screen()
+                    print(players[player_num].player, gated_net)
+
+            print(gates)
 
             winner = game.winner()
 
