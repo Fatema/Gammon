@@ -106,7 +106,7 @@ class Modnet:
 
             for i in range(opp_max + 1, player_max + 1):
                 # if sum is 1 move to a defensive strategy
-                sum = np.sum(player_checkers[i * 4:(i + 1) * 4])
+                sum = np.sum(player_checkers[i * 6:(i + 1) * 6])
                 if sum > 1:
                     player_prime[j] += 1
                 else:
@@ -209,9 +209,9 @@ class Modnet:
         opp_hit_count = 0
 
         for i in range(opp_max, player_max + 1):
-            player_field_count = np.sum(player_checkers[i * 4:(i + 1) * 4])
+            player_field_count = np.sum(player_checkers[i * 6:(i + 1) * 6])
             player_hit_count += 1 if player_field_count == 1 else 0
-            opp_field_count = np.sum(opp_checkers[i * 4:(i + 1) * 4])
+            opp_field_count = np.sum(opp_checkers[i * 6:(i + 1) * 6])
             opp_hit_count += 1 if opp_field_count == 1 else 0
 
         player_hit = player_hit_count / max(player_num_pieces - player_off - player_bar, 1)
