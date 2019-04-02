@@ -55,13 +55,15 @@ class ModnetHybrid:
     # gating program - decide which subnet to run based on the input features
     def get_output(self, x):
         # make the indexes evaulated based on global variables
-        flip = x[0][-1]
+        flip = x[0][-3]
 
         if flip:
            opp_pip = x[0][293] * 167
            opp_bar = x[0][292] * 2
+           opp_off = int(np.floor(x[0][291] * 15))
            player_pip = x[0][146] * 167
            player_bar = x[0][145] * 2
+           player_off = int(np.floor(x[0][144] * 15))
 
            opp_checkers = x[0][147:291]
            player_checkers = x[0][0:144]
@@ -72,8 +74,10 @@ class ModnetHybrid:
         else:
             opp_pip = x[0][146] * 167
             opp_bar = x[0][145] * 2
+            opp_off = int(np.floor(x[0][144] * 15))
             player_pip = x[0][293] * 167
             player_bar = x[0][292] * 2
+            player_off = int(np.floor(x[0][291] * 15))
 
             opp_checkers = x[0][0:144]
             player_checkers = x[0][147:291]
@@ -104,14 +108,14 @@ class ModnetHybrid:
             for i in range(opp_max + 1, player_max + 1):
                 # if sum is 1 move to a defensive strategy
                 sum = np.sum(player_checkers[i * 6:(i + 1) * 6])
-                if sum > 1:
+                if sum > 0:
                     player_prime[j] += 1
                 else:
                     player_prime += [0]
                     j += 1
 
             # check for prime or back game combinations
-            if max(player_prime) > 4 or (player_pip - opp_pip > 90 and np.sum(opp_checkers[108:144]) + player_bar > 3):
+            if max(player_prime) > 3 or (player_off <= opp_off and player_pip - opp_pip > 90 and np.sum(player_checkers[108:144]) + player_bar > 3):
                 net = 'h'
 
         return net, self.networks[net].get_output(x)
@@ -231,7 +235,7 @@ class ModnetHybrid:
         validation_interval = 1000
 
         # set intervals for changing the layouts to the ones defined in the game class
-        layout_change_interval = 6000
+        layout_change_interval = 4000
         layout_start_episode = layout_change_interval - 2000
         l = 0
         num_layouts = len(Game.LAYOUTS)
@@ -241,11 +245,11 @@ class ModnetHybrid:
             #     tester.test_self(self)
             #     tester.test_random(self)
 
-            # change layout when episode % 5000 == 0 is reached
-            if episode > 0 and episode % layout_start_episode == 0:
+            # change layout when episode % 4000 == 0 is reached
+            if episode > 0 and episode % layout_change_interval == 0:
                 l = (l + 1) % num_layouts
 
-            # keep this layout until episode % 6000 < 5000
+            # keep this layout until episode % 4000 < 2000
             if episode % layout_change_interval >= layout_start_episode:
                 layout = Game.LAYOUTS[l]
             else:

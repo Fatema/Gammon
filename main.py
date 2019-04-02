@@ -15,6 +15,7 @@ flags.DEFINE_boolean('play', False, 'If true, play against a trained TD-Gammon s
 flags.DEFINE_boolean('restore', True, 'If true, restore a checkpoint before training.')
 flags.DEFINE_boolean('mono', False, 'If true, use monolithic NN.')
 flags.DEFINE_boolean('hybrid', False, 'If true, use Modular Network with Hybrid strategy.')
+flags.DEFINE_boolean('draw', False, 'If true, use Modular Network with Hybrid strategy.')
 
 model_path = os.environ.get('MODEL_PATH', 'models/')
 summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
@@ -35,18 +36,18 @@ if __name__ == '__main__':
     model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test and FLAGS.all:
         if FLAGS.mono:
-            test_all_random(model_mono)
+            test_all_random(model_mono, draw=FLAGS.draw)
         elif FLAGS.hybrid:
-            test_all_random(model_mod_hybrid)
+            test_all_random(model_mod_hybrid, draw=FLAGS.draw)
         else:
-            test_all_random(model_mod)
+            test_all_random(model_mod, draw=FLAGS.draw)
     elif FLAGS.test:
         if FLAGS.mono:
-            test_random(model_mono, episodes=1000)
+            test_random(model_mono, episodes=1000, draw=FLAGS.draw)
         elif FLAGS.hybrid:
-            test_random(model_mod_hybrid, episodes=1000)
+            test_random(model_mod_hybrid, episodes=1000, draw=FLAGS.draw)
         else:
-            test_random(model_mod, episodes=1000)
+            test_random(model_mod, episodes=1000, draw=FLAGS.draw)
     elif FLAGS.play:
         if FLAGS.mono:
             model_mono.play()
