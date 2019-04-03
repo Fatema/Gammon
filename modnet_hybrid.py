@@ -108,7 +108,7 @@ class ModnetHybrid:
             for i in range(opp_max + 1, player_max + 1):
                 # if sum is 1 move to a defensive strategy
                 sum = np.sum(player_checkers[i * 6:(i + 1) * 6])
-                if sum > 0:
+                if sum > 1:
                     player_prime[j] += 1
                 else:
                     player_prime += [0]
@@ -281,6 +281,17 @@ class ModnetHybrid:
 
                 x = x_next
                 game_step += 1
+
+                if game_step % 150 == 0:
+                    game.draw_screen()
+                    print(players[not player_num].player, gated_net)
+                    # skip this training episode
+                    break
+
+            if game_step >= 150:
+                for net in self.networks:
+                    self.networks[net].reset_game_step()
+                continue
 
             winner = game.winner()
 

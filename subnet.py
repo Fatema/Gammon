@@ -253,6 +253,12 @@ class SubNet:
     def create_model(self):
         tf.train.write_graph(self.sess.graph_def, self.model_path, self.STRATEGY + '_net.pb', as_text=False)
 
+    def reset_game_step(self):
+        self.sess.run([
+            self.reset_op
+        ])
+
+
     def update_model(self, x, winner):
         _, global_step, summaries = self.sess.run([
             self.train_op,
