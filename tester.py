@@ -61,7 +61,7 @@ def test_self(model, episodes=100, draw=False):
 
 def test_all_random(model, timestamp=0, max_checkpoint=500001, episodes=500, draw=False):
     vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='random')
-    for i in range(1, max_checkpoint, 1000):
+    for i in range(1, max_checkpoint, 5000):
         if i == 1:
             model.restore_test_checkpoint(timestamp, i - 1)
         else:
@@ -89,7 +89,7 @@ def test_all_best(model, timestamp=0, max_checkpoint=500001, episodes=500, draw=
     #restore best checkpoint from this timestamp
     model.restore_test_checkpoint(timestamp, max_checkpoint)
 
-    for i in range(1, max_checkpoint, 1000):
+    for i in range(1, max_checkpoint, 5000):
         if i == 1:
             previous_model.restore_test_checkpoint(timestamp, i - 1)
         else:
