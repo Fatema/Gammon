@@ -21,7 +21,6 @@ previous_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, re
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
 vis = visdom.Visdom(server='ncc1.clients.dur.ac.uk',port=12345)
-vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='win')
 
 def run_games(players, episodes=100, draw=False):
     winners = [0, 0]
@@ -60,7 +59,8 @@ def test_self(model, episodes=100, draw=False):
     run_games(players, episodes, draw)
 
 
-def test_all_random(model, timestamp=0000, max_checkpoint=500001, episodes=100, draw=False):
+def test_all_random(model, timestamp=0, max_checkpoint=500001, episodes=500, draw=False):
+    vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='random')
     for i in range(1, max_checkpoint, 1000):
         if i == 1:
             model.restore_test_checkpoint(timestamp, i - 1)
@@ -72,12 +72,13 @@ def test_all_random(model, timestamp=0000, max_checkpoint=500001, episodes=100, 
         # plot metrics
         vis.line(X=np.array([i]), Y=np.array([[
             win_perc,
-        ]]), win='win', opts=dict(title='win', xlabel='checkpoint', ylabel='win rate', ytype='log', legend=[
+        ]]), win='random', opts=dict(title='win', xlabel='checkpoint', ylabel='win rate', ytype='log', legend=[
             'random'
         ]), update='append')
 
 
-def test_all_best(model, timestamp=0000, max_checkpoint=500001, episodes=100, draw=False):
+def test_all_best(model, timestamp=0, max_checkpoint=500001, episodes=500, draw=False):
+    vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='best')
     if isinstance(model, Modnet):
         previous_model = previous_mod
     elif isinstance(model, ModnetHybrid):
@@ -99,7 +100,7 @@ def test_all_best(model, timestamp=0000, max_checkpoint=500001, episodes=100, dr
         # plot metrics
         vis.line(X=np.array([i]), Y=np.array([[
             win_perc,
-        ]]), win='win', opts=dict(title='win', xlabel='checkpoint', ylabel='win rate', ytype='log', legend=[
+        ]]), win='best', opts=dict(title='win', xlabel='checkpoint', ylabel='win rate', ytype='log', legend=[
             'self'
         ]), update='append')
 
