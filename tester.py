@@ -2,7 +2,7 @@ import os
 
 import visdom
 
-from backgammon.agents.ai_agent import TDAgent
+from backgammon.agents.ai_agent import TDAgent, PubevalAgent
 from backgammon.agents.random_agent import RandomAgent
 from backgammon.game import Game
 
@@ -20,7 +20,7 @@ previous_mod = Modnet(model_path, summary_path, checkpoint_path, restore=True)
 previous_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, restore=True)
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
-vis = visdom.Visdom(server='ncc1.clients.dur.ac.uk',port=12345)
+vis = visdom.Visdom(server='localhost',port=12345)
 
 def run_games(players, episodes=100, draw=False):
     winners = [0, 0]
@@ -42,6 +42,12 @@ def run_games(players, episodes=100, draw=False):
 
 def test_random(model, episodes=100, draw=False):
     players = [TDAgent(Game.TOKENS[0], model), RandomAgent(Game.TOKENS[1])]
+    return run_games(players, episodes, draw)
+
+
+def test_pubeval(model, episodes=100, draw=False):
+    players = [TDAgent(Game.TOKENS[0], model), PubevalAgent(Game.TOKENS[1])]
+    # players = [RandomAgent(Game.TOKENS[0]), PubevalAgent(Game.TOKENS[1])]
     return run_games(players, episodes, draw)
 
 
@@ -103,4 +109,3 @@ def test_all_best(model, timestamp=0, max_checkpoint=500001, episodes=500, draw=
         ]]), win='best', opts=dict(title='win', xlabel='checkpoint', ylabel='win rate', ytype='log', legend=[
             'self'
         ]), update='append')
-

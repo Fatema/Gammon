@@ -9,21 +9,25 @@ from backgammon.game import Game
 
 from subnet import *
 
+
 class Modnet:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
         self.model_path = model_path
         self.summary_path = summary_path
         self.checkpoint_path = checkpoint_path
-        self.restore = restore
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('default')
+        self.default_net.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7)
 
         self.racing_net = self.create_network('racing')
+        self.racing_net.start_session(restore=restore)
 
         self.priming_net = self.create_network('priming')
+        self.priming_net.start_session(restore=restore)
 
         self.backgame_net = self.create_network('backgame')
+        self.backgame_net.start_session(restore=restore)
 
         self.networks = {'d': self.default_net,
                          'r': self.racing_net,
@@ -35,7 +39,6 @@ class Modnet:
         network.set_network_name(name)
         network.set_paths(self.model_path, self.summary_path, self.checkpoint_path)
         network.set_timestamp(self.timestamp)
-        network.start_session(restore=self.restore)
         return network
 
     def print_checkpoints(self):
@@ -61,19 +64,19 @@ class Modnet:
         flip = x[0][-3]
 
         if flip:
-           opp_pip = x[0][293] * 167
-           opp_bar = x[0][292] * 2
-           opp_off = int(np.floor(x[0][291] * 15))
-           player_pip = x[0][146] * 167
-           player_bar = x[0][145] * 2
-           player_off = int(np.floor(x[0][144] * 15))
+            opp_pip = x[0][293] * 167
+            opp_bar = x[0][292] * 2
+            opp_off = int(np.floor(x[0][291] * 15))
+            player_pip = x[0][146] * 167
+            player_bar = x[0][145] * 2
+            player_off = int(np.floor(x[0][144] * 15))
 
-           opp_checkers = x[0][147:291]
-           player_checkers = x[0][0:144]
+            opp_checkers = x[0][147:291]
+            player_checkers = x[0][0:144]
 
-           # flip the view - this is just a perspective change and not an actual copy
-           opp_checkers = opp_checkers[::-1]
-           player_checkers = player_checkers[::-1]
+            # flip the view - this is just a perspective change and not an actual copy
+            opp_checkers = opp_checkers[::-1]
+            player_checkers = player_checkers[::-1]
         else:
             opp_pip = x[0][146] * 167
             opp_bar = x[0][145] * 2
@@ -122,7 +125,8 @@ class Modnet:
                 net = 'p'
             # check if the player is at a disadvantage and check for the checkers at opponent home if they
             # are more than 3 along with the checkers on the bar do the back game
-            elif player_off <= opp_off and player_pip - opp_pip > 90 and np.sum(player_checkers[108:144]) + player_bar > 3:
+            elif player_off <= opp_off and player_pip - opp_pip > 90 and np.sum(
+                    player_checkers[108:144]) + player_bar > 3:
                 net = 'b'
         # print(flip, opp_max, player_max, player_pip - opp_pip, net, np.sum(player_checkers[108:144]), player_checkers)
         return net, self.networks[net].get_output(x)
@@ -149,17 +153,17 @@ class Modnet:
                     for i in range(len(col)):
                         if i >= 5: break
                         feats[i] += 1
-                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0 # normalize the remaining pips
+                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0  # normalize the remaining pips
                 features += feats
             # print('pip_count before off pieces', pip_count)
-            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p]) # off pieces percentage
-            features.append(float(len(game.bar_pieces[p])) / 2.) # bar pieces scaled
+            features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])  # off pieces percentage
+            features.append(float(len(game.bar_pieces[p])) / 2.)  # bar pieces scaled
             # print(game.bar_pieces[p], game.off_pieces[p])
             # if pip on the bar penalize the pip_count
             pip_count += len(game.bar_pieces[p]) * 25
             # pip_count for the player the closer to home the less the pip_count
             # scale it out or include it as part of the reward
-            features.append(float(pip_count) / 167) # pip count scaled
+            features.append(float(pip_count) / 167)  # pip count scaled
             # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]
@@ -267,7 +271,7 @@ class Modnet:
             game = Game.new(layout=layout)
             # game.generate_random_game()
             player_num = random.randint(0, 1)
-            gates = {'x':[], 'o':[]}
+            gates = {'x': [], 'o': []}
 
             x = self.extract_features(game, players[player_num].player)
 
@@ -299,14 +303,7 @@ class Modnet:
 
                 if game_step % 150 == 0:
                     game.draw_screen()
-                    print(players[not player_num].player, gated_net)
-                    # skip this training episode
-                    break
-
-            if game_step >= 150:
-                for net in self.networks:
-                    self.networks[net].reset_game_step()
-                continue
+                    print(episode, game_step, players[not player_num].player, gated_net)
 
             print(gates)
 
@@ -314,7 +311,10 @@ class Modnet:
 
             print("[Train %d/%d] (Winner: %s) in %d turns" % (episode, episodes, players[not winner].player, game_step))
 
-            for net in self.networks:
+            episode_nets = set(gates['x']) | set(gates['o'])
+            print(episode_nets)
+
+            for net in episode_nets:
                 self.networks[net].update_model(x, winner)
 
         for net in self.networks:

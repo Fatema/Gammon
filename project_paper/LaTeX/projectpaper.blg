@@ -1,0 +1,133 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: projectpaper.aux
+The style file: agsm.bst
+Database file #1: projectpaper.bib
+Repeated entry---line 37 of file projectpaper.bib
+ : @unpublished{euther
+ :                    
+I'm skipping whatever remains of this entry
+Repeated entry---line 44 of file projectpaper.bib
+ : @unpublished{futher
+ :                    
+I'm skipping whatever remains of this entry
+Warning--entry type for "gnubg" isn't style-file defined
+--line 354 of file projectpaper.bib
+Warning--entry type for "glossary" isn't style-file defined
+--line 362 of file projectpaper.bib
+Warning--entry type for "exg" isn't style-file defined
+--line 370 of file projectpaper.bib
+Warning--entry type for "snowie" isn't style-file defined
+--line 378 of file projectpaper.bib
+Repeated entry---line 421 of file projectpaper.bib
+ : @article{DBLP:journals/gpem/AzariaS05
+ :                                      ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 472 of file projectpaper.bib
+ : @inproceedings{DBLP:conf/evoW/PapahristouR11
+ :                                             ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 490 of file projectpaper.bib
+ : @proceedings{DBLP:conf/evoW/2011a1
+ :                                   ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 518 of file projectpaper.bib
+ : @inproceedings{DBLP:conf/ifip12/PapahristouR12
+ :                                               ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 535 of file projectpaper.bib
+ : @proceedings{DBLP:conf/ifip12/2012aiai-1
+ :                                         ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 554 of file projectpaper.bib
+ : @article{DBLP:journals/ml/PollackB98
+ :                                     ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 570 of file projectpaper.bib
+ : @inproceedings{DBLP:conf/nafips/TabriziKR15
+ :                                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 588 of file projectpaper.bib
+ : @proceedings{DBLP:conf/nafips/2015
+ :                                   ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 601 of file projectpaper.bib
+ : @article{DBLP:journals/ai/Tesauro02
+ :                                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 642 of file projectpaper.bib
+ : @inproceedings{DBLP:conf/icml/Tesauro92
+ :                                        ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 655 of file projectpaper.bib
+ : @proceedings{DBLP:conf/icml/1992
+ :                                 ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 668 of file projectpaper.bib
+ : @article{DBLP:journals/neco/Tesauro94
+ :                                      ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 684 of file projectpaper.bib
+ : @article{DBLP:journals/ml/Tesauro98
+ :                                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 700 of file projectpaper.bib
+ : @article{DBLP:journals/jilsa/Wiering10
+ :                                       ,
+I'm skipping whatever remains of this entry
+Warning--entry type for "MichaelDepreliStudy2012" isn't style-file defined
+--line 716 of file projectpaper.bib
+Repeated entry---line 723 of file projectpaper.bib
+ : @online{gnubg
+ :              ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 731 of file projectpaper.bib
+ : @online{exg
+ :            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 739 of file projectpaper.bib
+ : @online{snowie
+ :               ,
+I'm skipping whatever remains of this entry
+You've used 24 entries,
+            2909 wiz_defined-function locations,
+            804 strings with 9558 characters,
+and the built_in function-call counts, 59598 in all, are:
+= -- 9315
+> -- 791
+< -- 2
++ -- 4129
+- -- 234
+* -- 4780
+:= -- 12683
+add.period$ -- 29
+call.type$ -- 24
+change.case$ -- 337
+chr.to.int$ -- 23
+cite$ -- 24
+duplicate$ -- 368
+empty$ -- 762
+format.name$ -- 303
+if$ -- 10612
+int.to.chr$ -- 6
+int.to.str$ -- 0
+missing$ -- 16
+newline$ -- 93
+num.names$ -- 247
+pop$ -- 141
+preamble$ -- 1
+purify$ -- 360
+quote$ -- 0
+skip$ -- 306
+stack$ -- 0
+substring$ -- 12656
+swap$ -- 71
+text.length$ -- 338
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 92
+warning$ -- 0
+while$ -- 534
+width$ -- 0
+write$ -- 321
+(There were 19 error messages)

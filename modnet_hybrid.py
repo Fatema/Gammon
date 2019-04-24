@@ -9,6 +9,7 @@ from backgammon.game import Game
 
 from subnet import *
 
+
 class ModnetHybrid:
     def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
         self.model_path = model_path
@@ -18,10 +19,13 @@ class ModnetHybrid:
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('h_default')
+        self.default_net.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7)
 
         self.racing_net = self.create_network('h_racing')
+        self.racing_net.start_session(restore=restore)
 
         self.hybrid_net = self.create_network('h_hybrid')
+        self.hybrid_net.start_session(restore=restore)
 
         self.networks = {'d': self.default_net,
                          'r': self.racing_net,
@@ -32,7 +36,6 @@ class ModnetHybrid:
         network.set_network_name(name)
         network.set_paths(self.model_path, self.summary_path, self.checkpoint_path)
         network.set_timestamp(self.timestamp)
-        network.start_session(restore=self.restore)
         return network
 
     def print_checkpoints(self):
@@ -58,19 +61,19 @@ class ModnetHybrid:
         flip = x[0][-3]
 
         if flip:
-           opp_pip = x[0][293] * 167
-           opp_bar = x[0][292] * 2
-           opp_off = int(np.floor(x[0][291] * 15))
-           player_pip = x[0][146] * 167
-           player_bar = x[0][145] * 2
-           player_off = int(np.floor(x[0][144] * 15))
+            opp_pip = x[0][293] * 167
+            opp_bar = x[0][292] * 2
+            opp_off = int(np.floor(x[0][291] * 15))
+            player_pip = x[0][146] * 167
+            player_bar = x[0][145] * 2
+            player_off = int(np.floor(x[0][144] * 15))
 
-           opp_checkers = x[0][147:291]
-           player_checkers = x[0][0:144]
+            opp_checkers = x[0][147:291]
+            player_checkers = x[0][0:144]
 
-           # flip the view - this is just a perspective change and not an actual copy
-           opp_checkers = opp_checkers[::-1]
-           player_checkers = player_checkers[::-1]
+            # flip the view - this is just a perspective change and not an actual copy
+            opp_checkers = opp_checkers[::-1]
+            player_checkers = player_checkers[::-1]
         else:
             opp_pip = x[0][146] * 167
             opp_bar = x[0][145] * 2
@@ -115,7 +118,8 @@ class ModnetHybrid:
                     j += 1
 
             # check for prime or back game combinations
-            if max(player_prime) > 3 or (player_off <= opp_off and player_pip - opp_pip > 90 and np.sum(player_checkers[108:144]) + player_bar > 3):
+            if max(player_prime) > 3 or (player_off <= opp_off and player_pip - opp_pip > 90 and np.sum(
+                    player_checkers[108:144]) + player_bar > 3):
                 net = 'h'
 
         return net, self.networks[net].get_output(x)
@@ -142,7 +146,7 @@ class ModnetHybrid:
                     for i in range(len(col)):
                         if i >= 5: break
                         feats[i] += 1
-                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0 # normalize the remaining pips
+                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0  # normalize the remaining pips
                 features += feats
             # print('pip_count before off pieces', pip_count)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
@@ -259,6 +263,7 @@ class ModnetHybrid:
             game = Game.new(layout=layout)
             # game.generate_random_game()
             player_num = random.randint(0, 1)
+            gates = {'x': [], 'o': []}
 
             x = self.extract_features(game, players[player_num].player)
 
@@ -275,6 +280,8 @@ class ModnetHybrid:
                 x_next = self.extract_features(game, players[player_num].player)
                 gated_net, V_next = self.get_output(x_next)
 
+                gates[players[not player_num].player] += [gated_net]
+
                 V_next = 1 - V_next
 
                 self.networks[gated_net].run_output(x, V_next)
@@ -285,19 +292,17 @@ class ModnetHybrid:
                 if game_step % 150 == 0:
                     game.draw_screen()
                     print(players[not player_num].player, gated_net)
-                    # skip this training episode
-                    break
 
-            if game_step >= 150:
-                for net in self.networks:
-                    self.networks[net].reset_game_step()
-                continue
+            print(gates)
 
             winner = game.winner()
 
             print("[Train %d/%d] (Winner: %s) in %d turns" % (episode, episodes, players[not winner].player, game_step))
 
-            for net in self.networks:
+            episode_nets = set(gates['x']) | set(gates['o'])
+            print(episode_nets)
+
+            for net in episode_nets:
                 self.networks[net].update_model(x, winner)
 
         for net in self.networks:

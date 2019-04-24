@@ -17,7 +17,7 @@ class MonoNN:
         self.mono_nn.set_network_name('mono')
         self.mono_nn.set_paths(model_path, summary_path, checkpoint_path)
         self.mono_nn.set_timestamp(int(time.time()))
-        self.mono_nn.start_session(restore=restore)
+        self.mono_nn.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7, alpha_max=1.0, alpha_min=0.1)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
@@ -58,7 +58,7 @@ class MonoNN:
                     for i in range(len(col)):
                         if i >= 5: break
                         feats[i] += 1
-                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0 # normalize the remaining pips
+                    feats[5] = (len(col) - 5) / 2. if len(col) > 5 else 0  # normalize the remaining pips
                 features += feats
             # print('pip_count before off pieces', pip_count)
             features.append(float(len(game.off_pieces[p])) / game.num_pieces[p])
@@ -156,7 +156,7 @@ class MonoNN:
             # if episode % validation_interval == 0:
             #     tester.test_self(self)
             #     tester.test_random(self)
-                # self.print_checkpoints()
+            # self.print_checkpoints()
 
             game = Game.new()
             player_num = random.randint(0, 1)

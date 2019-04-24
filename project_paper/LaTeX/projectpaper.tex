@@ -2,6 +2,11 @@
 \usepackage{times}
 \usepackage{durhampaper}
 \usepackage{harvard}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\graphicspath{}
 
 \citationmode{abbr}
 \bibliographystyle{agsm}
@@ -24,8 +29,20 @@ These instructions give you guidelines for preparing the final paper.  DO NOT ch
 The abstract must be a Structured Abstract with the headings {\bf Context/Background}, {\bf Aims}, {\bf Method}, {\bf Results}, and {\bf Conclusions}.  This section should not be longer than half of a page, and having no more than one or two sentences under each heading is advised.
 \end{abstract}
 
+\begin{abstract}
+\subsection{Context/Background}
+Backgammon and many other board games have been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. Using Reinforcement Learning techniques to play backgammon has given insight to potential strategies that were overlooked in the past.
+\subsection{Aims}
+The aim of this project is to find a new strategy for backgammon; a hybrid of known strategies will be used as the basis for the new strategy. 
+\subsection{Method}
+A modular neural network architecture will be used to incorporate the different backgammon strategies. The priming and back games will be used for this project. Two modular networks will be implemented and trained, one that will include the 2 strategies separately and another one that will include a hybrid of the 2 strategies. A single neural network based on TD Gammon will also be implemented and trained. The modular networks will be evaluated against the single network and against each other. Test games against an expert user will be included to validate the new strategy.
+\subsection{Results}
+A python package that will include modules to train and test the networks using self-play. It will also include a module for setting both a textual and a graphical user interfaces to play against the trained networks. 
+\subsection{Conclusions}
+\end{abstract}
+
 \begin{keywords}
-Put a few keywords here.
+Backgammon; Reinforcement Learning; Modular Neural Network; Priming Game; Back Game; Strategy
 \end{keywords}
 
 \section{Introduction}
@@ -35,6 +52,20 @@ Note that the whole report, including the references, should not be longer than 
 
 \section{Related Work}
 This section presents a survey of existing work on the problems that this project addresses.  it should be between 2 to 4 pages in length.  The rest of this section shows the formats of subsections as well as some general formatting information for tables, figures, references and equations.
+
+\section*{Problem Background}
+The domain of complex board games such as Go, chess, checkers, Othello, and backgammon has been widely regarded as an ideal testing ground for exploring a variety of concepts and approaches in artificial intelligence and machine learning. TD-Gammon  of Tesauro \cite{DBLP:conf/icml/Tesauro92,DBLP:journals/ai/Tesauro02} had demonstrated the impressive ability of machine learning techniques to learn to play games. TD-Gammon used reinforcement learning techniques with a Neural Network (NN) that trains itself to be an evaluation function for the game of backgammon, by playing against itself and learning from the outcome \cite{DBLP:journals/ai/Tesauro02}. eXtreme Gammon \cite{exg}, Snowie \cite{snowie}, and GNUBG \cite{gnubg} are some of the strongest backgammon programs that use Neural Networks; eXtreme Gammon is currently the supreme software \cite{MichaelDepreliStudy2012}. Different variants of backgammon\cite{DBLP:conf/evoW/PapahristouR11,DBLP:conf/ifip12/PapahristouR12}, training techniques, learning methods and neural network architectures have been the focus of some researches that followed the work of Tesauro. This project will focus on studying the effect of including hybrid of Backgammon strategies to the learning network and comparing it to including the strategies separately; the introduction of those strategies will be part of the NN architecture. Many studies do not include the doubling cube in their analyses. As an extension to this project, further analyses with doubling cube will be added.
+
+\section*{Neural Networks Architecture}
+The architecture of the NN used for value function evaluation in the reinforcement learning problem plays a big role in the learning speed and performance. A large neural network with more hidden nodes provided a better equity results compared to a smaller network as shown in the work of researchers like Tesauro \cite{DBLP:journals/ai/Tesauro02} and Wiering \cite{DBLP:journals/jilsa/Wiering10}, however the bigger the network the more computations are required thus the slower the learning. GNUBG is made of 3 neural nets: the contact net which is the main net for middlegame positions, the crashed net, and the race net \cite{gnubg}. GNUBG made use of modular neural network \cite{modularNeuralNetwork}, many work that followed TD-gammon made use of this neural network architecture. Backgammon game strategies were incorporated in the NN which had enhanced the results of the NN \cite{DBLP:journals/jilsa/Wiering10,modularNeuralNetwork,gnubg}. 
+
+\section*{Training Techniques}
+Training neural networks by self-learning is the most popular training approach that is used in many Backgammon softwares. Tesauro used self-learning to train the NN for TD-gammon; TD-gammon was able to reach master-level \cite{DBLP:conf/icml/Tesauro92}. It has been proven in the work of Wiering \cite{DBLP:journals/jilsa/Wiering10} that by utilising an expert program, the speed of learning increases in comparison to self-learning. However, the end outcome for each self-learning and learning from an expert is almost the same. Learning from watching a match against two experts is by far the worst technique \cite{DBLP:journals/jilsa/Wiering10}.
+\subsection*{Doubling Cube}
+TD-gammon used a heuristic function for doubling cube (cubeful) computations. The formula that is based on a generalisation of prior theoretical work on doubling strategies by Zadeh?Kobliska \cite{DBLP:journals/ai/Tesauro02}. On the other hand, GNUBG estimated the cubeful equity from the cubeless equity by using a generalised transformations as outlined by Rick Janowski. Both approaches to computing the cubeful equity made us of a formula instead of a neural network as commented by Tesauro and GNUBG creaters the NN approach is more complex so they used the former approach. Snowie \cite{snowie} and eXtreme Gammon \cite{exg} both can evaluate cubeful equities however as both softwares are commercial their approaches are not known.
+\section*{Learning Methods}
+Other approaches to learning includes genetic programming \cite{DBLP:journals/gpem/AzariaS05}, Co-evolution methods - Hill Climbing \cite{DBLP:journals/ml/PollackB98} and incremental fuzzy clustering method \cite{DBLP:conf/nafips/TabriziKR15}. Pollack and Blair claimed that their Hill Climbing algorithm had 40\% winning factor against Pubeval, a moderately good public-domain player trained by Tesauro using human expert preferences, however, this claim was countered by Tesauro proving that his TD algorithm was better and it deals with nonlinear structures \cite{DBLP:journals/ml/Tesauro98}. This indicated that TD($\lambda$) is the superior learning method. The GP approach have achieved better results against Pubeval of 58\% on the other hand and had shown good results automatically obtained strategies, but it required more computational efforts and was more complex \cite{DBLP:journals/gpem/AzariaS05}. Incremental fuzzy clustering method, an adaptive artificial intelligence method, used in the work of Tabrizi, Khoie and Rahimi was designed to learn to play backgammon from its opponent \cite{DBLP:conf/nafips/TabriziKR15}; learning his movements and tactics which is something none of the previous methods provided, however there is no evidence of this approach being better than the previous learning approaches in terms of playing the game of backgammon. For the focus of this project, TD($\lambda$) algorithm will be used along with modular neural network architecture.
+
 
 \subsection{Main Text}
 
@@ -65,6 +96,153 @@ You need to give all authors' names in each reference.  Do not use ``et al.'' un
 This section presents the solutions to the problems in detail.  The design and implementation details should all be placed in this section.  You may create a number of subsections, each focussing on one issue.  
 
 This section should be between 4 to 7 pages in length.
+
+\subsection{Algorithms}
+\subsubsection{Temporal Difference, TD($\lambda$)}
+In backgammon, the dice rolls guarantee sufficient variability in the games so that all regions of the feature space will be explored. This characteristic made it perfectly suited for learning from self-play as it overcomes the known Reinforcement Learning problem with the trade-off between exploration and exploitation \cite{survey}. TD Gammon used the gradient-decent form of the TD($\lambda$) algorithm with the gradients computed by the error backpropagation algorithm \cite{rl}. The update rule is as follows
+$$\vec{\theta}_{t+1} = \vec{\theta}_{t} + \alpha\delta_t\vec{e}_{t}$$ 
+where $\delta_t$ is the TD error,
+$$\delta_{t} = r_{t+1} + \gamma V_t(s_{t+1}) - V_t(s_t)$$ 
+and $\vec{e}_t$ is a column vector of eligibility traces, one for each component of $\vec{\theta}_t$, updated by 
+$$\vec{e}_{t} = \gamma\lambda\vec{e}_{t-1} + \nabla_{\vec{\theta}_{t}}V_t(s_t)$$ 
+The expression $\nabla_{\vec{\theta}_{t}}V_t(s_t)$ refers to the gradient. For backgammon, $\gamma=1$ and the reward is always zero except when winning, reducing the update rule to
+$$\vec{\theta}_{t+1} = \vec{\theta}_{t} + \alpha[V_t(s_{t+1}) - V_t(s_t)][\lambda\vec{e}_{t-1} + \nabla_{\vec{\theta}_{t}}V_t(s_t)]$$
+$\alpha$, the learning rate, and $\lambda$ are constraint by the range $(0,1)$. The ideal value of $\lambda$ is between $0.7$ and $0.6$ based on Tesauro's \citeyear{DBLP:journals/ai/Tesauro02} results. $\alpha$ on the other hand, should ideally decay. $e_t(s)$ is the eligibility trace for state $s$, it marks $s$ as eligible for undergoing learning changes when a TD error, $\delta_t$ occurs \cite{rl}.
+
+\subsubsection{1-ply search algorithm}
+A ply is one turn taken by one user; n-ply refers to how far the player will look ahead when evaluating a move/action \cite{glossary}. Initially, the AI agent will use a 1-ply search algorithm to pick the best legal action for the current turn. Each action will be evaluated in the neural network, forward feeding, and the action with the maximum outcome will be returned \cite{DBLP:conf/icml/Tesauro92}.
+
+\subsection{System Components}
+Python 3.6 will used as the language for this project. The neural networks will be implemented using TensorFlow package. TensorFlow will be used as it allows to generate training progress summary, to save and to restore a trained network. Figure \ref{syscomp} shows the expected structure and component dependencies of this project. 
+\begin{figure}[htb] 
+    \centering
+    \begin{minipage}{0.8\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{syscomp}.png}
+    \end{minipage}
+    \caption{System components and dependencies}
+    \label{syscomp}
+\end{figure}
+
+\subsubsection{Main}
+This module will be used to invoke other components in the system and handle the general actions required from the system: play, train and test.  
+
+\subsubsection{Game}
+This module will hold the game setup and define the rules and constraints of the game e.g. take an action, find legal moves and game board setup. An open source implementation taken from a GitHub repository, backgammon \cite{awni}, of this module will be refactored and modified for the use of this project. 
+
+\subsubsection{User Interface}
+This module will be handle generating the command line interface (textual interface) and the graphical user interface. The use of either interface will depend on the availability of pygame, python package; pygame allows generating a graphical user interface in python. Similarly, to the Game module, an open source implementation taken from a GitHub repository, backgammon \cite{awni}, of this module will be refactored and modified for the use of this project. 
+
+\subsubsection{Agents}
+There are 2 types of agents that will be implemented for this project: 
+\begin{itemize}
+    \item \textbf{A human agent}, an interactive agent which will take user inputs either from the command line or by capturing the user clicks though a GUI to make a move/action.
+    \item \textbf{AI agent} will use a modular neural network to determine the move/action for the current turn. A list of legal moves is obtained from the game module and an action will be picked based on the search algorithm.
+\end{itemize}
+
+\subsubsection{Modnet}
+This module will define the operations for extracting features from the game board, testing and training neural network/s. This module will heavily depend on Subnet module. For modular networks, a game-specific gating program will be implemented in this module to determine which sub-network will be suitable to a given input, set of extracted features. For the different modular neural networks to be trained for this project, different instances of this module will be created as each modular network will require different gating program. The monolithic neural network won't need the gating program.
+
+\subsubsection{Subnet}
+This module will include the Neural Network implementation using TensorFlow. It will provide routines for storing and accessing model, checkpoints and summaries generated by TensorFlow. In addition, it will include the forward feeding and backpropagation algorithms. All networks created for this project will use an instance of this module; networks used in modular neural network and monolithic neural network. The architecture of these networks will be explained in the next section. An open source implementation taken from a GitHub repository, td-gammon \cite{fomorians}, will used as the basis for this module. 
+
+\subsubsection{Tester}
+This module will include all evaluations and test routines for the neural networks. 
+
+\subsection{Neural Network Architecture}
+\subsubsection{Monolithic Neural Network}
+For this network, it will be based on Tesauro's \citeyear{DBLP:journals/neco/Tesauro94} TD Gammon implementation; a fully-connected feed-forward neural networks with a single hidden layer. Initially, the architecture will consist of one input layer I with 298 units which will consist of 288 raw inputs representing the checkers configuration on the board, each field in the board is represented by 6 units as there are 24 fields so 144 total units and each player has their own configuration represented separately making the total 288. In addition, 8 input units will be included as expert features, table-\ref{exfeat}. Including expert features proved to provide better outcomes from the network \cite{DBLP:journals/ai/Tesauro02}. Lastly, 2 input units to represent the current player's token. 
+\begin{table}[htb]
+    \centering
+    \caption{Possible expert features for input layer}
+    \vspace*{6pt}
+    \label{exfeat}
+    \begin{tabular}{cp{12cm}}
+        \hline
+        \hline
+        Feature name & Description \\ 
+        \hline
+        bar\_pieces\_1 & number of checkers held on the bar for current player\\
+        \hline
+        bar\_pieces\_2 & number of checkers held on the bar for opponent\\
+        \hline
+        pip\_count\_1 & pip count for current player \\
+        \hline
+        pip\_count\_2 & pip count for opponent \\
+        \hline
+        off\_pieces\_1 & percentage of pieces that current player has borne off \\
+        \hline
+        off\_pieces\_2 & percentage of pieces that opponent has borne off \\
+        \hline
+        hit\_pieces\_1 & percentage of pieces that are at risk of being hit (single checker in a position which the opponent can hit) for current player \\
+        \hline
+        hit\_pieces\_2 & percentage of pieces that are at risk of being hit (single checker in a position which the player can hit) for opponent\\
+        \hline
+    \end{tabular}
+\end{table}
+As part of the network architecture, there will be one hidden layer H with 50 units and one output layer O with 1 unit representing the winning probability. At later stages the output layer will be extended to include 4 units, 2 units for the player winning the game and winning by a gammon and 2 units for the player losing the game and losing by a gammon. The network will have weights $w_{ih}$ for all input units $I_i$ to hidden unit $H_h$ and weights $w_{ho}$ for all hidden units $H_h$ to output unit $O_o$. The weights will be initialized to be random values; hence the initial strategy is a random strategy. Each hidden unit and output unit will have a bias $b_h$ and $b_o$ with sigmoid activation. Each bias will be initialized to an array of constant values of $0.1$. Figure \ref{mononn} includes the layout of the neural network.
+\begin{figure}[htb] 
+    \centering
+    \begin{minipage}{0.4\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mononn}.png}
+    \end{minipage}
+    \caption{Neural Network architecture}
+    \label{mononn}
+\end{figure}
+
+ A lot of implementations of this network are available in the open source community and will be used as a reference for this project; two code bases from GitHub, backgammon \cite{awni} and td-gammon \cite{fomorians}, will be used and referred throughout the life cycle of this project. The main challenge with using open source code will be debugging the code and validating it.
+
+\subsubsection{Modular Neural Network}
+To incorporate backgammon strategies, modular neural architecture will be implemented. The strategies will be represented by different monolithic neural networks that will be activated when certain board configurations are reached. This approach has been implemented by Boyan \citeyear{boyan} and what most recent software such as GNU-Backgammon \cite{gnubg} follow. The modular networks that will be implemented for this project will consist of a combination of the following networks:
+\begin{enumerate}
+    \item One network for back game positions; the player is behind in the race (pip count) but has two or more anchors (two checkers at one field) in the opponent's home board. This network will also be used when there are many checkers on the bar.
+    \item One network for priming games; if the player has a prime of 4-5 fields (a long wall of checkers) 
+    \item One network for a hybrid priming and back game; combines the conditions for both games
+    \item One default network for all other positions
+\end{enumerate}
+
+Initially each network will have the same layout/architecture as the monolithic neural network, however the networks don't necessarily need to have the same layout.
+
+There are two types of Modular Neural Network architectures that will be implemented in this project:
+\begin{itemize}
+    \item \textbf{Designer Domain Decomposition Network (DDD) -}This architecture will be used in the first stages of the project. The DDD network consists of n monolithic neural networks and a hard-coded gating program, figure \ref{ddd}. The gating program, based on the work of Boyan \citeyear{boyan}, partitions the domain space into n classes. For this project the n classes are represented by the different backgammon strategies. 
+    \begin{figure}[htb] 
+        \centering
+        \begin{minipage}{0.8\textwidth}
+            \centering
+            \includegraphics[width=1\textwidth]{{dddnn}.png}
+        \end{minipage}
+        \caption{The DDD Network}
+        \label{ddd}
+    \end{figure}
+    In both forward feeding and backward propagation, the gating program will be called to select an appropriate network for the current board extracted features/inputs. Exactly one network will be activated at any time.
+
+    \item \textbf{Meta-Pi Networks -}
+    The gating program in the DDD network will suffer from a blemish effect; the stiffness introduced by hard coding the triggers for the networks results in a non-smooth evaluation as noted by Boyan \citeyear{boyan}. The Meta-Pi network is a trainable gating network, figure \ref{metapi}.
+    \begin{figure}[htb] 
+        \centering
+        \begin{minipage}{0.8\textwidth}
+            \centering
+            \includegraphics[width=1\textwidth]{{metapinn}.png}
+        \end{minipage}
+        \caption{Meta-Pi gating network}
+        \label{metapi}
+    \end{figure}
+    This network will be used to determine the most suited network to be triggered based on a given input. The benefit of this approach is that it will allow the agent to develop a smoother evaluation function. This network will be introduced in later stages of the project once all networks have been trained.
+\end{itemize}
+
+\subsection{Training}
+A total of 3 networks will be trained; 1 monolithic network and 2 modular networks. The training strategy will be based on the work of Tesauro \citeyear{DBLP:journals/neco/Tesauro94}, Boyan \citeyear{boyan} and Wiering \citeyear{DBLP:journals/jilsa/Wiering10}. The monolithic network and the modular networks with the DDD architecture will be trained by self-play using TD($\lambda$) learning with a decaying learning rate $\alpha$ starting from 0.1 until 0.01 and a decaying value for $\lambda$ starting from 0.9 until 0.7; exponential decay will be used for both learning rate $\alpha$ and $\lambda$. Each network will be trained on 500,000 games. After each 5000 games, the network will be tested for 1000 games against the previously stored version of the network itself. This will allow to monitor the progress of the network's training. 
+
+Before running the full training with 500,000 games, different configurations for each network will be tested e.g. the addition of expert features as part of the input layer. The number of training games will be reduced to 100,000 and the resultant network will then be tested against the other configurations of that network for 2000 games. The best combination of configurations will be used to fully train each network.
+
+Once DDD networks are finished training, meta-pi gating network will be trained following the same strategy.
+
+\subsection{Evaluation}
+Both modular networks will be tested for 5000 games against the monolithic network. The result obtained will give an indication of the general performance of the networks and effectiveness of the strategies. A random sample of those games will be recorded and analysed to evaluate the strategies followed by both modular networks. In addition, both modular networks will be tested for 5000 against each other to measure the performance of the hybrid strategy.
+
+To further evaluate the networks, few test games against an expert-level backgammon human player will be conducted. The expert will be asked to provide feedback about the AI agent's actions and strategy of each modular network. The expert won't be told any details regarding the network that the AI agent will be using at first. After the feedback is obtained from the expert player, they will be made aware of the AI agent that used the network with the new strategy and will be asked to do few more test games and the validate if the network performs a hybrid strategy successfully and it is indeed a new strategy.
 
 \section{Results}
 

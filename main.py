@@ -11,6 +11,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_boolean('test', False, 'If true, run a test')
 flags.DEFINE_boolean('all', False, 'If true, test against a random strategy.')
+flags.DEFINE_boolean('best', False, 'If true, test against a random strategy.')
 flags.DEFINE_boolean('play', False, 'If true, play against a trained TD-Gammon strategy.')
 flags.DEFINE_boolean('restore', True, 'If true, restore a checkpoint before training.')
 flags.DEFINE_boolean('mono', False, 'If true, use monolithic NN.')
@@ -35,15 +36,23 @@ if __name__ == '__main__':
     model_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test and FLAGS.all:
-        if FLAGS.mono:
-            test_all_random(model_mono, draw=FLAGS.draw)
-        elif FLAGS.hybrid:
-            test_all_random(model_mod_hybrid, draw=FLAGS.draw)
+        if FLAGS.best:
+            if FLAGS.mono:
+                test_all_best(model_mono, draw=FLAGS.draw)
+            elif FLAGS.hybrid:
+                test_all_best(model_mod_hybrid, draw=FLAGS.draw)
+            else:
+                test_all_best(model_mod, draw=FLAGS.draw)
         else:
-            test_all_random(model_mod, draw=FLAGS.draw)
+            if FLAGS.mono:
+                test_all_random(model_mono, draw=FLAGS.draw)
+            elif FLAGS.hybrid:
+                test_all_random(model_mod_hybrid, draw=FLAGS.draw)
+            else:
+                test_all_random(model_mod, draw=FLAGS.draw)
     elif FLAGS.test:
         if FLAGS.mono:
-            test_random(model_mono, episodes=1000, draw=FLAGS.draw)
+            test_pubeval(model_mono, episodes=1000, draw=FLAGS.draw)
         elif FLAGS.hybrid:
             test_random(model_mod_hybrid, episodes=1000, draw=FLAGS.draw)
         else:
