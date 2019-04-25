@@ -143,37 +143,37 @@ class SubNet:
 
     def set_checkpoint(self):
         fid = open(self.checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'w')
-        pickle.dump([self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces], fid)
+        pickle.dump([self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces], fid)
         fid.close()
 
     def set_previous_checkpoint(self):
         fid = open(self.previous_checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'w')
-        pickle.dump([self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces], fid)
+        pickle.dump([self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces], fid)
         fid.close()
 
     def set_test_checkpoint(self):
         fid = open('{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, "checkpoint-%d.bin" % self.GAME_NUM),
                    'w')
-        pickle.dump([self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces], fid)
+        pickle.dump([self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces], fid)
         fid.close()
 
     def restore(self):
         try:
-            self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
+            self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
                 open(self.checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
         except IOError:
             print("404 File not found!")
 
     def restore_previous(self):
         try:
-            self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
+            self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
                 open(self.previous_checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
         except IOError:
             print("404 File not found!")
 
     def restore_test_checkpoint(self, timestamp, game_number):
         try:
-            self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
+            self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
                 open('{0}{1}/{2}/'.format(self.test_checkpoint_path, timestamp, "checkpoint-%d.bin" % game_number),
                      'r'))
         except IOError:
@@ -181,10 +181,11 @@ class SubNet:
 
     def print_checkpoints(self):
         try:
-            GAME_NUM, lamda, alpha, weights, traces = pickle.load(
+            GAME_NUM, global_step, lamda, alpha, weights, traces = pickle.load(
                 open(self.previous_checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
             print('previous checkpoint',
                   'game_number=' + GAME_NUM,
+                  'global_steps_number=', global_step,
                   'lambda=' + lamda,
                   'alpha=' + alpha,
                   'weights=' + weights,
@@ -194,10 +195,11 @@ class SubNet:
             print("404 File not found!")
 
         try:
-            GAME_NUM, lamda, alpha, weights, traces = pickle.load(
+            GAME_NUM, global_step, lamda, alpha, weights, traces = pickle.load(
                 open(self.checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
             print('current checkpoint',
                   'game_number=' + GAME_NUM,
+                  'global_steps_number=', global_step,
                   'lambda=' + lamda,
                   'alpha=' + alpha,
                   'weights=' + weights,
