@@ -1,6 +1,7 @@
 from __future__ import division
 
 import random
+import time
 
 import tester
 from backgammon.agents.ai_agent import TDAgent
@@ -11,21 +12,20 @@ from subnet import *
 
 
 class ModnetHybrid:
-    def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
-        self.model_path = model_path
-        self.summary_path = summary_path
+    def __init__(self, checkpoint_path, restore=False):
         self.checkpoint_path = checkpoint_path
         self.restore = restore
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('h_default')
-        self.default_net.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7)
+        self.default_net.set_decay(lamda=0.7, alpha=1)
+        self.default_net.set_nn(restore=restore)
 
         self.racing_net = self.create_network('h_racing')
-        self.racing_net.start_session(restore=restore)
+        self.racing_net.set_nn(restore=restore)
 
         self.hybrid_net = self.create_network('h_hybrid')
-        self.hybrid_net.start_session(restore=restore)
+        self.hybrid_net.set_nn(restore=restore)
 
         self.networks = {'d': self.default_net,
                          'r': self.racing_net,
@@ -34,7 +34,7 @@ class ModnetHybrid:
     def create_network(self, name):
         network = SubNet()
         network.set_network_name(name)
-        network.set_paths(self.model_path, self.summary_path, self.checkpoint_path)
+        network.set_paths(self.checkpoint_path)
         network.set_timestamp(self.timestamp)
         return network
 
@@ -230,8 +230,6 @@ class ModnetHybrid:
         return features
 
     def train(self, episodes=5000):
-        for net in self.networks:
-            self.networks[net].create_model()
 
         # the agent plays against itself, making the best move for each player
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
@@ -304,8 +302,5 @@ class ModnetHybrid:
 
             for net in episode_nets:
                 self.networks[net].update_model(x, winner)
-
-        for net in self.networks:
-            self.networks[net].training_end()
 
         tester.test_self(self)

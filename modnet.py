@@ -1,6 +1,7 @@
 from __future__ import division
 
 import random
+import time
 
 import tester
 from backgammon.agents.ai_agent import TDAgent
@@ -11,23 +12,22 @@ from subnet import *
 
 
 class Modnet:
-    def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
-        self.model_path = model_path
-        self.summary_path = summary_path
+    def __init__(self, checkpoint_path, restore=False):
         self.checkpoint_path = checkpoint_path
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('default')
-        self.default_net.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7)
+        self.default_net.set_decay(lamda=0.7, alpha=1)
+        self.default_net.set_nn(restore=restore)
 
         self.racing_net = self.create_network('racing')
-        self.racing_net.start_session(restore=restore)
+        self.racing_net.set_nn(restore=restore)
 
         self.priming_net = self.create_network('priming')
-        self.priming_net.start_session(restore=restore)
+        self.priming_net.set_nn(restore=restore)
 
         self.backgame_net = self.create_network('backgame')
-        self.backgame_net.start_session(restore=restore)
+        self.backgame_net.set_nn(restore=restore)
 
         self.networks = {'d': self.default_net,
                          'r': self.racing_net,
@@ -37,7 +37,7 @@ class Modnet:
     def create_network(self, name):
         network = SubNet()
         network.set_network_name(name)
-        network.set_paths(self.model_path, self.summary_path, self.checkpoint_path)
+        network.set_paths(self.checkpoint_path)
         network.set_timestamp(self.timestamp)
         return network
 
@@ -237,9 +237,6 @@ class Modnet:
         return features
 
     def train(self, episodes=5000):
-        for net in self.networks:
-            self.networks[net].create_model()
-
         # the agent plays against itself, making the best move for each player
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
 
@@ -290,12 +287,6 @@ class Modnet:
 
                 gates[players[not player_num].player] += [gated_net]
 
-                # if gated_net == 'b':
-                #     game.draw_screen()
-                #     print(players[player_num].player, gated_net,'\n', x_next)
-
-                V_next = 1 - V_next
-
                 self.networks[gated_net].run_output(x, V_next)
 
                 x = x_next
@@ -316,8 +307,5 @@ class Modnet:
 
             for net in episode_nets:
                 self.networks[net].update_model(x, winner)
-
-        for net in self.networks:
-            self.networks[net].training_end()
 
         tester.test_self(self)

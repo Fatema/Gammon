@@ -1,6 +1,7 @@
 from __future__ import division
 
 import random
+import time
 
 import tester
 from backgammon.agents.ai_agent import TDAgent
@@ -12,12 +13,12 @@ from subnet import *
 
 
 class MonoNN:
-    def __init__(self, model_path, summary_path, checkpoint_path, restore=False):
+    def __init__(self, checkpoint_path, restore=False):
         self.mono_nn = SubNet()
         self.mono_nn.set_network_name('mono')
-        self.mono_nn.set_paths(model_path, summary_path, checkpoint_path)
+        self.mono_nn.set_paths(checkpoint_path)
         self.mono_nn.set_timestamp(int(time.time()))
-        self.mono_nn.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7, alpha_max=1.0, alpha_min=0.1)
+        self.mono_nn.set_nn(restore=restore)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
@@ -142,37 +143,20 @@ class MonoNN:
         return features
 
     def train(self, episodes=5000):
-        self.mono_nn.create_model()
-
-        # the agent plays against itself, making the best move for each player
         players = [TDAgent(Game.TOKENS[0], self), TDAgent(Game.TOKENS[1], self)]
 
-        validation_interval = 1000
 
         for episode in range(episodes):
-            # print()
-            # print()
-            # print('episode', episode)
-            # if episode % validation_interval == 0:
-            #     tester.test_self(self)
-            #     tester.test_random(self)
-            # self.print_checkpoints()
 
             game = Game.new()
             player_num = random.randint(0, 1)
 
             x = self.extract_features(game, players[player_num].player)
 
-            # print('game beginning ...')
-            # game.draw_screen()
-
             game_step = 0
             while not game.is_over():
-                # print('Player', players[player_num].player, 'turn')
-                # print('extracted features:', x)
                 roll = game.roll_dice()
-                # print('dice roll', roll)
-                # game.draw_screen()
+
                 if player_num:
                     game.reverse()
 
@@ -184,9 +168,7 @@ class MonoNN:
                 player_num = (player_num + 1) % 2
 
                 x_next = self.extract_features(game, players[player_num].player)
-                # print('next features extracted', x_next)
-                V_next = 1 - self.mono_nn.get_output(x_next)
-                # print('next output', V_next)
+                V_next = self.mono_nn.get_output(x_next)
 
                 self.mono_nn.run_output(x, V_next)
 
@@ -198,7 +180,5 @@ class MonoNN:
             print("[Train %d/%d] (Winner: %s) in %d turns" % (episode, episodes, players[not winner].player, game_step))
 
             self.mono_nn.update_model(x, winner)
-
-        self.mono_nn.training_end()
 
         tester.test_self(self)

@@ -43,7 +43,7 @@ class SubNet:
         # learning rate decay
         self.alpha = alpha
 
-    def set_nn(self, input=298, hidden=50, out=1):
+    def set_nn(self, input=298, hidden=50, out=1, restore=False):
         # describe network size
         layer_size_input = input
         layer_size_hidden = hidden
@@ -62,6 +62,9 @@ class SubNet:
                        np.zeros((layer_size_hidden, layer_size_output)),  # tw_ho
                        np.zeros((layer_size_hidden, layer_size_output)),  # tb_ho
                        np.zeros((layer_size_output, 1))]  # tb_o
+
+        if restore:
+            self.restore()
 
     def sigmoid_activation(self, x, w, b):
         return np.matmul(x, w) + b
@@ -94,6 +97,7 @@ class SubNet:
 
         self.traces = [tw1, tw2, tb1, tb2]
 
+        # tw1 and tb2 dimensions are modified to it the weights dimensions (useful for more than 1 output)
         return V, [np.sum(tw1, axis=2), tw2, tb1, np.sum(tb2, axis=1)]
 
     def updateWeights(self, featsP, vN):
@@ -177,6 +181,11 @@ class SubNet:
 
     def update_model(self, x, winner):
         self.updateWeights(x, winner)
+
+        if self.GAME_NUM == 1000:
+            self.alpha = 0.1
+        elif self.GAME_NUM == 100000:
+            self.lamda = 0
 
         if self.GAME_NUM > 0 and self.GAME_NUM % self.validation_interval == 0:
             self.set_test_checkpoint()
