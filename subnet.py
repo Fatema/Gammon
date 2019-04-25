@@ -6,7 +6,9 @@ creation of multiple instances of the network
 import os
 import pickle
 import numpy as np
+import visdom
 
+vis = visdom.Visdom(server='localhost', port=12345)
 
 class SubNet:
     def __init__(self, lamda=0.7, alpha=1, validation_interval=1000):
@@ -15,6 +17,9 @@ class SubNet:
         self.GAME_NUM = 0
         self.lamda = lamda
         self.alpha = alpha
+        self.global_step = 0
+        self.loss_avg = 0.0
+        self.delta_avg = 0.0
 
     def set_network_name(self, name):
         self.STRATEGY = name
@@ -63,6 +68,9 @@ class SubNet:
                        np.zeros((layer_size_hidden, layer_size_output)),  # tb_ho
                        np.zeros((layer_size_output, 1))]  # tb_o
 
+        vis.line(X=np.array([0]), Y=np.array([[np.nan, np.nan]]), win='loss')
+        vis.line(X=np.array([0]), Y=np.array([[np.nan, np.nan]]), win='delta')
+
         if restore:
             self.restore()
 
@@ -101,10 +109,35 @@ class SubNet:
         return V, [np.sum(tw1, axis=2), tw2, tb1, np.sum(tb2, axis=1)]
 
     def updateWeights(self, featsP, vN):
+        self.global_step += 1
+
         # compute vals and grad
         vP, grad = self.backprop(featsP)
 
-        scale = self.alpha * (vN - vP)
+        delta = np.sum(vN - vP)
+        self.delta_avg += delta
+
+        loss = np.mean(np.square(delta))
+        self.loss_avg += loss
+
+        scale = self.alpha * delta
+
+        vis.line(X=np.array([self.global_step]), Y=np.array([[
+            delta,
+            self.delta_avg / self.global_step
+        ]]), win='random', opts=dict(title='win', xlabel='step', ylabel='delta', ytype='log', legend=[
+            'delta',
+            'delta avg'
+        ]), update='append')
+
+        vis.line(X=np.array([self.global_step]), Y=np.array([[
+            loss,
+            self.loss_avg / self.global_step
+        ]]), win='random', opts=dict(title='win', xlabel='step', ylabel='loss', ytype='log', legend=[
+            'loss',
+            'loss avg'
+        ]), update='append')
+
         for w, g in zip(self.weights, grad):
             w += scale * g
 
