@@ -4,16 +4,17 @@ creation of multiple instances of the network
 """
 
 import os
-import time
+import pickle
 import numpy as np
-from tensorflow.python.tools import inspect_checkpoint as chkp
-
-from utils import *
 
 
 class SubNet:
-    def __init__(self):
-        self.validation_interval = 1000
+    def __init__(self, lamda=0.7, alpha=1, validation_interval=1000):
+        self.validation_interval = validation_interval
+        self.NUM = 0
+        self.GAME_NUM = 0
+        self.lamda = lamda
+        self.alpha = alpha
 
     def set_network_name(self, name):
         self.STRATEGY = name
@@ -21,15 +22,10 @@ class SubNet:
     def set_timestamp(self, timestamp):
         self.timestamp = timestamp
 
-    def set_paths(self, model_path, summary_path, checkpoint_path):
-        self.model_path = model_path + self.STRATEGY + '/'
-        self.summary_path = summary_path + self.STRATEGY + '/'
+    def set_paths(self, checkpoint_path):
         self.checkpoint_path = checkpoint_path + self.STRATEGY + '/latest/'
         self.previous_checkpoint_path = checkpoint_path + self.STRATEGY + '/previous/'
         self.test_checkpoint_path = checkpoint_path + self.STRATEGY + '/test/'
-
-        if not os.path.exists(self.model_path):
-            os.makedirs(self.model_path)
 
         if not os.path.exists(self.checkpoint_path):
             os.makedirs(self.checkpoint_path)
@@ -40,255 +36,153 @@ class SubNet:
         if not os.path.exists(self.test_checkpoint_path):
             os.makedirs(self.test_checkpoint_path)
 
-        if not os.path.exists(self.summary_path):
-            os.makedirs(self.summary_path)
-
-    def start_session(self, restore=False, lambda_max=0.9, lambda_min=0.7, alpha_max=0.1, alpha_min=0.01):
-        graph = tf.Graph()
-        session = tf.Session(graph=graph)
-        with session.as_default(), graph.as_default():
-            self.sess = session
-            self.global_step = tf.Variable(0, trainable=False, name='global_step')
-            self.set_decay(lambda_max=lambda_max, lambda_min=lambda_min, alpha_max=alpha_max, alpha_min=alpha_min)
-            self.set_nn()
-            # after training a model, we can restore checkpoints here
-            if restore:
-                self.restore()
-                game_number = self.sess.run([self.game_number])
-                print(game_number)
-                if game_number[0] == 0.0:
-                    print('set')
-                    self.set_test_checkpoint()
-                    self.set_previous_checkpoint()
-            else:
-                self.set_previous_checkpoint()
-
-    def set_decay(self, lambda_max=0.9, lambda_min=0.7, alpha_max=0.1, alpha_min=0.01):
+    def set_decay(self, lamda=0.7, alpha=1):
         # lambda decay
-        self.lamda = tf.maximum(lambda_min, tf.train.exponential_decay(lambda_max, self.global_step,
-                                                                       30000, 0.96, staircase=True), name='lambda')
+        self.lamda = lamda
 
         # learning rate decay
-        self.alpha = tf.maximum(alpha_min, tf.train.exponential_decay(alpha_max, self.global_step,
-                                                                      40000, 0.96, staircase=True), name='alpha')
+        self.alpha = alpha
 
-        # tf.summary.scalar('lambda', self.lamda)
-        # tf.summary.scalar('alpha', self.alpha)
-
-    def set_nn(self):
+    def set_nn(self, input=298, hidden=50, out=1):
         # describe network size
-        layer_size_input = 298
-        layer_size_hidden = 50
-        layer_size_output = 1
+        layer_size_input = input
+        layer_size_hidden = hidden
+        layer_size_output = out
 
-        # placeholders for input and target output
-        self.x = tf.placeholder('float', [1, layer_size_input], name='x')
-        self.V_next = tf.placeholder('float', [1, layer_size_output], name='V_next')
+        scales = [np.sqrt(6. / (layer_size_input + layer_size_hidden)),
+                  np.sqrt(6. / (layer_size_output + layer_size_hidden))]
+
+        self.weights = [scales[0] * np.random.randn(layer_size_input, layer_size_hidden),  # w_ih
+                        scales[1] * np.random.randn(layer_size_hidden, layer_size_output),  # w_ho
+                        np.zeros((layer_size_hidden, 1)),  # b_h
+                        np.zeros((layer_size_output, 1))]  # b_o
+
+        # the shape is based on the weights gradients shapes
+        self.traces = [np.zeros((layer_size_input, layer_size_hidden, layer_size_output)),  # tw_iho
+                       np.zeros((layer_size_hidden, layer_size_output)),  # tw_ho
+                       np.zeros((layer_size_hidden, layer_size_output)),  # tb_ho
+                       np.zeros((layer_size_output, 1))]  # tb_o
+
+    def sigmoid_activation(self, x, w, b):
+        return np.matmul(x, w) + b
+
+    def backprop(self, x, fpropOnly=True):
+        w1, w2, b1, b2 = self.weights
+        tw1, tw2, tb1, tb2 = self.traces
 
         # build network arch. (just 2 layers with sigmoid activation)
-        prev_y = dense_layer(self.x, [layer_size_input, layer_size_hidden], tf.sigmoid, name='layer1')
-        self.V = dense_layer(prev_y, [layer_size_hidden, layer_size_output], tf.sigmoid, name='layer2')
+        prev_y = self.sigmoid_activation(x, w1, b1)
+        V = self.sigmoid_activation(prev_y, w2, b2)
 
-        # watch the individual value predictions over time
-        # tf.summary.scalar('V_next', tf.reduce_sum(self.V_next))
-        # tf.summary.scalar('V', tf.reduce_sum(self.V))
+        if fpropOnly:
+            return V
 
-        # delta = V_next - V
-        delta_op = tf.reduce_sum(self.V_next - self.V, name='delta')
+        # compute gradients
+        db2_o = V * (1 - V)
+        db1_ho = (prev_y * (1 - prev_y))[0][:, np.newaxis] * w2[:, :] * \
+                 (db2_o)[0][np.newaxis, :]
+        dw2_ho = prev_y[0][:, np.newaxis] * (db2_o)[0][np.newaxis, :]
+        dw1_iho = x[0][:, np.newaxis, np.newaxis] * (prev_y * (1 - prev_y))[0][np.newaxis, :,
+                                                    np.newaxis] * w2[np.newaxis, :, :] * \
+                  (db2_o)[0][np.newaxis, np.newaxis, :]
 
-        # mean squared error of the difference between the next state and the current state
-        # loss_op = tf.reduce_mean(tf.square(self.V_next - self.V), name='loss')
+        # update traces
+        tw1 = self.lamda * tw1 + dw1_iho
+        tw2 = self.lamda * tw2 + dw2_ho
+        tb1 = self.lamda * tb1 + db1_ho
+        tb2 = self.lamda * tw1 + db2_o
 
-        # track the number of steps and average loss for the current game
-        # with tf.variable_scope('game'):
-        #     game_step = tf.Variable(tf.constant(0.0), name='game_step', trainable=False)
-        #     game_step_op = game_step.assign_add(1.0)
-        #
-        #     loss_sum = tf.Variable(tf.constant(0.0), name='loss_sum', trainable=False)
-        #     delta_sum = tf.Variable(tf.constant(0.0), name='delta_sum', trainable=False)
-        #
-        #     loss_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-        #     delta_avg_ema = tf.train.ExponentialMovingAverage(decay=0.999)
-        #
-        #     loss_sum_op = loss_sum.assign_add(loss_op)
-        #     delta_sum_op = delta_sum.assign_add(delta_op)
-        #
-        #     loss_avg_op = loss_sum / tf.maximum(game_step, 1.0)
-        #     delta_avg_op = delta_sum / tf.maximum(game_step, 1.0)
-        #
-        #     loss_avg_ema_op = loss_avg_ema.apply([loss_avg_op])
-        #     delta_avg_ema_op = delta_avg_ema.apply([delta_avg_op])
-        #
-        #     tf.summary.scalar('game/loss', loss_op)
-        #     tf.summary.scalar('game/loss_avg', loss_avg_op)
-        #     tf.summary.scalar('game/delta', delta_op)
-        #     tf.summary.scalar('game/delta_avg', delta_avg_op)
-        #     tf.summary.scalar('game/loss_avg_ema', loss_avg_ema.average(loss_avg_op))
-        #     tf.summary.scalar('game/delta_avg_ema', delta_avg_ema.average(delta_avg_op))
-        #
-        #     # reset per-game monitoring variables
-        #     game_step_reset_op = game_step.assign(0.0)
-        #     loss_sum_reset_op = loss_sum.assign(0.0)
-        #     self.reset_op = tf.group(*[loss_sum_reset_op, game_step_reset_op])
+        self.traces = [tw1, tw2, tb1, tb2]
 
-        # increment global step: we keep this as a variable so it's saved with checkpoints
-        global_step_op = self.global_step.assign_add(1)
+        return V, [np.sum(tw1, axis=2), tw2, tb1, np.sum(tb2, axis=1)]
 
-        # get gradients of output V wrt trainable variables (weights and biases)
-        tvars = tf.trainable_variables()
-        grads = tf.gradients(self.V, tvars)
+    def updateWeights(self, featsP, vN):
+        # compute vals and grad
+        vP, grad = self.backprop(featsP)
 
-        # watch the weight and gradient distributions
-        # for grad, var in zip(grads, tvars):
-        #     tf.summary.histogram(var.name, var)
-        #     tf.summary.histogram(var.name + '/gradients/grad', grad)
+        scale = self.alpha * (vN - vP)
+        for w, g in zip(self.weights, grad):
+            w += scale * g
 
-        # for each variable, define operations to update the var with delta,
-        # taking into account the gradient as part of the eligibility trace
-        apply_gradients = []
-        with tf.variable_scope('apply_gradients'):
-            for grad, var in zip(grads, tvars):
-                with tf.variable_scope('trace'):
-                    # e-> = lambda * e-> + <grad of output w.r.t weights>
-                    trace = tf.Variable(tf.zeros(grad.get_shape()), trainable=False, name='trace')
-                    trace_op = trace.assign((self.lamda * trace) + grad)
-                    # tf.summary.histogram(var.name + '/traces', trace)
-
-                # grad with trace = alpha * delta * e
-                grad_trace = self.alpha * delta_op * trace_op
-                # tf.summary.histogram(var.name + '/gradients/trace', grad_trace)
-
-                grad_apply = var.assign_add(grad_trace)
-                apply_gradients.append(grad_apply)
-
-        # as part of training we want to update our step and other monitoring variables
-        with tf.control_dependencies([
-            global_step_op,
-            # game_step_op,
-            # loss_sum_op,
-            # delta_sum_op,
-            # loss_avg_ema_op,
-            # delta_avg_ema_op,
-        ]):
-            # define single operation to apply all gradient updates
-            self.train_op = tf.group(*apply_gradients, name='train')
-
-        # merge summaries for TensorBoard
-        # self.summaries_op = tf.summary.merge_all()
-
-        # keep track on the number of games taken
-        self.game_number = tf.Variable(tf.constant(0.0), name='game_number', trainable=False)
-        self.game_number_op = self.game_number.assign_add(1)
-
-        # with tf.variable_scope('game'):
-        #     # cubeless equity = 2 * W - 1
-        #     ppg = 2 * tf.reduce_sum(self.V_next) - 1
-        #     ppg_sum = tf.Variable(tf.constant(0.0), name='ppg_sum', trainable=False)
-        #     ppg_sum_op = ppg_sum.assign_add(ppg)
-        #     with tf.control_dependencies([
-        #         ppg_sum_op,
-        #         self.game_number_op
-        #         ]):
-        #         self.ppg_avg_op = ppg_sum / tf.maximum(self.game_number, 1.0)
-        #     ppg_summary = tf.summary.scalar('ppg', ppg)
-        #     ppg_avg_summary = tf.summary.scalar('ppg_avg', self.ppg_avg_op)
-        #     game_step_summary = tf.summary.scalar('game_step', game_step)
-        #
-        # self.ppg_summary_op = tf.summary.merge([ppg_summary, ppg_avg_summary, game_step_summary])
-
-        # create a saver for periodic checkpoints
-        self.saver = tf.train.Saver(max_to_keep=1)
-        self.pre_saver = tf.train.Saver(max_to_keep=1)
-        self.testing_saver = tf.train.Saver(max_to_keep=None)
-
-        # run variable initializers
-        self.sess.run(tf.global_variables_initializer())
-        #
-        # self.summary_writer = tf.summary.FileWriter(
-        #     '{0}{1}'.format(self.summary_path, self.timestamp, self.sess.graph_def))
-
-    def restore(self):
-        latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
-        if latest_checkpoint_path:
-            print('Restoring checkpoint: {0}'.format(latest_checkpoint_path))
-            self.saver.restore(self.sess, latest_checkpoint_path)
-            chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
-
-    def restore_previous(self):
-        latest_checkpoint_path = tf.train.latest_checkpoint(self.previous_checkpoint_path)
-        if latest_checkpoint_path:
-            print('Restoring previous checkpoint: {0}'.format(latest_checkpoint_path))
-            self.pre_saver.restore(self.sess, latest_checkpoint_path)
-            chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
+    def set_checkpoint(self):
+        fid = open(self.checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'w')
+        pickle.dump([self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces], fid)
+        fid.close()
 
     def set_previous_checkpoint(self):
-        self.pre_saver.save(self.sess, self.previous_checkpoint_path + 'checkpoint', global_step=self.game_number)
-
-    def restore_test_checkpoint(self, timestamp, game_number):
-        latest_checkpoint_path = '{0}{1}/checkpoint-{2}'.format(self.test_checkpoint_path, timestamp, game_number)
-        if latest_checkpoint_path:
-            print('Restoring test checkpoint: {0}'.format(latest_checkpoint_path))
-            self.pre_saver.restore(self.sess, latest_checkpoint_path)
-            chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
-            return True
-        return False
+        fid = open(self.previous_checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'w')
+        pickle.dump([self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces], fid)
+        fid.close()
 
     def set_test_checkpoint(self):
-        self.testing_saver.save(self.sess, '{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, 'checkpoint'),
-                                global_step=self.game_number)
+        fid = open('{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, "checkpoint-%d.bin" % self.GAME_NUM),
+                   'w')
+        pickle.dump([self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces], fid)
+        fid.close()
+
+    def restore(self):
+        try:
+            self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
+                open(self.checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
+        except IOError:
+            print("404 File not found!")
+
+    def restore_previous(self):
+        try:
+            self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
+                open(self.previous_checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
+        except IOError:
+            print("404 File not found!")
+
+    def restore_test_checkpoint(self, timestamp, game_number):
+        try:
+            self.GAME_NUM, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
+                open('{0}{1}/{2}/'.format(self.test_checkpoint_path, timestamp, "checkpoint-%d.bin" % game_number),
+                     'r'))
+        except IOError:
+            print("404 File not found!")
 
     def print_checkpoints(self):
-        latest_checkpoint_path = tf.train.latest_checkpoint(self.checkpoint_path)
-        previous_checkpoint_path = tf.train.latest_checkpoint(self.previous_checkpoint_path)
-        chkp.print_tensors_in_checkpoint_file(latest_checkpoint_path, tensor_name='', all_tensors=True)
-        chkp.print_tensors_in_checkpoint_file(previous_checkpoint_path, tensor_name='', all_tensors=True)
+        try:
+            GAME_NUM, lamda, alpha, weights, traces = pickle.load(
+                open(self.previous_checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
+            print('previous checkpoint',
+                  'game_number=' + GAME_NUM,
+                  'lambda=' + lamda,
+                  'alpha=' + alpha,
+                  'weights=' + weights,
+                  'traces=' + traces,
+                  sep='\n')
+        except IOError:
+            print("404 File not found!")
+
+        try:
+            GAME_NUM, lamda, alpha, weights, traces = pickle.load(
+                open(self.checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
+            print('current checkpoint',
+                  'game_number=' + GAME_NUM,
+                  'lambda=' + lamda,
+                  'alpha=' + alpha,
+                  'weights=' + weights,
+                  'traces=' + traces,
+                  sep='\n')
+        except IOError:
+            print("404 File not found!")
 
     def get_output(self, x):
-        return self.sess.run(self.V, feed_dict={self.x: x})
+        return self.backprop(x, fpropOnly=True)
 
     def run_output(self, x, V_next):
-        self.sess.run(self.train_op, feed_dict={self.x: x, self.V_next: V_next})
-
-    def create_model(self):
-        tf.train.write_graph(self.sess.graph_def, self.model_path, self.STRATEGY + '_net.pb', as_text=False)
-
-    def reset_game_step(self):
-        self.sess.run([
-            self.reset_op
-        ])
+        self.updateWeights(x, V_next)
 
     def update_model(self, x, winner):
-        _ = self.sess.run([
-            self.train_op,
-            # self.global_step,
-            # self.summaries_op,
-        ], feed_dict={self.x: x, self.V_next: np.array([[winner]], dtype='float')})
-        # self.summary_writer.add_summary(summaries, global_step=global_step)
+        self.updateWeights(x, winner)
 
-        _, game_number = self.sess.run([
-            self.game_number_op,
-            self.game_number,
-            # self.ppg_summary_op,
-            # self.reset_op
-        ], feed_dict={self.V_next: np.array([[winner]], dtype='float')})
-
-        # self.summary_writer.add_summary(ppg_summaries, game_number)
-
-        if game_number > 1 and (game_number - 1) % self.validation_interval == 0:
+        if self.GAME_NUM > 0 and self.GAME_NUM % self.validation_interval == 0:
             self.set_test_checkpoint()
             self.set_previous_checkpoint()
 
-        self.saver.save(self.sess, self.checkpoint_path + 'checkpoint', global_step=self.game_number)
+        self.GAME_NUM += 1
 
-    # def update_test_summary(self, winner):
-    #     _, test_game_number, test_ppg_summaries, _ = self.sess.run([
-    #         self.test_ppg_avg_op,
-    #         self.test_game_number,
-    #         self.test_ppg_summary_op,
-    #     ], feed_dict={self.V_next: np.array([[winner]], dtype='float')})
-    #
-    #     self.summary_writer.add_summary(test_ppg_summaries, test_game_number)
-
-    def training_end(self):
-        # self.summary_writer.close()
-        return
+        # save weights
+        self.set_checkpoint()
