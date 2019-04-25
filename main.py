@@ -18,23 +18,15 @@ flags.DEFINE_boolean('mono', False, 'If true, use monolithic NN.')
 flags.DEFINE_boolean('hybrid', False, 'If true, use Modular Network with Hybrid strategy.')
 flags.DEFINE_boolean('draw', False, 'If true, use Modular Network with Hybrid strategy.')
 
-model_path = os.environ.get('MODEL_PATH', 'models/')
-summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
 checkpoint_path = os.environ.get('CHECKPOINT_PATH', 'checkpoints/')
-
-if not os.path.exists(model_path):
-    os.makedirs(model_path)
 
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
 
-if not os.path.exists(summary_path):
-    os.makedirs(summary_path)
-
 if __name__ == '__main__':
-    model_mod = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-    model_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-    model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
+    model_mod = Modnet(checkpoint_path, restore=FLAGS.restore)
+    model_mod_hybrid = ModnetHybrid(checkpoint_path, restore=FLAGS.restore)
+    model_mono = MonoNN(checkpoint_path, restore=FLAGS.restore)
     if FLAGS.test and FLAGS.all:
         if FLAGS.best:
             if FLAGS.mono:

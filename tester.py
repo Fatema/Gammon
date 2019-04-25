@@ -12,15 +12,13 @@ from mono_nn import MonoNN
 
 import numpy as np
 
-model_path = os.environ.get('MODEL_PATH', 'models/')
-summary_path = os.environ.get('SUMMARY_PATH', 'summaries/')
 checkpoint_path = os.environ.get('CHECKPOINT_PATH', 'checkpoints/')
 
-previous_mod = Modnet(model_path, summary_path, checkpoint_path, restore=True)
-previous_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, restore=True)
-previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
+previous_mod = Modnet(checkpoint_path, restore=True)
+previous_mod_hybrid = ModnetHybrid(checkpoint_path, restore=True)
+previous_mono = MonoNN(checkpoint_path, restore=True)
 
-vis = visdom.Visdom(server='localhost',port=12345)
+vis = visdom.Visdom(server='localhost', port=12345)
 
 def run_games(players, episodes=100, draw=False):
     winners = [0, 0]
