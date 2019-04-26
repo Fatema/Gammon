@@ -149,6 +149,9 @@ class MonoNN:
 
         for episode in range(episodes):
 
+            if episode != 0 and episode % 1000 == 0:
+                tester.test_pubeval(self)
+
             game = Game.new()
             player_num = random.randint(0, 1)
 
@@ -156,6 +159,7 @@ class MonoNN:
 
             game_step = 0
             while not game.is_over():
+
                 roll = game.roll_dice()
 
                 if player_num:

@@ -238,7 +238,7 @@ class SubNet:
     def update_model(self, x, winner):
         self.updateWeights(x, winner)
 
-        if self.GAME_NUM == 1000:
+        if self.GAME_NUM == 500:
             self.alpha = 0.1
         elif self.GAME_NUM == 100000:
             self.lamda = 0

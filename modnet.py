@@ -17,7 +17,7 @@ class Modnet:
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('default')
-        self.default_net.set_decay(lamda=0.7, alpha=1)
+        self.default_net.set_decay(lamda=0, alpha=1)
         self.default_net.set_nn(restore=restore)
 
         self.racing_net = self.create_network('racing')
