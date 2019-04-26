@@ -33,8 +33,6 @@ class TDAgent:
             # print('features after action:', features)
             _, v = self.model.get_output(features)
             # print(v)
-            # minimize the probability of the opponent winning
-            v = 1. - v
             # print('NN output', v)
             if v > v_best:
                 v_best = v

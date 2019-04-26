@@ -18,7 +18,8 @@ class MonoNN:
         self.mono_nn.set_network_name('mono')
         self.mono_nn.set_paths(checkpoint_path)
         self.mono_nn.set_timestamp(int(time.time()))
-        self.mono_nn.set_nn(restore=restore)
+        self.mono_nn.set_nn(restore=restore, input=294)
+        self.mono_nn.set_decay(lamda=0)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
@@ -69,7 +70,7 @@ class MonoNN:
             pip_count += len(game.bar_pieces[p]) * 25
             # pip_count for the player the closer to home the less the pip_count
             # scale it out or include it as part of the reward
-            features.append(float(pip_count) / 167)
+            # features.append(float(pip_count) / 167)
             # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]
@@ -78,7 +79,7 @@ class MonoNN:
 
         features = np.array(features).reshape(1, -1)
 
-        features = self.add_hit_prob(features, game)
+        # features = self.add_hit_prob(features, game)
 
         return features
 

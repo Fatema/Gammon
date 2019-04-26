@@ -10,6 +10,7 @@ import visdom
 
 vis = visdom.Visdom(server='localhost', port=12345)
 
+
 class SubNet:
     def __init__(self, lamda=0.7, alpha=1, validation_interval=1000):
         self.validation_interval = validation_interval
@@ -57,32 +58,34 @@ class SubNet:
         scales = [np.sqrt(6. / (layer_size_input + layer_size_hidden)),
                   np.sqrt(6. / (layer_size_output + layer_size_hidden))]
 
-        self.weights = [scales[0] * np.random.randn(layer_size_input, layer_size_hidden),  # w_ih
-                        scales[1] * np.random.randn(layer_size_hidden, layer_size_output),  # w_ho
+        self.weights = [(scales[0] * np.random.randn(layer_size_hidden, layer_size_input)),  # w_hi
+                        (scales[1] * np.random.randn(layer_size_output, layer_size_hidden)),  # w_oh
                         np.zeros((layer_size_hidden, 1)),  # b_h
                         np.zeros((layer_size_output, 1))]  # b_o
 
         # the shape is based on the weights gradients shapes
-        self.traces = [np.zeros((layer_size_input, layer_size_hidden, layer_size_output)),  # tw_iho
-                       np.zeros((layer_size_hidden, layer_size_output)),  # tw_ho
-                       np.zeros((layer_size_hidden, layer_size_output)),  # tb_ho
+        self.traces = [np.zeros((layer_size_hidden, layer_size_input)),  # tw_iho
+                       np.zeros((layer_size_output, layer_size_hidden)),  # tw_ho
+                       np.zeros((layer_size_hidden, 1)),  # tb_ho
                        np.zeros((layer_size_output, 1))]  # tb_o
 
-        vis.line(X=np.array([0]), Y=np.array([[np.nan, np.nan]]), win='loss')
-        vis.line(X=np.array([0]), Y=np.array([[np.nan, np.nan]]), win='delta')
+        # vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='loss')
+        # vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='loss_avg')
+        # vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='delta')
+        # vis.line(X=np.array([0]), Y=np.array([[np.nan]]), win='delta_avg')
 
         if restore:
             self.restore()
 
     def sigmoid_activation(self, x, w, b):
-        return np.matmul(x, w) + b
+        return 1 / (1 + np.exp(-(w.dot(x) + b)))
 
-    def backprop(self, x, fpropOnly=True):
+    def backprop(self, x, fpropOnly=False):
         w1, w2, b1, b2 = self.weights
         tw1, tw2, tb1, tb2 = self.traces
 
         # build network arch. (just 2 layers with sigmoid activation)
-        prev_y = self.sigmoid_activation(x, w1, b1)
+        prev_y = self.sigmoid_activation(x.T, w1, b1)
         V = self.sigmoid_activation(prev_y, w2, b2)
 
         if fpropOnly:
@@ -90,23 +93,26 @@ class SubNet:
 
         # compute gradients
         db2_o = V * (1 - V)
-        db1_ho = (prev_y * (1 - prev_y))[0][:, np.newaxis] * w2[:, :] * \
-                 (db2_o)[0][np.newaxis, :]
-        dw2_ho = prev_y[0][:, np.newaxis] * (db2_o)[0][np.newaxis, :]
-        dw1_iho = x[0][:, np.newaxis, np.newaxis] * (prev_y * (1 - prev_y))[0][np.newaxis, :,
-                                                    np.newaxis] * w2[np.newaxis, :, :] * \
-                  (db2_o)[0][np.newaxis, np.newaxis, :]
+        db1_ho = w2.T * db2_o * prev_y * (1 - prev_y)
+        dw2_ho = db2_o * prev_y.T
+        dw1_iho = db1_ho * x
+
+        # print(db2_o.shape, db1_ho.shape, dw2_ho.shape, dw1_iho.shape)
 
         # update traces
         tw1 = self.lamda * tw1 + dw1_iho
         tw2 = self.lamda * tw2 + dw2_ho
         tb1 = self.lamda * tb1 + db1_ho
-        tb2 = self.lamda * tw1 + db2_o
+        tb2 = self.lamda * tb2 + db2_o
+
+        # print(x.shape, w2.shape, prev_y.shape, V.shape)
 
         self.traces = [tw1, tw2, tb1, tb2]
 
+        # print(tw1.shape, tw2.shape, tb1.shape, tb2.shape, V.shape)
+
         # tw1 and tb2 dimensions are modified to it the weights dimensions (useful for more than 1 output)
-        return V, [np.sum(tw1, axis=2), tw2, tb1, np.sum(tb2, axis=1)]
+        return V, [tw1, tw2, tb1, tb2]
 
     def updateWeights(self, featsP, vN):
         self.global_step += 1
@@ -122,52 +128,67 @@ class SubNet:
 
         scale = self.alpha * delta
 
-        vis.line(X=np.array([self.global_step]), Y=np.array([[
-            delta,
-            self.delta_avg / self.global_step
-        ]]), win='random', opts=dict(title='win', xlabel='step', ylabel='delta', ytype='log', legend=[
-            'delta',
-            'delta avg'
-        ]), update='append')
+        # vis.line(X=np.array([self.global_step]), Y=np.array([[
+        #     delta
+        # ]]), win='delta', opts=dict(title='win', xlabel='step', ylabel='delta', ytype='log', legend=[
+        #     'delta',
+        # ]), update='append')
+        # vis.line(X=np.array([self.global_step]), Y=np.array([[
+        #     self.delta_avg / self.global_step
+        # ]]), win='delta_avg', opts=dict(title='win', xlabel='step', ylabel='delta', ytype='log', legend=[
+        #     'delta-avg',
+        # ]), update='append')
+        #
+        # vis.line(X=np.array([self.global_step]), Y=np.array([[
+        #     loss
+        # ]]), win='loss', opts=dict(title='win', xlabel='step', ylabel='loss', ytype='log', legend=[
+        #     'loss',
+        # ]), update='append')
+        # vis.line(X=np.array([self.global_step]), Y=np.array([[
+        #     self.loss_avg / self.global_step
+        # ]]), win='loss_avg', opts=dict(title='win', xlabel='step', ylabel='loss', ytype='log', legend=[
+        #     'loss-avg',
+        # ]), update='append')
 
-        vis.line(X=np.array([self.global_step]), Y=np.array([[
-            loss,
-            self.loss_avg / self.global_step
-        ]]), win='random', opts=dict(title='win', xlabel='step', ylabel='loss', ytype='log', legend=[
-            'loss',
-            'loss avg'
-        ]), update='append')
+        w1, w2, b1, b2 = self.weights
+        tw1, tw2, tb1, tb2 = grad
 
-        for w, g in zip(self.weights, grad):
-            w += scale * g
+        w1 += scale * tw1
+        w2 += scale * w2
+        b1 += scale * tb1
+        b2 += scale * tb2
+
+        self.weights = [w1, w2, b1, b2]
 
     def set_checkpoint(self):
-        fid = open(self.checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'w')
+        fid = open(self.checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'wb')
         pickle.dump([self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces], fid)
         fid.close()
 
     def set_previous_checkpoint(self):
-        fid = open(self.previous_checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'w')
+        fid = open(self.previous_checkpoint_path + "checkpoint-%d.bin" % self.NUM, 'wb')
         pickle.dump([self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces], fid)
         fid.close()
 
     def set_test_checkpoint(self):
+        if not os.path.exists(self.test_checkpoint_path + str(self.timestamp)):
+            os.makedirs(self.test_checkpoint_path + str(self.timestamp))
         fid = open('{0}{1}/{2}'.format(self.test_checkpoint_path, self.timestamp, "checkpoint-%d.bin" % self.GAME_NUM),
-                   'w')
+                   'wb')
         pickle.dump([self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces], fid)
         fid.close()
 
     def restore(self):
         try:
             self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
-                open(self.checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
+                open(self.checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'rb'))
         except IOError:
             print("404 File not found!")
 
     def restore_previous(self):
         try:
             self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
-                open(self.previous_checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'r'))
+                open(self.previous_checkpoint_path + 'checkpoint-%d.bin' % self.NUM, 'rb'))
         except IOError:
             print("404 File not found!")
 
@@ -175,7 +196,7 @@ class SubNet:
         try:
             self.GAME_NUM, self.global_step, self.lamda, self.alpha, self.weights, self.traces = pickle.load(
                 open('{0}{1}/{2}/'.format(self.test_checkpoint_path, timestamp, "checkpoint-%d.bin" % game_number),
-                     'r'))
+                     'rb'))
         except IOError:
             print("404 File not found!")
 
@@ -192,7 +213,7 @@ class SubNet:
                   'traces=' + traces,
                   sep='\n')
         except IOError:
-            print("404 File not found!")
+            print("404 previous not found!")
 
         try:
             GAME_NUM, global_step, lamda, alpha, weights, traces = pickle.load(
@@ -222,11 +243,12 @@ class SubNet:
         elif self.GAME_NUM == 100000:
             self.lamda = 0
 
-        if self.GAME_NUM > 0 and self.GAME_NUM % self.validation_interval == 0:
+        if self.GAME_NUM % self.validation_interval == 0:
             self.set_test_checkpoint()
             self.set_previous_checkpoint()
 
         self.GAME_NUM += 1
 
         # save weights
-        self.set_checkpoint()
+        if self.GAME_NUM > 0 and self.GAME_NUM % 500 == 0:
+            self.set_checkpoint()
