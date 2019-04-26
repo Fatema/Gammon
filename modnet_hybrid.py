@@ -19,7 +19,7 @@ class ModnetHybrid:
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('h_default')
-        self.default_net.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7)
+        self.default_net.start_session(restore=restore, lamda=0.7)
 
         self.racing_net = self.create_network('h_racing')
         self.racing_net.start_session(restore=restore)

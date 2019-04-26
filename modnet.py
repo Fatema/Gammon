@@ -18,7 +18,7 @@ class Modnet:
         self.timestamp = int(time.time())
 
         self.default_net = self.create_network('default')
-        self.default_net.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7)
+        self.default_net.start_session(restore=restore, lamda=0.7)
 
         self.racing_net = self.create_network('racing')
         self.racing_net.start_session(restore=restore)

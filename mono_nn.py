@@ -17,7 +17,7 @@ class MonoNN:
         self.mono_nn.set_network_name('mono')
         self.mono_nn.set_paths(model_path, summary_path, checkpoint_path)
         self.mono_nn.set_timestamp(int(time.time()))
-        self.mono_nn.start_session(restore=restore, lambda_max=0.7, lambda_min=0.7, alpha_max=1.0, alpha_min=0.1)
+        self.mono_nn.start_session(restore=restore, lamda=0)
 
     # this method is not really related to the model but it is encapsulated as part of the model class
     def play(self):
@@ -68,7 +68,7 @@ class MonoNN:
             pip_count += len(game.bar_pieces[p]) * 25
             # pip_count for the player the closer to home the less the pip_count
             # scale it out or include it as part of the reward
-            features.append(float(pip_count) / 167)
+            # features.append(float(pip_count) / 167)
             # print('pip count for', p, pip_count)
         if player == game.players[0]:
             features += [1., 0.]
@@ -77,7 +77,7 @@ class MonoNN:
 
         features = np.array(features).reshape(1, -1)
 
-        features = self.add_hit_prob(features, game)
+        # features = self.add_hit_prob(features, game)
 
         return features
 
@@ -153,9 +153,9 @@ class MonoNN:
             # print()
             # print()
             # print('episode', episode)
-            # if episode % validation_interval == 0:
-            #     tester.test_self(self)
-            #     tester.test_random(self)
+            if episode != 0 and episode % validation_interval == 0:
+                # tester.test_self(self)
+                tester.test_pubeval(self)
             # self.print_checkpoints()
 
             game = Game.new()
@@ -185,7 +185,7 @@ class MonoNN:
 
                 x_next = self.extract_features(game, players[player_num].player)
                 # print('next features extracted', x_next)
-                V_next = 1 - self.mono_nn.get_output(x_next)
+                V_next = self.mono_nn.get_output(x_next)
                 # print('next output', V_next)
 
                 self.mono_nn.run_output(x, V_next)
