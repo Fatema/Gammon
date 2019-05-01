@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  1 MAY 2019 16:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  1 MAY 2019 21:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -107,7 +107,107 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip45
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux)
+) (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot' multiply defined.
+
+
+LaTeX Warning: Label `plot:non' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:non' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot' multiply defined.
+
+
+LaTeX Warning: Label `plot:non' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:non' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot' multiply defined.
+
+
+LaTeX Warning: Label `plot:non' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:non' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot' multiply defined.
+
+
+LaTeX Warning: Label `plot:non' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:non' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot:all' multiply defined.
+
+
+LaTeX Warning: Label `sub@plot:all' multiply defined.
+
+
+LaTeX Warning: Label `plot' multiply defined.
+
+)
 \openout1 = `projectpaper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
@@ -275,7 +375,91 @@ File: layouts/racing_game_layout.png Graphic file (type png)
  <use layouts/racing_game_layout.png>
 Package pdftex.def Info: layouts/racing_game_layout.png used on input line 287.
 (pdftex.def)             Requested size: 138.34096pt x 73.16573pt.
- [11 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/default.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/o_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/x_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/prime_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/racing_game_layout.png>] [12] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.bbl
+ [11 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/default.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/o_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/x_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/prime_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/racing_game_layout.png>] <results/mono-0.7-random.png, id=71, 702.625pt x 451.6875pt>
+File: results/mono-0.7-random.png Graphic file (type png)
+ <use results/mono-0.7-random.png>
+Package pdftex.def Info: results/mono-0.7-random.png used on input line 316.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/pip2.png, id=72, 702.625pt x 451.6875pt>
+File: results/pip2.png Graphic file (type png)
+ <use results/pip2.png>
+Package pdftex.def Info: results/pip2.png used on input line 322.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/mono-non.png, id=73, 702.625pt x 451.6875pt>
+File: results/mono-non.png Graphic file (type png)
+ <use results/mono-non.png>
+Package pdftex.def Info: results/mono-non.png used on input line 335.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/mono-pip.png, id=74, 702.625pt x 451.6875pt>
+File: results/mono-pip.png Graphic file (type png)
+ <use results/mono-pip.png>
+Package pdftex.def Info: results/mono-pip.png used on input line 341.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/mono-all.png, id=75, 702.625pt x 451.6875pt>
+File: results/mono-all.png Graphic file (type png)
+ <use results/mono-all.png>
+Package pdftex.def Info: results/mono-all.png used on input line 347.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/mod-non.png, id=76, 702.625pt x 451.6875pt>
+File: results/mod-non.png Graphic file (type png)
+ <use results/mod-non.png>
+Package pdftex.def Info: results/mod-non.png used on input line 359.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/mod-pip.png, id=77, 702.625pt x 451.6875pt>
+File: results/mod-pip.png Graphic file (type png)
+ <use results/mod-pip.png>
+Package pdftex.def Info: results/mod-pip.png used on input line 365.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/mod-all.png, id=78, 702.625pt x 451.6875pt>
+File: results/mod-all.png Graphic file (type png)
+ <use results/mod-all.png>
+Package pdftex.def Info: results/mod-all.png used on input line 371.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/hybrid-non.png, id=79, 702.625pt x 451.6875pt>
+File: results/hybrid-non.png Graphic file (type png)
+ <use results/hybrid-non.png>
+Package pdftex.def Info: results/hybrid-non.png used on input line 383.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/hybrid-pip.png, id=80, 702.625pt x 451.6875pt>
+File: results/hybrid-pip.png Graphic file (type png)
+ <use results/hybrid-pip.png>
+Package pdftex.def Info: results/hybrid-pip.png used on input line 389.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/hybrid-all.png, id=81, 702.625pt x 451.6875pt>
+File: results/hybrid-all.png Graphic file (type png)
+ <use results/hybrid-all.png>
+Package pdftex.def Info: results/hybrid-all.png used on input line 395.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/non2.png, id=82, 702.625pt x 451.6875pt>
+File: results/non2.png Graphic file (type png)
+ <use results/non2.png>
+Package pdftex.def Info: results/non2.png used on input line 428.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+File: results/pip2.png Graphic file (type png)
+ <use results/pip2.png>
+Package pdftex.def Info: results/pip2.png used on input line 434.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <results/all2.png, id=83, 702.625pt x 451.6875pt>
+File: results/all2.png Graphic file (type png)
+ <use results/all2.png>
+Package pdftex.def Info: results/all2.png used on input line 440.
+(pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
+ <gnu-bg/mono-racing-board.png, id=84, 1085.05376pt x 820.06375pt>
+File: gnu-bg/mono-racing-board.png Graphic file (type png)
+ <use gnu-bg/mono-racing-board.png>
+Package pdftex.def Info: gnu-bg/mono-racing-board.png used on input line 457.
+(pdftex.def)             Requested size: 147.56557pt x 111.51718pt.
+ <gnu-bg/mono-racing-rollout.png, id=85, 446.66875pt x 222.8325pt>
+File: gnu-bg/mono-racing-rollout.png Graphic file (type png)
+ <use gnu-bg/mono-racing-rollout.png>
+Package pdftex.def Info: gnu-bg/mono-racing-rollout.png used on input line 463.
+(pdftex.def)             Requested size: 147.56557pt x 73.61655pt.
+ <gnu-bg/mono-feedback.png, id=86, 432.61626pt x 308.15125pt>
+File: gnu-bg/mono-feedback.png Graphic file (type png)
+ <use gnu-bg/mono-feedback.png>
+Package pdftex.def Info: gnu-bg/mono-feedback.png used on input line 469.
+(pdftex.def)             Requested size: 147.56557pt x 105.10857pt.
+ [12 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-0.7-random.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/pip2.png>] [13 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-all.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-all.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-all.png>] [14 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/non2.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/all2.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-racing-board.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-racing-rollout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-feedback.png>] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.bbl [15]
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
@@ -287,23 +471,26 @@ Underfull \hbox (badness 2343) in paragraph at lines 29--34
 []| | \OT1/ptm/m/n/12 Eg-ger, O. (2017), `Backgam-mon snowie'.  $\OT1/pcr/m/n/12 http : / / www . bgsnowie . com / about /
  []
 
-[13]
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¼ in font ptmr7t!
- [14]) [15] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux) ) 
+[16]) [17] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3669 strings out of 493014
- 58509 string characters out of 6133350
- 123043 words of memory out of 5000000
- 7145 multiletter control sequences out of 15000+600000
+ 3759 strings out of 493014
+ 60481 string characters out of 6133350
+ 127181 words of memory out of 5000000
+ 7217 multiletter control sequences out of 15000+600000
  18733 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,10n,40p,1633b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,40p,1633b,444s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf (15 pages, 9918540 bytes).
+Output written on /Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf (17 pages, 11013186 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 73 compressed objects within 1 object stream
+ 163 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 136 words of extra memory for PDF output out of 10000 (max. 10000000)
 

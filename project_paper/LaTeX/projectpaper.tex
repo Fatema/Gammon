@@ -7,7 +7,7 @@
 \usepackage{url}
 \usepackage[noend]{algpseudocode}
 
-\graphicspath{{layouts/}}
+\graphicspath{{layouts/} {results/} {gnu-bg/}}
 
 \citationmode{abbr}
 \bibliographystyle{agsm}
@@ -240,7 +240,7 @@ There are 4 types of agents that were implemented:
     \item \textbf{Random Agent}, an agent that would randomnly select a legal move. This agent was used in early stages of this project and was replaced by Pubeval agent.
     \item \textbf{Human agent}, an interactive agent which took user inputs either from the command line or by capturing the user clicks though a GUI to make a move/action.
     \item \textbf{AI agent} used a neural network to determine the move/action for the current turn. A list of legal moves is obtained from the game module and the best action was picked based on the search algorithm.
-    \item \textbf{Pubeval Agent}, an intermediate level benchmark agent provided by Tesauro \citeyear{pubeval}. It was used to evaluate the performance of the trained networks.
+    \item \textbf{Pubeval Agent}, an intermediate level benchmark agent provided by Tesauro \citeyear{pubeval}. It was used to evaluate the performance of the trained networks. Pubeval had two set of weights that it used to select a move: weights for racing game and another for the rest of the positions. 
 \end{itemize}
 
 \subsubsection{Modnet}
@@ -292,8 +292,114 @@ Similarly to the monolithic network training, the number of training games was s
 \end{figure}
 
 \section{Results}
-All Networks were trained on machines with the following specifications: Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz with 32.0GB RAM and Hyber-V support. The networks only needed to be ran on the CPU as the networks size was relativelly small. For every change in parameter or addition of features, the networks were retrained. To analyse the strategies of the networks, GNU-Backgammon software was used. The analysis by the software provides details regarding the points gained/lost as a result of the move made based on the current dice roll, giving an idication to the strategy the agent is following. 
+All Networks were trained on machines with the following specifications: Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz with 32.0GB RAM and Hyber-V support. Multiple learning parameters and input features were tested which required the networks to be retrained with each change. To measure the performance of the networks pubeval agent was used. To analyse the strategies of the networks, GNU-Backgammon software was used. The analysis by the software provided details regarding the points gained or lost as a result of a move made in the current turn. There were many agents with varied strengths provided by the software. The world class agent was picked to provide a good challenge for the trained networks; it plays a really strong game close to the best human players in the world by using 2-ply lookahead, no noise, and a normal move filter \cite{gnubg}.
 \subsection{General performance}
+First, variace parameters for $\lambda$ and $\alpha$ were tested. The values used were based on previous related works. The basic input features were used for all cases. Initially, the random agent was used as the benchmark player, however after experimenting with different paramaters, the random player proved to be too weak so it was disregarded as a testing agent. Pubeval agent was used for the remainder of the tests, table \ref{rp}.
+\begin{table}[htb]
+    \centering
+    \caption{Monolithic network performance after 1000 test games against pubeval (P) and random (R) agents}
+    \label{rp}
+    \begin{tabular}{ccc|ccc}
+        \hline
+        \hline
+        \multicolumn{3}{c|}{$\lambda=0.7, \alpha=0.01$} & \multicolumn{3}{|c}{$\lambda=0, \alpha=0.1$} \\
+        Max after & Win rate (P) & Win rate (R) & Max after & Win rate (R) & Win rate (P)  \\ 
+        \hline
+        100,000 & 66.0\% & 3.0\% & 159,000 & 98.0\% & 60.00\% \\ 
+        \hline
+    \end{tabular}
+\end{table}
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-0.7-random}.png}
+        \subcaption{Basic features}
+        \label{mono:7}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{pip2}.png}
+        \subcaption{Pip count included}
+        \label{plot:all}
+    \end{minipage}
+    \caption{every 1000s trained game against Random agent for 100 test games}
+    \label{plot}
+\end{figure}
+When $\lambda \leq 0.7$ the outcome did not change significantly and only resulted in a faster convergance for the network; in other words the training stabilized as shown in figure \ref{mono:7} with the agent winning 66\% against the random, however the performance was rather bad against pubeval. When $\lambda$ was 0, performance significantly improved after the first 1000 games and imp
+
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-non}.png}
+        \subcaption{Basic features}
+        \label{plot:non}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-pip}.png}
+        \subcaption{Pip count included}
+        \label{plot:all}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-all}.png}
+        \subcaption{Pip count and hit probability included}
+        \label{plot:all}
+    \end{minipage}
+    \caption{every 1000s trained game for monolithich network against pubeval agent for 100 test games}
+    \label{plot}
+\end{figure}
+
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mod-non}.png}
+        \subcaption{Basic features}
+        \label{plot:non}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mod-pip}.png}
+        \subcaption{Pip count included}
+        \label{plot:all}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mod-all}.png}
+        \subcaption{Pip count and hit probability included}
+        \label{plot:all}
+    \end{minipage}
+    \caption{every 1000s trained game for seperate modular network against pubeval agent for 100 test games}
+    \label{plot}
+\end{figure}
+
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{hybrid-non}.png}
+        \subcaption{Basic features}
+        \label{plot:non}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{hybrid-pip}.png}
+        \subcaption{Pip count included}
+        \label{plot:all}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{hybrid-all}.png}
+        \subcaption{Pip count and hit probability included}
+        \label{plot:all}
+    \end{minipage}
+    \caption{every 1000s trained game for hybrid modular network against pubeval agent for 100 test games}
+    \label{plot}
+\end{figure}
+
 Table \ref{perf1} shows the performance of the networks with basic input features, with pip count included to the basic features and with both pip count and hit probability included to the basic features against Pubeval agent after 1000 test games. $\lambda$ and $\alpha$ were not changed. The networks were left to run for as long as possible. The result in the tables were for the latest training game reached by each network. 
 % add graphs for the test outputs
 \begin{table}[htb]
@@ -308,18 +414,66 @@ Table \ref{perf1} shows the performance of the networks with basic input feature
         \hline
         Monolithic & 159,000 & 60.00\% & 94,000 & 54.00\% & 100,000 & 60.00\% \\ 
         \hline
-        Seperate Modular & 20,000 & 15.20\% & 40,000 & 16.20\%  & 20,000 & 24.20\% \\ 
+        Seperate Modular & 111,000 & 38.20\% & 34,000 & 16.20\%  & 12,000 & 24.20\% \\ 
         \hline
-        Hybrid Modular & 90,000 & 24.30\% & 150,000 & 38.30\% & 30,000 & 23.00\% \\ 
+        Hybrid Modular & 46,000 & 19.30\% & 143,000 & 35.30\% & 29,000 & 20.00\% \\ 
         \hline
     \end{tabular}
 \end{table}
 
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{non2}.png}
+        \subcaption{Basic features}
+        \label{plot:non}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{pip2}.png}
+        \subcaption{Pip count included}
+        \label{plot:all}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{all2}.png}
+        \subcaption{Pip count and hit probability included}
+        \label{plot:all}
+    \end{minipage}
+    \caption{every 1000s trained game against pubeval agent for 100 test games}
+    \label{plot}
+\end{figure}
+
+As noted from figure , the training did not improve as the network's training continued and tended to get worst in some cases. 
+
 
 \subsection{Match analysis}
 The best performing networks were tested against GNU-Backgammon's world class level agent for 10 games. 
-
-For monolithic network, as the game reaches to the racing game, the network makes average decisions based on the analysis, picking moves that are based on GNU-Backgammon in the middle range 17th move picked out of 25 possible moves. In some cases it makes aweful decisions but generally it picks one of 3 top moves. This empahsises the results obtained previously regarding the weakness of a single network implementation.
+\begin{figure}[htp] 
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-racing-board}.png}
+        \subcaption{Game Board}
+        \label{plot:non}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-racing-rollout}.png}
+        \subcaption{Move analysis}
+        \label{plot:all}
+    \end{minipage}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{{mono-feedback}.png}
+        \subcaption{Full game analysis}
+        \label{plot:all}
+    \end{minipage}
+    \caption{Monolithic network (Red) against GNU-Backgammon world class level agent (Black) - racing game}
+    \label{plot}
+\end{figure}
+For monolithic network, as the game reaches to the racing game, the network makes average decisions based on the analysis, picking moves that are based on GNU-Backgammon in the middle range 17th move picked out of 25 possible moves. In some cases it makes aweful decisions but generally it picks one of 3 top moves. This empahsises the results obtained previously regarding the weakness of a single network implementation. The monolithic network tended to use primes as part of its strategy. This is noticed by watchign the network play against Pubeval 
 
 For hybrid network, plays good first roll positions, always makes the best decision when racing game is reached. it makes awful decisions but generally it picks one of 3 top moves.  
 
@@ -335,13 +489,19 @@ Bug are difficult to spot. As training takes time and good result happen after a
 
 Modular Networks. Some games could take thousands of turns, this usually indicates that the network has diverged this incredebly increase the time a single game takes slowing down the training significantly. Although adjusting paramaters helps in some cases, convergences is not always garanteed and different runs for the same configurations could go either ways. This also explains the low number of games that were trained for those networks. Inclusion of expert however seemed to have fixed the divergance problem giving better results. 
 
+Action selection algorithm could be to blame for this behaviour as the first best action was always selected. 
+
 The results indicate that the modular networks did not out perform the monolithic network. however the hybrid module network did better than the seperate modula network. 
 
 It is difficult to decided when is it appropiate to stop learning. 
 
+Difficulty in interacting between the agent and gnu agent. required more manual effort which was incredibly ineffective and slow. Manually entering dice roll and entering move provided by both players.
+
 \subsection{Improvements}
 If given a chance to repeat this project the advance objectives would have been included. Training strategy for the network re-evaluated. As most bugs in the code has been fixed and a better evaluation method had been included with using pubeval. Doubling cube will be included as part of evaluating the actions taken by the AI agent. This will be implemented by including a heuristic function as part of the action evaluation process. The implementation will be initially based on Tesauro's \citeyear{DBLP:journals/ai/Tesauro02} work, then an implementation using Crawford rule will be tested. The best trained network will be retrained with the doubling cube taken into consideration. The newly trained network will be tested for 5000 games against the older version of the network. 
 Following Tesauro's \citeyear{DBLP:journals/ai/Tesauro02} work and recent backgammon software, the search algorithm used to determine the current turn's move will affect the general training outcome; it is evident from results collected by Depreli \citeyear{botbattle} that better results are expected from 2-ply and 3-ply search. 
+
+Use different package that is more optimized to use the CPU improving the training time.
 
 \section{Conclusions}
 

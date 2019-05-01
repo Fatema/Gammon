@@ -35,39 +35,40 @@ if __name__ == '__main__':
     model_mod = Modnet(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     model_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
     model_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=FLAGS.restore)
-    if FLAGS.test and FLAGS.all:
-        if FLAGS.best:
-            if FLAGS.mono:
-                test_all_best(model_mono, draw=FLAGS.draw)
-            elif FLAGS.hybrid:
-                test_all_best(model_mod_hybrid, draw=FLAGS.draw)
-            else:
-                test_all_best(model_mod, draw=FLAGS.draw)
-        else:
-            if FLAGS.mono:
-                test_all_random(model_mono, draw=FLAGS.draw)
-            elif FLAGS.hybrid:
-                test_all_random(model_mod_hybrid, draw=FLAGS.draw)
-            else:
-                test_all_random(model_mod, draw=FLAGS.draw)
-    elif FLAGS.test:
-        if FLAGS.mono:
-            test_random(model_mono, episodes=1000, draw=FLAGS.draw)
-        elif FLAGS.hybrid:
-            test_random(model_mod_hybrid, episodes=1000, draw=FLAGS.draw)
-        else:
-            test_random(model_mod, episodes=1000, draw=FLAGS.draw)
-    elif FLAGS.play:
-        if FLAGS.mono:
-            model_mono.play()
-        elif FLAGS.hybrid:
-            model_mod_hybrid.play()
-        else:
-            model_mod.play()
-    else:
-        if FLAGS.mono:
-            model_mono.train(episodes=1000000)
-        elif FLAGS.hybrid:
-            model_mod_hybrid.train(episodes=1000000)
-        else:
-            model_mod.train(episodes=1000000)
+    create_plots()
+    # if FLAGS.test and FLAGS.all:
+    #     if FLAGS.best:
+    #         if FLAGS.mono:
+    #             test_all_best(model_mono, draw=FLAGS.draw)
+    #         elif FLAGS.hybrid:
+    #             test_all_best(model_mod_hybrid, draw=FLAGS.draw)
+    #         else:
+    #             test_all_best(model_mod, draw=FLAGS.draw)
+    #     else:
+    #         if FLAGS.mono:
+    #             test_all_random(model_mono, draw=FLAGS.draw)
+    #         elif FLAGS.hybrid:
+    #             test_all_random(model_mod_hybrid, draw=FLAGS.draw)
+    #         else:
+    #             test_all_random(model_mod, draw=FLAGS.draw)
+    # elif FLAGS.test:
+    #     if FLAGS.mono:
+    #         test_random(model_mono, episodes=1000, draw=FLAGS.draw)
+    #     elif FLAGS.hybrid:
+    #         test_random(model_mod_hybrid, episodes=1000, draw=FLAGS.draw)
+    #     else:
+    #         test_random(model_mod, episodes=1000, draw=FLAGS.draw)
+    # elif FLAGS.play:
+    #     if FLAGS.mono:
+    #         model_mono.play()
+    #     elif FLAGS.hybrid:
+    #         model_mod_hybrid.play()
+    #     else:
+    #         model_mod.play()
+    # else:
+    #     if FLAGS.mono:
+    #         model_mono.train(episodes=1000000)
+    #     elif FLAGS.hybrid:
+    #         model_mod_hybrid.train(episodes=1000000)
+    #     else:
+    #         model_mod.train(episodes=1000000)
