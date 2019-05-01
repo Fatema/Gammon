@@ -3,6 +3,7 @@ import os
 import visdom
 
 from backgammon.agents.ai_agent import TDAgent, PubevalAgent
+from backgammon.agents.human_agent import HumanAgent
 from backgammon.agents.random_agent import RandomAgent
 from backgammon.game import Game
 
@@ -21,6 +22,27 @@ previous_mod_hybrid = ModnetHybrid(model_path, summary_path, checkpoint_path, re
 previous_mono = MonoNN(model_path, summary_path, checkpoint_path, restore=True)
 
 vis = visdom.Visdom(server='localhost',port=12345)
+
+
+def manual_test_gnubg(model):
+    game = Game.new(layout=Game.LAYOUT)
+    players = [TDAgent(Game.TOKENS[0], model), HumanAgent(Game.TOKENS[1])]
+    player_num = int(input('second player num'))
+    turns = 0
+    while not game.is_over():
+        turns += 1
+        nodups = False
+        roll = tuple(map(int, input('dice roll').split(',')))
+        player_num = (player_num + 1) % 2
+        if player_num:
+            nodups = True
+            game.reverse()
+        game.take_turn(players[player_num], roll, draw=False, nodups=nodups)
+        if player_num:
+            game.reverse()
+    winner = game.winner()
+    return winner
+
 
 def run_games(players, episodes=100, draw=False):
     winners = [0, 0]

@@ -52,7 +52,7 @@ if __name__ == '__main__':
                 test_all_random(model_mod, draw=FLAGS.draw)
     elif FLAGS.test:
         if FLAGS.mono:
-            test_pubeval(model_mono, episodes=1000, draw=FLAGS.draw)
+            test_random(model_mono, episodes=1000, draw=FLAGS.draw)
         elif FLAGS.hybrid:
             test_random(model_mod_hybrid, episodes=1000, draw=FLAGS.draw)
         else:
