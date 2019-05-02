@@ -6,24 +6,14 @@ Azaria, Y. \harvardand\ Sipper, M.  \harvardyearleft 2005\harvardyearright ,
   Programming and Evolvable Machines} {\bf 6}(3),~283--300.
 \newline\harvardurl{https://doi.org/10.1007/s10710-005-2990-0}
 
-\harvarditem{Boyan}{1992{\em a}}{boyan}
-Boyan, J.~A.  \harvardyearleft 1992{\em a}\harvardyearright , Modular neural
-  networks for learning context-dependent game strategies, Technical report,
-  Master’s thesis, Computer Speech and Language Processing.
+\harvarditem{Boyan}{1992}{boyan}
+Boyan, J.~A.  \harvardyearleft 1992\harvardyearright , Modular neural networks
+  for learning context-dependent game strategies, Technical report, Master’s
+  thesis, Computer Speech and Language Processing.
 
-\harvarditem{Boyan}{1992{\em b}}{modularNeuralNetwork}
-Boyan, J.~A.  \harvardyearleft 1992{\em b}\harvardyearright , `Modular neural
-  networks for learning context-dependent game strategies'.
-
-\harvarditem{Depreli}{2012{\em a}}{MichaelDepreliStudy2012}
-Depreli, M.  \harvardyearleft 2012{\em a}\harvardyearright , `Bot comparison
-  final table'.
-\newblock \url{http://www.extremegammon.com/studies.aspx\#D2012}, accessed:
-  20/09/2018.
-
-\harvarditem{Depreli}{2012{\em b}}{botbattle}
-Depreli, M.  \harvardyearleft 2012{\em b}\harvardyearright , `Bot comparison
-  final table'.
+\harvarditem{Depreli}{2012}{botbattle}
+Depreli, M.  \harvardyearleft 2012\harvardyearright , `Bot comparison final
+  table'.
 \newline\harvardurl{http://www.extremegammon.com/studies.aspx\#D2012}
 
 \harvarditem{Egger}{2017}{snowie}
@@ -53,19 +43,6 @@ Hannun, A.  \harvardyearleft 2013\harvardyearright , `backgammon'.
 Keith, T.  \harvardyearleft 1995\harvardyearright , `Backgammon galore
   glossary'.
 \newline\harvardurl{http://www.bkgm.com/glossary.html}
-
-\harvarditem{Papahristou \harvardand\
-  Refanidis}{2011}{DBLP:conf/evoW/PapahristouR11}
-Papahristou, N. \harvardand\ Refanidis, I.  \harvardyearleft
-  2011\harvardyearright , Training neural networks to play backgammon variants
-  using reinforcement learning, {\em in} C.~D. Chio, S.~Cagnoni, C.~Cotta,
-  M.~Ebner, A.~Ek{\'{a}}rt, A.~Esparcia{-}Alc{\'{a}}zar, J.~J.~M.
-  Guerv{\'{o}}s, F.~Neri, M.~Preuss, H.~Richter, J.~Togelius \harvardand\ G.~N.
-  Yannakakis, eds, `Applications of Evolutionary Computation - EvoApplications
-  2011: EvoCOMPLEX, EvoGAMES, EvoIASP, EvoINTELLIGENCE, EvoNUM, and EvoSTOC,
-  Torino, Italy, April 27-29, 2011, Proceedings, Part {I}', Vol. 6624 of {\em
-  Lecture Notes in Computer Science}, Springer, pp.~113--122.
-\newline\harvardurl{https://doi.org/10.1007/978-3-642-20525-5\_12}
 
 \harvarditem{Papahristou \harvardand\
   Refanidis}{2012}{DBLP:conf/ifip12/PapahristouR12}

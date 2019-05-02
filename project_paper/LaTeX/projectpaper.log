@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  2 MAY 2019 07:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.11.27)  2 MAY 2019 21:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -266,20 +266,20 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10.95> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 27.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 39.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 40.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 39.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 40.
  <boardsetup.png, id=1, 683.1924pt x 386.4036pt>
 File: boardsetup.png Graphic file (type png)
  <use boardsetup.png>
-Package pdftex.def Info: boardsetup.png used on input line 50.
+Package pdftex.def Info: boardsetup.png used on input line 51.
 (pdftex.def)             Requested size: 276.68193pt x 156.4867pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 51.
+(Font)              <12> on input line 52.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 51.
+(Font)              <8> on input line 52.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 51.
+(Font)              <6> on input line 52.
  [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
@@ -295,211 +295,213 @@ Missing character: There is no ™ in font ptmr7t!
  <prime.png, id=10, 66.9702pt x 64.0794pt>
 File: prime.png Graphic file (type png)
  <use prime.png>
-Package pdftex.def Info: prime.png used on input line 62.
+Package pdftex.def Info: prime.png used on input line 64.
 (pdftex.def)             Requested size: 138.34096pt x 132.37169pt.
  <backgame.png, id=11, 105.0324pt x 61.1886pt>
 File: backgame.png Graphic file (type png)
  <use backgame.png>
-Package pdftex.def Info: backgame.png used on input line 67.
+Package pdftex.def Info: backgame.png used on input line 69.
 (pdftex.def)             Requested size: 216.73254pt x 126.26183pt.
- [2 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/boardsetup.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/prime.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/backgame.png>]
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¼ in font ptmr7t!
- [3]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 102.
+ [2 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/boardsetup.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/prime.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/backgame.png>] [3]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 101.
  (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 102.
- [4]
-Overfull \hbox (33.5995pt too wide) in paragraph at lines 123--124
-\OT1/ptm/m/n/12 mula that is based on a gen-er-al-i-sa-tion of prior the-o-ret-i-cal work on dou-bling strate-gies by Zadeh?Kobliska
- []
-
-[5]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 101.
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¼ in font ptmr7t!
- <mononn.png, id=31, 369.0588pt x 369.0588pt>
+ [4]
+Missing character: There is no Ã in font ptmr7t!
+Missing character: There is no ¼ in font ptmr7t!
+ [5]
+Missing character: There is no Ã in font ptmr7t!
+Missing character: There is no ¼ in font ptmr7t!
+ [6] <mononn.png, id=38, 369.0588pt x 369.0588pt>
 File: mononn.png Graphic file (type png)
  <use mononn.png>
-Package pdftex.def Info: mononn.png used on input line 182.
+Package pdftex.def Info: mononn.png used on input line 179.
 (pdftex.def)             Requested size: 184.44994pt x 184.4501pt.
- [6] [7 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/mononn.png>] <dddnn.png, id=45, 886.0302pt x 377.2494pt>
+ [7] <dddnn.png, id=43, 886.0302pt x 377.2494pt>
 File: dddnn.png Graphic file (type png)
  <use dddnn.png>
-Package pdftex.def Info: dddnn.png used on input line 198.
+Package pdftex.def Info: dddnn.png used on input line 195.
 (pdftex.def)             Requested size: 368.9069pt x 157.07365pt.
- [8 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/dddnn.png>] <syscomp.png, id=50, 840.741pt x 350.2686pt>
+ [8 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/mononn.png>] <syscomp.png, id=48, 840.741pt x 350.2686pt>
 File: syscomp.png Graphic file (type png)
  <use syscomp.png>
-Package pdftex.def Info: syscomp.png used on input line 227.
+Package pdftex.def Info: syscomp.png used on input line 224.
 (pdftex.def)             Requested size: 368.9069pt x 153.69643pt.
- [9 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/syscomp.png>] [10] <results/mono-all.png, id=58, 702.625pt x 451.6875pt>
+ [9 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/dddnn.png>] [10 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/syscomp.png>] <results/mono-all.png, id=57, 702.625pt x 451.6875pt>
 File: results/mono-all.png Graphic file (type png)
  <use results/mono-all.png>
-Package pdftex.def Info: results/mono-all.png used on input line 266.
+Package pdftex.def Info: results/mono-all.png used on input line 263.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/mono-turns.png, id=59, 320.19624pt x 121.45375pt>
+ <results/mono-turns.png, id=58, 320.19624pt x 121.45375pt>
 File: results/mono-turns.png Graphic file (type png)
  <use results/mono-turns.png>
-Package pdftex.def Info: results/mono-turns.png used on input line 272.
+Package pdftex.def Info: results/mono-turns.png used on input line 269.
 (pdftex.def)             Requested size: 147.56557pt x 55.97316pt.
- <results/mono-loss-plot.png, id=60, 318.18875pt x 211.79124pt>
+ <results/mono-loss-plot.png, id=59, 318.18875pt x 211.79124pt>
 File: results/mono-loss-plot.png Graphic file (type png)
  <use results/mono-loss-plot.png>
-Package pdftex.def Info: results/mono-loss-plot.png used on input line 278.
+Package pdftex.def Info: results/mono-loss-plot.png used on input line 275.
 (pdftex.def)             Requested size: 147.56557pt x 98.22014pt.
- <results/gnubg.png, id=61, 1927.2pt x 1018.80624pt>
+ <results/gnubg.png, id=60, 1927.2pt x 1018.80624pt>
 File: results/gnubg.png Graphic file (type png)
  <use results/gnubg.png>
-Package pdftex.def Info: results/gnubg.png used on input line 291.
+Package pdftex.def Info: results/gnubg.png used on input line 288.
 (pdftex.def)             Requested size: 405.7983pt x 214.51527pt.
- [11 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-all.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-turns.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-loss-plot.png>] <layouts/default.png, id=68, 798.985pt x 423.5825pt>
+ [11 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-all.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-turns.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-loss-plot.png>] <layouts/default.png, id=67, 798.985pt x 423.5825pt>
 File: layouts/default.png Graphic file (type png)
  <use layouts/default.png>
-Package pdftex.def Info: layouts/default.png used on input line 310.
+Package pdftex.def Info: layouts/default.png used on input line 307.
 (pdftex.def)             Requested size: 138.34096pt x 73.33951pt.
- <layouts/o_backgame_layout.png, id=69, 798.985pt x 425.59pt>
+ <layouts/o_backgame_layout.png, id=68, 798.985pt x 425.59pt>
 File: layouts/o_backgame_layout.png Graphic file (type png)
  <use layouts/o_backgame_layout.png>
-Package pdftex.def Info: layouts/o_backgame_layout.png used on input line 315.
+Package pdftex.def Info: layouts/o_backgame_layout.png used on input line 312.
 (pdftex.def)             Requested size: 138.34096pt x 73.68709pt.
- <layouts/x_backgame_layout.png, id=70, 799.98875pt x 426.59375pt>
+ <layouts/x_backgame_layout.png, id=69, 799.98875pt x 426.59375pt>
 File: layouts/x_backgame_layout.png Graphic file (type png)
  <use layouts/x_backgame_layout.png>
-Package pdftex.def Info: layouts/x_backgame_layout.png used on input line 320.
+Package pdftex.def Info: layouts/x_backgame_layout.png used on input line 317.
 (pdftex.def)             Requested size: 138.34096pt x 73.76976pt.
- <layouts/prime_layout.png, id=71, 800.9925pt x 425.59pt>
+ <layouts/prime_layout.png, id=70, 800.9925pt x 425.59pt>
 File: layouts/prime_layout.png Graphic file (type png)
  <use layouts/prime_layout.png>
-Package pdftex.def Info: layouts/prime_layout.png used on input line 325.
+Package pdftex.def Info: layouts/prime_layout.png used on input line 322.
 (pdftex.def)             Requested size: 138.34096pt x 73.49876pt.
- <layouts/racing_game_layout.png, id=72, 798.985pt x 422.57875pt>
+ <layouts/racing_game_layout.png, id=71, 798.985pt x 422.57875pt>
 File: layouts/racing_game_layout.png Graphic file (type png)
  <use layouts/racing_game_layout.png>
-Package pdftex.def Info: layouts/racing_game_layout.png used on input line 330.
+Package pdftex.def Info: layouts/racing_game_layout.png used on input line 327.
 (pdftex.def)             Requested size: 138.34096pt x 73.16573pt.
- [12 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/gnubg.png>] <results/mono-non.png, id=77, 702.625pt x 451.6875pt>
+ [12 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/gnubg.png>]
+Overfull \hbox (12.51692pt too wide) in paragraph at lines 360--373
+ [][] 
+ []
+
+[13 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/default.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/o_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/x_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/prime_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/racing_game_layout.png>] <results/mono-non.png, id=85, 702.625pt x 451.6875pt>
 File: results/mono-non.png Graphic file (type png)
  <use results/mono-non.png>
-Package pdftex.def Info: results/mono-non.png used on input line 384.
+Package pdftex.def Info: results/mono-non.png used on input line 402.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/mono-pip.png, id=78, 702.625pt x 451.6875pt>
+ <results/mono-pip.png, id=86, 702.625pt x 451.6875pt>
 File: results/mono-pip.png Graphic file (type png)
  <use results/mono-pip.png>
-Package pdftex.def Info: results/mono-pip.png used on input line 390.
+Package pdftex.def Info: results/mono-pip.png used on input line 408.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
 File: results/mono-all.png Graphic file (type png)
  <use results/mono-all.png>
-Package pdftex.def Info: results/mono-all.png used on input line 396.
+Package pdftex.def Info: results/mono-all.png used on input line 414.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- [13 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/default.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/o_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/x_backgame_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/prime_layout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/layouts/racing_game_layout.png>] <results/mod-non.png, id=88, 702.625pt x 451.6875pt>
+ <results/mod-non.png, id=87, 702.625pt x 451.6875pt>
 File: results/mod-non.png Graphic file (type png)
  <use results/mod-non.png>
-Package pdftex.def Info: results/mod-non.png used on input line 409.
+Package pdftex.def Info: results/mod-non.png used on input line 427.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/mod-pip.png, id=89, 702.625pt x 451.6875pt>
+ <results/mod-pip.png, id=88, 702.625pt x 451.6875pt>
 File: results/mod-pip.png Graphic file (type png)
  <use results/mod-pip.png>
-Package pdftex.def Info: results/mod-pip.png used on input line 415.
+Package pdftex.def Info: results/mod-pip.png used on input line 433.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/mod-all.png, id=90, 702.625pt x 451.6875pt>
+ <results/mod-all.png, id=89, 702.625pt x 451.6875pt>
 File: results/mod-all.png Graphic file (type png)
  <use results/mod-all.png>
-Package pdftex.def Info: results/mod-all.png used on input line 421.
+Package pdftex.def Info: results/mod-all.png used on input line 439.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/hybrid-non.png, id=91, 702.625pt x 451.6875pt>
+ <results/hybrid-non.png, id=90, 702.625pt x 451.6875pt>
 File: results/hybrid-non.png Graphic file (type png)
  <use results/hybrid-non.png>
-Package pdftex.def Info: results/hybrid-non.png used on input line 434.
+Package pdftex.def Info: results/hybrid-non.png used on input line 452.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/hybrid-pip.png, id=92, 702.625pt x 451.6875pt>
+ <results/hybrid-pip.png, id=91, 702.625pt x 451.6875pt>
 File: results/hybrid-pip.png Graphic file (type png)
  <use results/hybrid-pip.png>
-Package pdftex.def Info: results/hybrid-pip.png used on input line 440.
+Package pdftex.def Info: results/hybrid-pip.png used on input line 458.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
- <results/hybrid-all.png, id=93, 702.625pt x 451.6875pt>
+ <results/hybrid-all.png, id=92, 702.625pt x 451.6875pt>
 File: results/hybrid-all.png Graphic file (type png)
  <use results/hybrid-all.png>
-Package pdftex.def Info: results/hybrid-all.png used on input line 446.
+Package pdftex.def Info: results/hybrid-all.png used on input line 464.
 (pdftex.def)             Requested size: 147.56557pt x 94.86406pt.
-Missing character: There is no Ã in font ptmr7t!
-Missing character: There is no ¼ in font ptmr7t!
- <gnu-bg/mono-racing-board.png, id=94, 1085.05376pt x 820.06375pt>
+ [14] [15 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-all.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-all.png>] <gnu-bg/mono-racing-board.png, id=107, 1085.05376pt x 820.06375pt>
 File: gnu-bg/mono-racing-board.png Graphic file (type png)
  <use gnu-bg/mono-racing-board.png>
-Package pdftex.def Info: gnu-bg/mono-racing-board.png used on input line 464.
+Package pdftex.def Info: gnu-bg/mono-racing-board.png used on input line 480.
 (pdftex.def)             Requested size: 147.56557pt x 111.51718pt.
- <gnu-bg/mono-racing-rollout.png, id=95, 446.66875pt x 222.8325pt>
+ <gnu-bg/mono-racing-rollout.png, id=108, 446.66875pt x 222.8325pt>
 File: gnu-bg/mono-racing-rollout.png Graphic file (type png)
  <use gnu-bg/mono-racing-rollout.png>
-Package pdftex.def Info: gnu-bg/mono-racing-rollout.png used on input line 470.
+Package pdftex.def Info: gnu-bg/mono-racing-rollout.png used on input line 486.
 (pdftex.def)             Requested size: 147.56557pt x 73.61655pt.
- <gnu-bg/mono-feedback.png, id=96, 432.61626pt x 308.15125pt>
+ <gnu-bg/mono-feedback.png, id=109, 432.61626pt x 308.15125pt>
 File: gnu-bg/mono-feedback.png Graphic file (type png)
  <use gnu-bg/mono-feedback.png>
-Package pdftex.def Info: gnu-bg/mono-feedback.png used on input line 476.
+Package pdftex.def Info: gnu-bg/mono-feedback.png used on input line 492.
 (pdftex.def)             Requested size: 147.56557pt x 105.10857pt.
- [14 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mono-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/mod-all.png>] <gnu-bg/hybrid-bad-board.png, id=105, 1084.05pt x 822.07124pt>
+ <gnu-bg/hybrid-bad-board.png, id=110, 1084.05pt x 822.07124pt>
 File: gnu-bg/hybrid-bad-board.png Graphic file (type png)
  <use gnu-bg/hybrid-bad-board.png>
-Package pdftex.def Info: gnu-bg/hybrid-bad-board.png used on input line 490.
+Package pdftex.def Info: gnu-bg/hybrid-bad-board.png used on input line 506.
 (pdftex.def)             Requested size: 147.56557pt x 111.90306pt.
- <gnu-bg/hybrid-bad-move.png, id=106, 423.5825pt x 183.68625pt>
+ <gnu-bg/hybrid-bad-move.png, id=111, 423.5825pt x 183.68625pt>
 File: gnu-bg/hybrid-bad-move.png Graphic file (type png)
  <use gnu-bg/hybrid-bad-move.png>
-Package pdftex.def Info: gnu-bg/hybrid-bad-move.png used on input line 496.
+Package pdftex.def Info: gnu-bg/hybrid-bad-move.png used on input line 512.
 (pdftex.def)             Requested size: 147.56557pt x 63.99123pt.
- <gnu-bg/hybrid-bad-moves.png, id=107, 432.61626pt x 181.67876pt>
+ <gnu-bg/hybrid-bad-moves.png, id=112, 432.61626pt x 181.67876pt>
 File: gnu-bg/hybrid-bad-moves.png Graphic file (type png)
  <use gnu-bg/hybrid-bad-moves.png>
-Package pdftex.def Info: gnu-bg/hybrid-bad-moves.png used on input line 502.
+Package pdftex.def Info: gnu-bg/hybrid-bad-moves.png used on input line 518.
 (pdftex.def)             Requested size: 147.56557pt x 61.96954pt.
 File: gnu-bg/hybrid-bad-board.png Graphic file (type png)
  <use gnu-bg/hybrid-bad-board.png>
-Package pdftex.def Info: gnu-bg/hybrid-bad-board.png used on input line 516.
+Package pdftex.def Info: gnu-bg/hybrid-bad-board.png used on input line 532.
 (pdftex.def)             Requested size: 147.56557pt x 111.90306pt.
 File: gnu-bg/hybrid-bad-move.png Graphic file (type png)
  <use gnu-bg/hybrid-bad-move.png>
-Package pdftex.def Info: gnu-bg/hybrid-bad-move.png used on input line 522.
+Package pdftex.def Info: gnu-bg/hybrid-bad-move.png used on input line 538.
 (pdftex.def)             Requested size: 147.56557pt x 63.99123pt.
 File: gnu-bg/hybrid-bad-moves.png Graphic file (type png)
  <use gnu-bg/hybrid-bad-moves.png>
-Package pdftex.def Info: gnu-bg/hybrid-bad-moves.png used on input line 528.
+Package pdftex.def Info: gnu-bg/hybrid-bad-moves.png used on input line 544.
 (pdftex.def)             Requested size: 147.56557pt x 61.96954pt.
- [15 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-non.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-pip.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/results/hybrid-all.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-racing-board.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-racing-rollout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-feedback.png>] [16 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/hybrid-bad-board.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/hybrid-bad-move.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/hybrid-bad-moves.png>] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.bbl
+ [16 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-racing-board.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-racing-rollout.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/mono-feedback.png>] [17 </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/hybrid-bad-board.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/hybrid-bad-move.png> </Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/gnu-bg/hybrid-bad-moves.png>] [18] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.bbl
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 21.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 22.
  (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [17]
-Underfull \hbox (badness 2343) in paragraph at lines 29--34
+)
+Underfull \hbox (badness 2343) in paragraph at lines 19--24
 []| | \OT1/ptm/m/n/12 Eg-ger, O. (2017), `Backgam-mon snowie'.  $\OT1/pcr/m/n/12 http : / / www . bgsnowie . com / about /
  []
 
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¼ in font ptmr7t!
-[18]) [19] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux)
+[19]) [20] (/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3785 strings out of 493014
- 61034 string characters out of 6133350
- 122361 words of memory out of 5000000
- 7241 multiletter control sequences out of 15000+600000
+ 3772 strings out of 493014
+ 60652 string characters out of 6133350
+ 124150 words of memory out of 5000000
+ 7228 multiletter control sequences out of 15000+600000
  18733 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,10n,40p,1633b,444s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,40p,2499b,444s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf (19 pages, 12306856 bytes).
+Output written on /Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf (20 pages, 12308930 bytes).
 PDF statistics:
- 174 PDF objects out of 1000 (max. 8388607)
- 82 compressed objects within 1 object stream
+ 177 PDF objects out of 1000 (max. 8388607)
+ 84 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  146 words of extra memory for PDF output out of 10000 (max. 10000000)
 

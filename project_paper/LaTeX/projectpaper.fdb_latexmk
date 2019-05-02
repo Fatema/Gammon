@@ -1,15 +1,15 @@
 # Fdb version 3
-["bibtex projectpaper"] 1556780114 "projectpaper.aux" "projectpaper.bbl" "projectpaper" 1556780357
+["bibtex projectpaper"] 1556830625 "projectpaper.aux" "projectpaper.bbl" "projectpaper" 1556830630
   "/usr/local/texlive/2016/texmf-dist/bibtex/bst/harvard/agsm.bst" 1136766823 25549 e3d0f1ab4ae55e777f7352db30e2c6f7 ""
-  "projectpaper.aux" 1556780357 11016 1f44a61c90fd3c1ac694992357092ce4 ""
+  "projectpaper.aux" 1556830629 11155 ff9a6ee040116ba3210948abb832bcc4 ""
   "projectpaper.bcf" 0 -1 0 ""
   "projectpaper.bib" 1556697687 18325 12c9c3bc9b05af68a13594cdef2b3650 ""
   (generated)
   "projectpaper.bbl"
   "projectpaper.blg"
-["pdflatex"] 1556780353 "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf" "projectpaper" 1556780357
-  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux" 1556780357 11016 1f44a61c90fd3c1ac694992357092ce4 ""
-  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" 1556780353 47285 ae072d7b065fc1cf912f949fa088f971 ""
+["pdflatex"] 1556830625 "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf" "projectpaper" 1556830630
+  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux" 1556830629 11155 ff9a6ee040116ba3210948abb832bcc4 ""
+  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" 1556830619 52733 40e90ec145b6a47994f479fcac38fb54 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2016/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -104,9 +104,9 @@
   "layouts/x_backgame_layout.png" 1553511270 1840892 786f4382865f0ff8e18e8a93b01ae199 ""
   "mononn.png" 1556033508 107849 6da12ef801d089b1fc19583e44615169 ""
   "prime.png" 1556033508 23798 aad2aa493b91a0591d3b6193aba44204 ""
-  "projectpaper.aux" 1556780357 11016 1f44a61c90fd3c1ac694992357092ce4 ""
-  "projectpaper.bbl" 1556780114 7024 a9f1ae8ed6da6e3009768feeafdd5014 "bibtex projectpaper"
-  "projectpaper.tex" 1556780353 47285 ae072d7b065fc1cf912f949fa088f971 ""
+  "projectpaper.aux" 1556830629 11155 ff9a6ee040116ba3210948abb832bcc4 ""
+  "projectpaper.bbl" 1556830625 5745 cbdc623fab3afeb06938cb0e8a3a7a98 "bibtex projectpaper"
+  "projectpaper.tex" 1556830619 52733 40e90ec145b6a47994f479fcac38fb54 ""
   "results/gnubg.png" 1556776677 887422 58900ab5f530b9d9c6af1ea10ac2cdf0 ""
   "results/hybrid-all.png" 1556734073 41308 e44c0515f0786e710b7e97b44c8e79e8 ""
   "results/hybrid-non.png" 1556734068 39647 4695b1f7d79d24d4b1f6630fc9a4da57 ""
@@ -121,8 +121,8 @@
   "results/mono-turns.png" 1556769639 55571 32dc7aaa433618647409caaec8b2141c ""
   "syscomp.png" 1556033508 69075 8e93921126f97636bbb74abaed6c29c9 ""
   (generated)
-  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.log"
-  "projectpaper.log"
   "projectpaper.pdf"
   "projectpaper.aux"
+  "projectpaper.log"
+  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.log"
   "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf"
