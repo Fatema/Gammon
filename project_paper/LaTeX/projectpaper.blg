@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: projectpaper.aux
 The style file: agsm.bst
 Database file #1: projectpaper.bib
-You've used 20 entries,
+You've used 18 entries,
             2909 wiz_defined-function locations,
-            779 strings with 8642 characters,
-and the built_in function-call counts, 49528 in all, are:
-= -- 7747
-> -- 635
+            763 strings with 7930 characters,
+and the built_in function-call counts, 42977 in all, are:
+= -- 6699
+> -- 541
 < -- 1
-+ -- 3425
-- -- 187
-* -- 3972
-:= -- 10532
-add.period$ -- 23
-call.type$ -- 20
-change.case$ -- 281
-chr.to.int$ -- 20
-cite$ -- 20
-duplicate$ -- 304
-empty$ -- 649
-format.name$ -- 244
-if$ -- 8820
++ -- 2941
+- -- 159
+* -- 3436
+:= -- 9183
+add.period$ -- 18
+call.type$ -- 18
+change.case$ -- 253
+chr.to.int$ -- 18
+cite$ -- 18
+duplicate$ -- 272
+empty$ -- 583
+format.name$ -- 211
+if$ -- 7638
 int.to.chr$ -- 5
 int.to.str$ -- 0
-missing$ -- 12
-newline$ -- 79
-num.names$ -- 205
-pop$ -- 127
+missing$ -- 11
+newline$ -- 71
+num.names$ -- 184
+pop$ -- 112
 preamble$ -- 1
-purify$ -- 300
+purify$ -- 270
 quote$ -- 0
-skip$ -- 251
+skip$ -- 224
 stack$ -- 0
-substring$ -- 10539
-swap$ -- 57
-text.length$ -- 281
+substring$ -- 9100
+swap$ -- 51
+text.length$ -- 253
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 78
+type$ -- 70
 warning$ -- 0
-while$ -- 446
+while$ -- 401
 width$ -- 0
-write$ -- 267
+write$ -- 235

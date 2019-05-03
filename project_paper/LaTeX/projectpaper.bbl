@@ -16,12 +16,6 @@ Depreli, M.  \harvardyearleft 2012\harvardyearright , `Bot comparison final
   table'.
 \newline\harvardurl{http://www.extremegammon.com/studies.aspx\#D2012}
 
-\harvarditem{Egger}{2017}{snowie}
-Egger, O.  \harvardyearleft 2017\harvardyearright , `Backgammon snowie'.
-\newblock
-  \url{http://www.bgsnowie.com/about/what-is-backgammon-snowie.dhtml},accessed:
-  28/09/2018.
-
 \harvarditem{Fleming}{2016}{fomorians}
 Fleming, J.  \harvardyearleft 2016\harvardyearright , `td-gammon'.
 \newline\harvardurl{https://github.com/fomorians/td-gammon}
@@ -33,7 +27,7 @@ Fürnkranz, J.  \harvardyearleft 2000\harvardyearright , Machine learning in
 
 \harvarditem{GameSite}{2017}{exg}
 GameSite  \harvardyearleft 2017\harvardyearright , `extreme gammon'.
-\newblock \url{http://www.extremegammon.com/default.aspx},accessed: 26/09/2018.
+\newline\harvardurl{http://www.extremegammon.com/default.aspx}
 
 \harvarditem{Hannun}{2013}{awni}
 Hannun, A.  \harvardyearleft 2013\harvardyearright , `backgammon'.
@@ -71,16 +65,6 @@ Sutton, R.~S. \harvardand\ Barto, A.~G.  \harvardyearleft 1998\harvardyearright
   , {\em Introduction to Reinforcement Learning}, 1st edn, MIT Press,
   Cambridge, MA, USA.
 
-\harvarditem[Tabrizi et~al.]{Tabrizi, Khoie \harvardand\
-  Rahimi}{2015}{DBLP:conf/nafips/TabriziKR15}
-Tabrizi, T.~S., Khoie, M.~R. \harvardand\ Rahimi, S.  \harvardyearleft
-  2015\harvardyearright , Incremental fuzzy clustering for an adaptive
-  backgammon game, {\em in} `2015 Annual Conference of the North American Fuzzy
-  Information Processing Society {(NAFIPS)} held jointly with 2015 5th World
-  Conference on Soft Computing (WConSC), Redmond, WA, USA, August 17-19, 2015',
-  {IEEE}, pp.~1--5.
-\newline\harvardurl{https://doi.org/10.1109/NAFIPS-WConSC.2015.7284185}
-
 \harvarditem{Tesauro}{1992}{DBLP:conf/icml/Tesauro92}
 Tesauro, G.  \harvardyearleft 1992\harvardyearright , Temporal difference
   learning of backgammon strategy, {\em in} D.~H. Sleeman \harvardand\
@@ -91,7 +75,7 @@ Tesauro, G.  \harvardyearleft 1992\harvardyearright , Temporal difference
 \harvarditem{Tesauro}{1993}{pubeval}
 Tesauro, G.  \harvardyearleft 1993\harvardyearright , `Ftpable benchmark
   evaluation function'.
-\newblock \url{http://www.bkgm.com/rgb/rgb.cgi?view+610}, accessed: 15/04/2019.
+\newline\harvardurl{https://www.zabkat.com/blog/tesauro-backgammon-reinvented.html}
 
 \harvarditem{Tesauro}{1994}{DBLP:journals/neco/Tesauro94}
 Tesauro, G.  \harvardyearleft 1994\harvardyearright , `Td-gammon, a
