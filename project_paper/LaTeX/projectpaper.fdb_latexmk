@@ -1,15 +1,15 @@
 # Fdb version 3
-["bibtex projectpaper"] 1556864336 "projectpaper.aux" "projectpaper.bbl" "projectpaper" 1556864383
+["bibtex projectpaper"] 1556874373 "projectpaper.aux" "projectpaper.bbl" "projectpaper" 1556874794
   "/usr/local/texlive/2016/texmf-dist/bibtex/bst/harvard/agsm.bst" 1136766823 25549 e3d0f1ab4ae55e777f7352db30e2c6f7 ""
-  "projectpaper.aux" 1556864383 10989 be086ac9144533cf695586f12603064b ""
+  "projectpaper.aux" 1556874794 11017 5745e0a524c864604b37bca37188642b ""
   "projectpaper.bcf" 0 -1 0 ""
   "projectpaper.bib" 1556859449 18120 c4e65135975d26f21b51af15fdb1d448 ""
   (generated)
   "projectpaper.blg"
   "projectpaper.bbl"
-["pdflatex"] 1556864379 "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf" "projectpaper" 1556864383
-  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux" 1556864383 10989 be086ac9144533cf695586f12603064b ""
-  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" 1556864379 54118 b350e00ca156ce8a528e5bf27dd5cfa8 ""
+["pdflatex"] 1556874790 "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf" "projectpaper" 1556874794
+  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.aux" 1556874794 11017 5745e0a524c864604b37bca37188642b ""
+  "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.tex" 1556874790 53580 515326592a10efc150e312be7ab1ae52 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2016/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1136768653 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -89,6 +89,9 @@
   "gnu-bg/hybrid-bad-board.png" 1556777226 772635 49c4ba8c8e0b62d898ba201fe33c927d ""
   "gnu-bg/hybrid-bad-move.png" 1556777375 13840 7f10cccf0d6961aeddc52689789eaa8e ""
   "gnu-bg/hybrid-bad-moves.png" 1556777322 14072 cae15d523114839414f0f5a0d78f6aec ""
+  "gnu-bg/mod-board.png" 1556873996 826746 bf3caa59324fdc37db3bd97aca0edc80 ""
+  "gnu-bg/mod-move.png" 1556874045 20818 0b2996d54ba3a9ae23b65c481436cd31 ""
+  "gnu-bg/mod-moves.png" 1556874017 12399 15a9bf3b71247346d3a181d1eeddd42d ""
   "gnu-bg/mono-feedback.png" 1556736527 23001 9233129ca5a5fa67ea31b77bb4bc7f68 ""
   "gnu-bg/mono-racing-board.png" 1556735473 774316 7e78d90255446cdf7290a3d4b713f75a ""
   "gnu-bg/mono-racing-rollout.png" 1556735869 16842 56ae614bbede3d447cd1cf11be166f4a ""
@@ -99,9 +102,9 @@
   "layouts/x_backgame_layout.png" 1553511270 1840892 786f4382865f0ff8e18e8a93b01ae199 ""
   "mononn.png" 1556033508 107849 6da12ef801d089b1fc19583e44615169 ""
   "prime.png" 1556033508 23798 aad2aa493b91a0591d3b6193aba44204 ""
-  "projectpaper.aux" 1556864383 10989 be086ac9144533cf695586f12603064b ""
-  "projectpaper.bbl" 1556864336 4945 947d0600b33355769fc66b799972e053 "bibtex projectpaper"
-  "projectpaper.tex" 1556864379 54118 b350e00ca156ce8a528e5bf27dd5cfa8 ""
+  "projectpaper.aux" 1556874794 11017 5745e0a524c864604b37bca37188642b ""
+  "projectpaper.bbl" 1556874373 4945 947d0600b33355769fc66b799972e053 "bibtex projectpaper"
+  "projectpaper.tex" 1556874790 53580 515326592a10efc150e312be7ab1ae52 ""
   "results/gnubg.png" 1556776677 887422 58900ab5f530b9d9c6af1ea10ac2cdf0 ""
   "results/hybrid-all.png" 1556734073 41308 e44c0515f0786e710b7e97b44c8e79e8 ""
   "results/hybrid-non.png" 1556734068 39647 4695b1f7d79d24d4b1f6630fc9a4da57 ""
@@ -116,8 +119,8 @@
   "results/mono-turns.png" 1556769639 55571 32dc7aaa433618647409caaec8b2141c ""
   "syscomp.png" 1556033508 69075 8e93921126f97636bbb74abaed6c29c9 ""
   (generated)
-  "projectpaper.log"
-  "projectpaper.aux"
   "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.pdf"
   "projectpaper.pdf"
+  "projectpaper.aux"
+  "projectpaper.log"
   "/Users/FatemaK/Desktop/Gammon/project_paper/LaTeX/projectpaper.log"
